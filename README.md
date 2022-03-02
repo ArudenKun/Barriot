@@ -11,4 +11,4 @@ Please read the [privacy policy](https://github.com/Rozen4334/Barriot/blob/maste
 
 ## 🗑️ Data removal
 
-If you wish to have all stored data associated to you removed, Feel free to get into contact at `contact@rozen.one`.
+If you wish to have all stored data associated to you removed, Feel free to get into contact at `contact@rozen.one` or on any other platform. Please include your Discord user ID to speed up the process.
