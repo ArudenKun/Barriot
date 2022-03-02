@@ -1,6 +1,8 @@
 # Barriot
 A fully REST Discord bot implementing exclusively QOL &amp; entertainment for all users.
 
+Barriot is closed source, so no source code will be found on this repository. This repository serves as a knowledge base, contact, reports & connection hub for Barriot, nothing else.
+
 ## 🌍 Visit the website!
 
 [Visit now](https://barriot.xyz) to invite the bot, get support & vote to support Barriot yourself!
