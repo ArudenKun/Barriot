@@ -8,3 +8,7 @@ A fully REST Discord bot implementing exclusively QOL &amp; entertainment for al
 ## 🔏 Privacy
 
 Please read the [privacy policy](https://github.com/Rozen4334/Barriot/blob/master/PRIVACY.md) carefully if you have any concern about how Barriot handles your information.
+
+## 🗑️ Data removal
+
+If you wish to have all stored data associated to you removed, Feel free to get into contact at `contact@rozen.one`.
