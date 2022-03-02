@@ -1,6 +1,7 @@
-# Privacy Policy
+# 🔏 Privacy Policy
 
-----
+Please read this document carefully if there is any concern in how Barriot handles your information. 
+This policy is automatically accepted as you make use of Barriot's services.
 
 ## 📤 Terminology
 
@@ -49,7 +50,9 @@ These preferred options are defined along with others in Barriots user-entity co
 
 Data is stored in a MongoDB server, locally hosted on the same machine as Barriot itself. 
 It is safely protected by a security manager & password system. 
-The port MongoDB communicates over is locked externally, so no traffic from outside the machine can interfere with or keep tabs on your data.
+The port MongoDB communicates over is locked externally, so no traffic from outside the machine can interfere with or keep tabs on your data. 
+> If this security somehow fails, and your data is somehow grabbed or deleted, 
+Barriot will notify you along other users of this event in its built-in notification system.
 
 ## ✅ Agreement
 
@@ -57,6 +60,5 @@ By adding Barriot to your guild or guilds, you agree to the above mentioned poli
 
 ## ❌ Disagreement
 
-- If you disagree with these terms as a guild owner or maintainer, you may remove Barriot from the guilds in question. 
-
-- If you disagree with these terms as a guild member, you may leave the guilds where Barriot resides.
+If you disagree with these terms as a guild owner or maintainer, you may remove Barriot from the guilds in question. 
+If you disagree with these terms as a guild member, you may leave the guilds where Barriot resides.
