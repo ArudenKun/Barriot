@@ -7,6 +7,10 @@ Barriot is closed source, so no source code will be found on this repository. Th
 
 [Visit now](https://barriot.xyz) to invite the bot, get support & vote to support Barriot yourself!
 
+## 🔗 Commands
+
+Please visit the [command documentation](https://github.com/Rozen4334/Barriot/blob/master/COMMANDS.md) to see all commands and their use cases.
+
 ## 🔏 Privacy
 
 Please read the [privacy policy](https://github.com/Rozen4334/Barriot/blob/master/PRIVACY.md) carefully if you have any concern about how Barriot handles your information.
