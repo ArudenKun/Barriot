@@ -9,7 +9,7 @@ Barriot is closed source, so no source code will be found on this repository. Th
 
 ## 🔗 Commands
 
-Please visit the [command documentation](https://github.com/Rozen4334/Barriot/blob/master/COMMANDS.md) to see all commands and their use cases.
+Please visit the [command docs](https://github.com/Rozen4334/Barriot/blob/master/COMMANDS.md) to see all commands and their use cases.
 
 ## 🔏 Privacy
 
