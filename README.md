@@ -1,4 +1,5 @@
-# Barriot for Discord.
+# Barriot for Discord - Serving the user.
+
 A fully REST Discord bot implementing exclusively QOL &amp; entertainment for all users.
 
 ### 🌍 Visit the website!
