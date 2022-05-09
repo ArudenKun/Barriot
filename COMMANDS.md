@@ -4,9 +4,9 @@
 
 Commands executed by typing `/` in the message box. 
 
-### /hidecommands (true/false)
+### /settings
 
-> Hides or unhides command responses from other people in chat. Error messages will always be hidden from other users.
+> Brings up a menu to change embed color & hide/unhide commands
 
 ## 👤 User Commands
 
