@@ -1,7 +1,7 @@
 ﻿using Barriot.Extensions;
 using Barriot.Extensions.Files;
-using Barriot.Interaction.Attributes;
 using Barriot.Extensions.Pagination;
+using Barriot.Interaction.Attributes;
 
 namespace Barriot.Interaction.Modules
 {
@@ -40,7 +40,7 @@ namespace Barriot.Interaction.Modules
                     var embed = new EmbedBuilder()
                         .WithDescription(FileHelper.GetInfoFromFile(InfoType.ReminderCheckUp))
                         .WithFooter("Make sure you keep your DM's open to receive it!")
-                        .WithColor(new Color(Context.UserData.Color));
+                        .WithColor(new Color(Context.Member.Color));
 
                     await Context.User.SendMessageAsync(
                         text: ":wave: **Hi, just checking up on you!**",
@@ -51,7 +51,7 @@ namespace Barriot.Interaction.Modules
                     await RespondAsync(
                         text: $":thumbsup: **Got it!** I will remind you to {message} in {spanUntil.ToReadable()}" +
                         $"{((frequency > 1) ? $"\n\n> This reminder will repeat {frequency} time(s) every {timeBetween?.ToReadable()}." : "")}",
-                        ephemeral: Context.UserData.DoEphemeral);
+                        ephemeral: Context.Member.DoEphemeral);
                 }
                 catch
                 {
@@ -72,8 +72,6 @@ namespace Barriot.Interaction.Modules
                 if (!Paginator<RemindEntity>.TryGet(out var paginator))
                 {
                     paginator = new PaginatorBuilder<RemindEntity>()
-                        .WithEmbed(new EmbedBuilder()
-                            .WithColor(new Color(Context.UserData.Color)))
                         .WithPages(x =>
                         {
                             string sendRepeat = "";
@@ -81,18 +79,18 @@ namespace Barriot.Interaction.Modules
                                 sendRepeat = $"\n⤷ *Set to repeat {x.Frequency} more time(s).";
                             return new($"{x.Expiration} (UTC)", x.Message ?? "No message set" + sendRepeat);
                         })
-                        .WithCustomId($"reminders-list:{Context.User.Id}")
-                        .WithComponents(new ComponentBuilder()
-                            .WithButton("Delete reminders", $"reminders-deleting:{Context.User.Id}", ButtonStyle.Secondary))
+                        .WithCustomId("reminders-list")
+                        .WithComponents(x => new ComponentBuilder()
+                            .WithButton("Delete reminders", $"reminders-deleting:{x}", ButtonStyle.Secondary))
                         .Build();
                 }
-                var value = paginator.GetPage(page, reminders);
+                var value = paginator.GetPage(page, reminders, Context.User.Id, Context.User.Id.ToString());
 
                 await RespondAsync(
                     text: $":page_facing_up: **Your reminders:** You are able to set a total of {25} reminders, and are currently able to add {25 - reminders.Count} more.",
                     embed: value.Embed,
                     components: value.Component,
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
             else
                 await RespondAsync(
@@ -111,8 +109,6 @@ namespace Barriot.Interaction.Modules
                 if (!Paginator<RemindEntity>.TryGet(out var paginator))
                 {
                     paginator = new PaginatorBuilder<RemindEntity>()
-                        .WithEmbed(new EmbedBuilder()
-                            .WithColor(new Color(Context.UserData.Color)))
                         .WithPages(x =>
                         {
                             string sendRepeat = "";
@@ -120,18 +116,18 @@ namespace Barriot.Interaction.Modules
                                 sendRepeat = $"\n⤷ *Set to repeat {x.Frequency} more time(s).";
                             return new($"{x.Expiration} (UTC)", x.Message ?? "No message set" + sendRepeat);
                         })
-                        .WithCustomId($"reminders-list:{Context.User.Id}")
-                        .WithComponents(new ComponentBuilder()
-                            .WithButton("Delete reminders", $"reminders-deleting:{Context.User.Id}", ButtonStyle.Secondary))
+                        .WithCustomId("reminders-list")
+                        .WithComponents(x => new ComponentBuilder()
+                            .WithButton("Delete reminders", $"reminders-deleting:{x}", ButtonStyle.Secondary))
                         .Build();
                 }
-                var value = paginator.GetPage(page, reminders);
+                var value = paginator.GetPage(page, reminders, Context.User.Id, Context.User.Id.ToString());
 
                 await RespondAsync(
                     text: $":page_facing_up: **Your reminders:** You are able to set a total of {25} reminders, and are currently able to add {25 - reminders.Count} more.",
                     embed: value.Embed,
                     components: value.Component,
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
             else
                 await RespondAsync(
@@ -169,7 +165,7 @@ namespace Barriot.Interaction.Modules
                 await RespondAsync(
                     text: ":wastebasket: **Delete reminders:** *Select the reminders you want to delete in the dropdown below.*",
                     components: cb.Build(),
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
         }
 
@@ -195,7 +191,7 @@ namespace Barriot.Interaction.Modules
                 }
                 await RespondAsync(
                     text: $":white_check_mark: **Succesfully removed {selectedReminders.Length} reminder(s).",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
         }
     }

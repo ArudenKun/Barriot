@@ -1,5 +1,4 @@
-﻿using Barriot.Extensions;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 
 namespace Barriot.Extensions.Converters

@@ -1,7 +1,11 @@
-﻿namespace Barriot.Extensions
+﻿using System.Text.RegularExpressions;
+
+namespace Barriot.Extensions
 {
     public static class StringExtensions
     {
+        private static readonly Lazy<Regex> _linkRegex = new(() => new(@"", RegexOptions.Compiled));
+
         /// <summary>
         ///     Reduces the length of the <paramref name="input"/> and appends the <paramref name="finalizer"/> to humanize the returned string.
         /// </summary>
@@ -34,6 +38,19 @@
                 return input[..maxLength] + finalizer;
             }
             else return input;
+        }
+
+        public static bool TryGetLinkData(this string messageLink, out ulong[] data)
+        {
+            var extraction = messageLink.Split('/');
+            data = new ulong[extraction.Length];
+
+            for (int i = 0; i < extraction.Length; i++)
+            {
+                if (ulong.TryParse(extraction[i], out data[i]))
+                    continue;
+            }
+            return false;
         }
     }
 }

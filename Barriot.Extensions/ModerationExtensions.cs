@@ -3,7 +3,7 @@
     /// <summary>
     ///     A class that adds a set of extension methods for moderation purposes.
     /// </summary>
-    internal static class ModerationExtensions
+    public static class ModerationExtensions
     {
         public static string FormatLogReason(string issuer, string? reason = null)
         {

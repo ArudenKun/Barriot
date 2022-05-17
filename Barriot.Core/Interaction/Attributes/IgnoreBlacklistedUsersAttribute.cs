@@ -8,7 +8,7 @@
 
             var validContext = (context as BarriotInteractionContext)!;
 
-            if (validContext.UserData.IsBlacklisted)
+            if (validContext.Member.IsBlacklisted)
             {
                 return BarriotPreconditionResult.FromError(
                     reason: "User is blacklisted and cannot enter command execution.",

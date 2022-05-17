@@ -15,7 +15,7 @@ namespace Barriot.Interaction.Modules
             if (user.Id == Context.Client.CurrentUser.Id)
             {
                 var eb = new EmbedBuilder()
-                    .WithColor(Context.UserData.Color)
+                    .WithColor(Context.Member.Color)
                     .AddField("Votes", $"Voted ` 69 ` times.")
                     .AddField("Commands", $"Executed ` 420 ` commands.")
                     .AddField("Components", $"Clicked ` 1337 ` components.")
@@ -24,20 +24,20 @@ namespace Barriot.Interaction.Modules
                 await RespondAsync(
                     text: $":sunglasses: **Barriot's statistics.** *Cool, you found an easter egg!*",
                     embed: eb.Build(),
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
 
             else if (user.IsBot || user.IsWebhook)
                 await RespondAsync(
                     text: $":x: **This user cannot interact with Barriot!**",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
 
             else
             {
                 var cb = new ComponentBuilder()
                     .WithButton("View acknowledgements", $"ack:{Context.User.Id},{user.Id}");
 
-                if (Context.UserData.Flags.Any(x => x.Type is FlagType.Developer))
+                if (Context.Member.Flags.Any(x => x.Type is FlagType.Developer))
                 {
                     if (user.Id != Context.User.Id)
                         cb.WithButton("Blacklist user", $"blacklist:{Context.User.Id},{user.Id}", ButtonStyle.Danger);
@@ -46,7 +46,7 @@ namespace Barriot.Interaction.Modules
                 var target = await UserEntity.GetAsync(user);
 
                 var eb = new EmbedBuilder()
-                    .WithColor(Context.UserData.Color)
+                    .WithColor(Context.Member.Color)
                     .AddField("Votes", $"Voted ` {target.Votes} ` time{((target.Votes != 1) ? "s" : "")}.")
                     .AddField("Latest command", $"` {target.LastCommand} `")
                     .AddField("Commands", $"Executed ` {target.CommandsExecuted} ` command{((target.CommandsExecuted != 1) ? "s" : "")}.")
@@ -57,7 +57,7 @@ namespace Barriot.Interaction.Modules
                     text: $":bar_chart: **<@{user.Id}>'s Barriot statistics**",
                     embed: eb.Build(),
                     components: cb.Build(),
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Barriot.Interaction.Modules
                 text: $":medal: **<@{targetId}>'s Acknowledgements.** Rewarded for contributions, regular use of the bot, donations and more.",
                 embed: eb.Build(),
                 components: cb?.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿using Barriot.Interaction.Attributes;
-using Barriot.Caching;
+﻿using Barriot.Caching;
+using Barriot.Extensions.Files;
+using Barriot.Interaction.Attributes;
 using Barriot.Models;
 
 namespace Barriot.Interaction.Modules
@@ -39,17 +40,17 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Privacy Policy", style: ButtonStyle.Link, url: _configuration["Domain"] + "privacy", row: 1);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
+                .WithColor(Context.Member.Color)
                 .WithThumbnailUrl("https://rozen.one/Files/B_monogram.png")
                 .AddField("Commands", "Click on the buttons below to navigate through command examples & to get further support if required!")
                 .AddField("Note", "Discord currently does not support Message or User commands on mobile devices!")
-                .WithDescription(string.Join("\n", Files.FileHelper.GetDataFromFile("HelpText").Lines));
+                .WithDescription(string.Join("\n", FileHelper.GetDataFromFile("HelpText").Lines));
 
             await RespondAsync(
                 text: ":question: **Barriot help & support**",
                 components: cb.Build(),
                 embed: eb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -70,15 +71,15 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 text: ":heart: **Vote for Barriot through the link below!**",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("changelog", "Views current Barriot version & changelog.")]
         public async Task ChangelogAsync()
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
-                .WithDescription(string.Join("\n", Files.FileHelper.GetDataFromFile("Changelog").Lines));
+                .WithColor(Context.Member.Color)
+                .WithDescription(string.Join("\n", FileHelper.GetDataFromFile("Changelog").Lines));
 
             var cb = new ComponentBuilder()
                 .WithButton("Get new version notifications", style: ButtonStyle.Link, url: _configuration["Domain"] + "discord")
@@ -89,7 +90,7 @@ namespace Barriot.Interaction.Modules
                 text: $":newspaper: **Changelog for version {typeof(Program).Assembly.GetName().Version}**",
                 embed: eb.Build(),
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("invite", "Invite Barriot to your own servers.")]
@@ -101,7 +102,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 text: ":chart_with_upwards_trend: **Invite Barriot through the button below!**",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("about", "Barriot statistics and more!")]
@@ -114,7 +115,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 text: ":robot: **Everything about Barriot!**",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -122,14 +123,14 @@ namespace Barriot.Interaction.Modules
         public async Task StatsAsync(ulong _)
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
+                .WithColor(Context.Member.Color)
                 .WithThumbnailUrl(_client.CurrentUser.GetAvatarUrl())
                 .AddField("Total Guilds", _guilds.GetGuildCount());
 
             await RespondAsync(
                 text: ":bar_chart: **Guild count** This may not be fully accurate, as this data is not updated continuously.",
                 embed: eb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -137,7 +138,7 @@ namespace Barriot.Interaction.Modules
         public async Task UptimeAsync(ulong _)
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
+                .WithColor(Context.Member.Color)
                 .WithThumbnailUrl(_client.CurrentUser.GetAvatarUrl())
                 .AddField("Start Time", _uptime.StartTime)
                 .AddField("Total Uptime", _uptime.ToString());
@@ -145,7 +146,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 text: ":clock1: **Uptime & start time.** This information is in UTC.",
                 embed: eb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
     }

@@ -46,13 +46,13 @@
 
         private bool CanAssignFlag(UserFlag newFlag)
         {
-            List<UserFlag> flags = Context.UserData.Flags;
+            List<UserFlag> flags = Context.Member.Flags;
             UserFlag[] newFlags = { newFlag };
 
             if (!flags.Any(x => x.Title == newFlag.Title))
             {
                 flags.RemoveAll(x => x.Type == newFlag.Type);
-                Context.UserData.Flags = new(flags.Concat(newFlags));
+                Context.Member.Flags = new(flags.Concat(newFlags));
                 return true;
             }
             return false;
@@ -60,15 +60,15 @@
 
         public override async Task AfterExecuteAsync(ICommandInfo command)
         {
-            if (Context.UserData.UserName is "Unknown")
-                Context.UserData.UserName = $"{Context.User.Username}#{Context.User.Discriminator}";
+            if (Context.Member.UserName is "Unknown")
+                Context.Member.UserName = $"{Context.User.Username}#{Context.User.Discriminator}";
 
             if (Context.WonGameInSession)
             {
-                Context.UserData.GamesWon++;
+                Context.Member.GamesWon++;
 
                 int ranking = 10;
-                int tier = CalculateTier(Context.UserData.GamesWon, ref ranking);
+                int tier = CalculateTier(Context.Member.GamesWon, ref ranking);
 
                 if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateChampion(tier, ranking)))
                     await FollowupAsync(
@@ -79,10 +79,10 @@
 
             if (command is ComponentCommandInfo or ModalCommandInfo)
             {
-                Context.UserData.ButtonsPressed++;
+                Context.Member.ButtonsPressed++;
 
                 int ranking = 300;
-                int tier = CalculateTier(Context.UserData.ButtonsPressed, ref ranking);
+                int tier = CalculateTier(Context.Member.ButtonsPressed, ref ranking);
 
                 if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateComponent(tier, ranking)))
                     await FollowupAsync(
@@ -93,16 +93,16 @@
 
             else
             {
-                if (Context.UserData.Inbox.Any() && command.Name != "inbox")
+                if (Context.Member.Inbox.Any() && command.Name != "inbox")
                     await FollowupAsync(
                         text: ":speech_balloon: **You have unread mail!** Please use ` /inbox ` to read this mail.",
                         ephemeral: true);
 
-                Context.UserData.LastCommand = command.Name;
-                Context.UserData.CommandsExecuted++;
+                Context.Member.LastCommand = command.Name;
+                Context.Member.CommandsExecuted++;
 
                 int ranking = 150;
-                int tier = CalculateTier(Context.UserData.CommandsExecuted, ref ranking);
+                int tier = CalculateTier(Context.Member.CommandsExecuted, ref ranking);
 
                 if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateCommand(tier, ranking)))
                     await FollowupAsync(

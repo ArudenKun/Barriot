@@ -1,5 +1,5 @@
-﻿using Barriot.Interaction.Attributes;
-using Barriot.Caching;
+﻿using Barriot.Caching;
+using Barriot.Interaction.Attributes;
 
 namespace Barriot.Interaction.Modules
 {
@@ -32,7 +32,7 @@ namespace Barriot.Interaction.Modules
                 cb.WithButton("View banner", $"banner:{Context.User.Id},{user.Id}", ButtonStyle.Primary);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
+                .WithColor(Context.Member.Color)
                 .AddField("Joined Discord on:", user.CreatedAt);
 
             if (user is RestGuildUser gUser)
@@ -42,7 +42,7 @@ namespace Barriot.Interaction.Modules
                 if (gUser.RoleIds.Any(x => x != gUser.GuildId))
                     eb.AddField("Roles:", string.Join(", ", gUser.RoleIds.Where(x => x != gUser.GuildId).Select(x => $"<@&{x}>")));
 
-                if (Context.UserData.HasVoted())
+                if (Context.Member.HasVoted())
                 {
                     if (gUser.PremiumSince is not null)
                         eb.AddField("Boosting since:", gUser.PremiumSince);
@@ -66,7 +66,7 @@ namespace Barriot.Interaction.Modules
                 text: $":bust_in_silhouette: **Information about {user.Username}#{user.Discriminator}**",
                 embed: eb.Build(),
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -76,13 +76,13 @@ namespace Barriot.Interaction.Modules
             var rUser = await _users.GetOneAsync(targetId);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
+                .WithColor(Context.Member.Color)
                 .WithImageUrl(rUser.GetAvatarUrl(ImageFormat.Auto, 256));
 
             await RespondAsync(
                 text: $":selfie: **<@{targetId}>'s avatar:**",
                 embed: eb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -92,13 +92,13 @@ namespace Barriot.Interaction.Modules
             var rUser = await _users.GetOneAsync(targetId);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.UserData.Color)
+                .WithColor(Context.Member.Color)
                 .WithImageUrl(rUser.GetBannerUrl(ImageFormat.Auto, 256));
 
             await RespondAsync(
                 text: $":sunrise_over_mountains: **<@{targetId}>'s banner:**",
                 embed: eb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
     }
 }

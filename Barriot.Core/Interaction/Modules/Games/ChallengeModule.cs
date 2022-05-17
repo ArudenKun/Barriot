@@ -15,12 +15,12 @@ namespace Barriot.Interaction.Modules
             if (target.IsBot || target.IsWebhook)
                 await RespondAsync(
                     text: ":x: **You cannot challenge bots!**",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
 
             else if (target.Id == Context.User.Id)
                 await RespondAsync(
                     text: ":x: **You cannot challenge yourself!**",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
 
             else
             {

@@ -14,7 +14,7 @@ namespace Barriot.Caching
 
         public TranslationCache(ITranslateClient client)
         {
-            _lastCheck = DateTime.UtcNow; 
+            _lastCheck = DateTime.UtcNow;
             _client = client;
         }
 
@@ -28,13 +28,13 @@ namespace Barriot.Caching
 
                 List<IEnumerable<LanguageData>> data = new();
 
-                var cursor = _alphabet.Length / 2; 
+                var cursor = _alphabet.Length / 2;
                 for (int i = 0; i < _alphabet.Length; i += cursor)
-                    data.Add(languages.OrderBy(x => x.Name[0]).ToList().GetRange(i, cursor)); 
+                    data.Add(languages.OrderBy(x => x.Name[0]).ToList().GetRange(i, cursor));
 
                 _languages = data;
 
-                return data; 
+                return data;
             }
             else
                 return _languages;

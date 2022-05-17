@@ -19,7 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Discord.Net.Interactions" Version="3.6.1" />
     <PackageReference Include="MailKit" Version="3.2.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.2.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
   </ItemGroup>
 
@@ -39,6 +39,6 @@
     </Content>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

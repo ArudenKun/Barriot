@@ -16,7 +16,7 @@ namespace Barriot.Interaction.Modules
 
             await RespondAsync(
                 text: $":question: **Answer me this:** {file.SelectedLine.Split('|').First()}",
-                ephemeral: Context.UserData.DoEphemeral,
+                ephemeral: Context.Member.DoEphemeral,
                 components: cb.Build());
         }
 
@@ -26,7 +26,7 @@ namespace Barriot.Interaction.Modules
         {
             await RespondAsync(
                 text: $":eyes: **The answer to your riddle is:** {FileHelper.GetDataFromFile("Riddles").Lines[riddleId].Split('|').Last()}",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("question", "Give me a question, I'll answer!")]
@@ -35,7 +35,7 @@ namespace Barriot.Interaction.Modules
         {
             await RespondAsync(
                 text: $":speech_balloon: **{FileHelper.GetDataFromFile("Answers").SelectedLine}**",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("random-fact", "A random fact")]
@@ -43,7 +43,7 @@ namespace Barriot.Interaction.Modules
         {
             await RespondAsync(
                 text: $":bulb: **Did you know that:** {FileHelper.GetDataFromFile("Facts").SelectedLine}",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("showerthought", "Ever thought about something odd in the shower? I certainly did!")]
@@ -51,7 +51,7 @@ namespace Barriot.Interaction.Modules
         {
             await RespondAsync(
                 text: $":thinking: **Have you ever thought about:** {FileHelper.GetDataFromFile("Thoughts").SelectedLine}",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("dadjoke", "They're pretty bad tbh...")]
@@ -59,7 +59,7 @@ namespace Barriot.Interaction.Modules
         {
             await RespondAsync(
                 text: $":man_facepalming: **Heres a good one:** {FileHelper.GetDataFromFile("Jokes").SelectedLine}",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
     }
 }

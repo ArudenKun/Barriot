@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+using System.Collections.ObjectModel;
 
 namespace Barriot
 {
@@ -16,6 +17,24 @@ namespace Barriot
         [BsonIgnore]
         public EntityState State { get; set; } = EntityState.Deserializing;
 
+        internal UserEntity(ulong id)
+        {
+            UserId = id;
+            _userName = "Unknown#0000";
+            _doEphemeral = true;
+            _isBlackListed = false;
+            _preferredLang = "en|English";
+            _commandsExecuted = 0;
+            _buttonsPressed = 0;
+            _color = Discord.Color.Blue.RawValue;
+            _flags = new();
+            _gamesWon = 0;
+            _inbox = new();
+            _lastCommand = "None";
+            _votes = 0;
+            _monthlyVotes = 0;
+        }
+
         #region UserEntity
 
         /// <summary>
@@ -23,7 +42,7 @@ namespace Barriot
         /// </summary>
         public ulong UserId { get; set; }
 
-        private string _userName = "Unknown#0000";
+        private string _userName;
         /// <summary>
         ///     Gets the username of this user.
         /// </summary>
@@ -38,7 +57,7 @@ namespace Barriot
             }
         }
 
-        private bool _doEphemeral = true;
+        private bool _doEphemeral;
         /// <summary>
         ///     If messages are supposed to be sent ephemerally.
         /// </summary>
@@ -53,7 +72,7 @@ namespace Barriot
             }
         }
 
-        private bool _isBlackListed = false;
+        private bool _isBlackListed;
         /// <summary>
         ///     Wether or not this user is blacklisted. If so, user is unable to execute any functions, including buttons & dropdowns.
         /// </summary>
@@ -68,7 +87,7 @@ namespace Barriot
             }
         }
 
-        private string _preferredLang = "en|English";
+        private string _preferredLang;
         /// <summary>
         ///     The preferred language of this user.
         /// </summary>
@@ -83,7 +102,7 @@ namespace Barriot
             }
         }
 
-        private long _commandsExecuted = 0;
+        private long _commandsExecuted;
         /// <summary>
         ///     How many commands this user has executed.
         /// </summary>
@@ -98,7 +117,7 @@ namespace Barriot
             }
         }
 
-        private long _buttonsPressed = 0;
+        private long _buttonsPressed;
         /// <summary>
         ///     How many buttons have been pressed by this user.
         /// </summary>
@@ -113,7 +132,7 @@ namespace Barriot
             }
         }
 
-        private long _gamesWon = 0;
+        private long _gamesWon;
         /// <summary>
         ///     How many minigames this user has won.
         /// </summary>
@@ -128,7 +147,7 @@ namespace Barriot
             }
         }
 
-        private string _lastCommand = "None";
+        private string _lastCommand;
         /// <summary>
         ///     The last command this user has executed.
         /// </summary>
@@ -143,7 +162,7 @@ namespace Barriot
             }
         }
 
-        private List<string> _inbox = new();
+        private List<string> _inbox;
         /// <summary>
         ///     A list of messages targetting this user.
         /// </summary>
@@ -158,7 +177,7 @@ namespace Barriot
             }
         }
 
-        private List<UserFlag> _flags = new();
+        private List<UserFlag> _flags;
         /// <summary>
         ///     A list of all user flags.
         /// </summary>
@@ -188,7 +207,7 @@ namespace Barriot
             }
         }
 
-        private long _votes = 0;
+        private long _votes;
         /// <summary>
         ///     How many times this user has voted in total.
         /// </summary>
@@ -203,7 +222,7 @@ namespace Barriot
             }
         }
 
-        private long _monthlyVotes = 0;
+        private long _monthlyVotes;
         /// <summary>
         ///     How many times this user has voted this month.
         /// </summary>
@@ -218,7 +237,7 @@ namespace Barriot
             }
         }
 
-        private uint _color = Discord.Color.Blue.RawValue;
+        private uint _color;
         /// <summary>
         ///     The user's embed color.
         /// </summary>

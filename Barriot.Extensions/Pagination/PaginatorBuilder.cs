@@ -10,29 +10,20 @@ namespace Barriot.Extensions.Pagination
     {
         private Func<T, FieldFormatter>? _valueFormatter;
 
-        /// <summary>
-        ///     The embed builder of this paginator.
-        /// </summary>
-        public EmbedBuilder EmbedBuilder { get; set; } = new();
+        private Func<object, EmbedBuilder>? _embedFormatter;
 
-        /// <summary>
-        ///     The component builder of this paginator.
-        /// </summary>
-        public ComponentBuilder ComponentBuilder { get; set; } = new();
+        private Func<object, ComponentBuilder>? _compFormatter;
 
-        /// <summary>
-        ///     The custom ID of this paginator.
-        /// </summary>
-        public string CustomId { get; set; } = string.Empty;
+        private string _cid = string.Empty;
 
         /// <summary>
         ///     Overrides the current embed instance of the builder, adding the arguments inside the passed builder.
         /// </summary>
         /// <param name="builder">The embed builder to pass into the paginator builder.</param>
         /// <returns>The builder instance with a new embed builder.</returns>
-        public PaginatorBuilder<T> WithEmbed(EmbedBuilder builder)
+        public PaginatorBuilder<T> WithEmbed(Func<object, EmbedBuilder> builder)
         {
-            EmbedBuilder = builder;
+            _embedFormatter = builder;
             return this;
         }
 
@@ -48,13 +39,13 @@ namespace Barriot.Extensions.Pagination
         }
 
         /// <summary>
-        ///     Adds a custom ID to the builder, for paging.
+        ///     Adds a custom ID to the builder with a ulong parameter with usercheck logic, for paging.
         /// </summary>
-        /// <param name="customid">The custom ID to add.</param>
+        /// <param name="customId">The custom ID to add.</param>
         /// <returns>The builder instance with a custom ID included.</returns>
-        public PaginatorBuilder<T> WithCustomId(string customid)
+        public PaginatorBuilder<T> WithCustomId(string customId)
         {
-            CustomId = customid;
+            _cid = customId;
             return this;
         }
 
@@ -63,9 +54,9 @@ namespace Barriot.Extensions.Pagination
         /// </summary>
         /// <param name="builder">The component builder to pass into the paginator builder.</param>
         /// <returns>The builder instance with a new component builder.</returns>
-        public PaginatorBuilder<T> WithComponents(ComponentBuilder builder)
+        public PaginatorBuilder<T> WithComponents(Func<object, ComponentBuilder> builder)
         {
-            ComponentBuilder = builder;
+            _compFormatter = builder;
             return this;
         }
 
@@ -78,10 +69,10 @@ namespace Barriot.Extensions.Pagination
             if (_valueFormatter is null)
                 throw new InvalidOperationException("The value formatter is null. Please call 'WithPages' to correct this error.");
 
-            if (string.IsNullOrEmpty(CustomId))
-                throw new InvalidOperationException("The custom ID of a paginatorbuilder cannot be empty.");
+            if (_cid is null)
+                throw new InvalidOperationException("The custom ID of a paginatorbuilder cannot be null.");
 
-            return new Paginator<T>(_valueFormatter, EmbedBuilder, ComponentBuilder, CustomId);
+            return new Paginator<T>(_valueFormatter, _embedFormatter, _compFormatter, _cid);
         }
     }
 }

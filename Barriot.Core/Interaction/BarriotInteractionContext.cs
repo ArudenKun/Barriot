@@ -8,7 +8,7 @@
         /// <summary>
         ///     The Barriot user entity for this interaction.
         /// </summary>
-        public UserEntity UserData { get; }
+        public UserEntity Member { get; }
 
         /// <summary>
         ///     If the user in context has won a game. Only applies to challenges.
@@ -18,7 +18,7 @@
         internal BarriotInteractionContext(DiscordRestClient client, RestInteraction interaction, Func<string, Task> responseCallback)
             : base(client, interaction, responseCallback)
         {
-            UserData = UserEntity.GetAsync(User)
+            Member = UserEntity.GetAsync(User)
                 .GetAwaiter()
                 .GetResult();
         }

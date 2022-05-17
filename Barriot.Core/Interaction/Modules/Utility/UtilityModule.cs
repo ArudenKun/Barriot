@@ -1,6 +1,5 @@
 ﻿using Barriot.Extensions.Models;
 using Barriot.Interaction.Attributes;
-using Barriot.Models;
 
 namespace Barriot.Interaction.Modules
 {
@@ -23,7 +22,7 @@ namespace Barriot.Interaction.Modules
 
                 await RespondAsync(
                     text: ":white_check_mark: **Sent message content in DM!**",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
             catch
             {
@@ -44,26 +43,26 @@ namespace Barriot.Interaction.Modules
             else
                 await RespondAsync(
                     text: $":abacus: **The result is:** {calculation}",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
         }
 
         [SlashCommand("ping", "Pong! See if the bot works. If this command fails, all is lost...")]
         public async Task PingAsync()
             => await RespondAsync(
                 text: $":ping_pong: **Pong!**",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
 
         [SlashCommand("coinflip", "Flips a coin.")]
         public async Task CoinFlipAsync()
             => await RespondAsync(
                 text: (new Random().Next(2) < 1) ? ":coin: **Heads!**" : ":coin: **Tails!**",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
 
         [EnabledInDm(false)]
         [SlashCommand("membercount", "Views the amount of members in the current guild.")]
         public async Task MemberCountAsync()
             => await RespondAsync(
                 text: $":1234: **Approximate membercount of this server: ` {Context.Guild.ApproximateMemberCount ?? 0}`** *(0 if unable to gather data)*",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
     }
 }

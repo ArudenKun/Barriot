@@ -34,10 +34,7 @@ namespace Barriot.Entities.Users
 
         private static async Task<UserEntity> CreateAsync(ulong id)
         {
-            var entity = new UserEntity
-            {
-                UserId = id
-            };
+            var entity = new UserEntity(id);
             await _client.InsertDocumentAsync(entity);
             return entity;
         }
@@ -46,7 +43,7 @@ namespace Barriot.Entities.Users
         {
             var documents = await _client.GetAllDocumentsAsync();
 
-            await foreach(var document in documents)
+            await foreach (var document in documents)
             {
                 document.State = EntityState.Initialized;
                 yield return document;

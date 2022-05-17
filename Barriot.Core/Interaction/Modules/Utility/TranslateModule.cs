@@ -20,14 +20,14 @@ namespace Barriot.Interaction.Modules
         [MessageCommand("Translate")]
         public async Task TranslateAsync(IMessage message)
         {
-            await DeferAsync(Context.UserData.DoEphemeral);
+            await DeferAsync(Context.Member.DoEphemeral);
 
-            if (Context.UserData.PreferredLang is null)
-                Context.UserData.PreferredLang = $"en|English";
-            string[] args = Context.UserData.PreferredLang.Split('|');
+            if (Context.Member.PreferredLang is null)
+                Context.Member.PreferredLang = $"en|English";
+            string[] args = Context.Member.PreferredLang.Split('|');
             var cb = new ComponentBuilder()
                 .WithButton("Change preferred language", $"language-changing:{Context.User.Id},{args[0]}");
-            
+
             var result = await _translator.TranslateAsync(x =>
             {
                 x.ApiKey = "";
@@ -52,15 +52,15 @@ namespace Barriot.Interaction.Modules
             {
                 var languages = options[i];
                 cb.WithButton(
-                    label: $"{languages.First().Name[0]} - {languages.Last().Name[0]}", 
-                    customId: $"language-process:{Context.User.Id},{i}", 
+                    label: $"{languages.First().Name[0]} - {languages.Last().Name[0]}",
+                    customId: $"language-process:{Context.User.Id},{i}",
                     style: ButtonStyle.Secondary);
             }
 
             await RespondAsync(
-                text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.UserData.PreferredLang.Split('|')[1]}) to ignore.*",
+                text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.*",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -80,9 +80,9 @@ namespace Barriot.Interaction.Modules
             cb.WithSelectMenu(sb);
 
             await RespondAsync(
-                text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.UserData.PreferredLang.Split('|')[1]}) to ignore.*",
+                text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.*",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -92,18 +92,18 @@ namespace Barriot.Interaction.Modules
             var @new = (await _translator.GetSupportedLanguagesAsync())
                 .First(x => x.Code == selectedLang[0]);
 
-            if (@new.Code == Context.UserData.PreferredLang.Split('|')[0])
+            if (@new.Code == Context.Member.PreferredLang.Split('|')[0])
                 await RespondAsync(
                     text: ":x: **Canceled selection!** Your preferred language remains the same.",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
 
             else
             {
                 await RespondAsync(
                     text: $":white_check_mark: **Succesfully changed target language!** The translate command will now respond in {@new.Name}.",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
 
-                Context.UserData.PreferredLang = $"{@new.Code}|{@new.Name}";
+                Context.Member.PreferredLang = $"{@new.Code}|{@new.Name}";
             }
         }
     }

@@ -45,7 +45,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 text: ":writing_hand: **Add acknowledgements:** *Select the acknowledgements you want to add or create a custom one below.*",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -78,7 +78,7 @@ namespace Barriot.Interaction.Modules
 
             await RespondAsync(
                 text: $":white_check_mark: **Successfully added {values.Length} acknowledgements.**",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -109,7 +109,7 @@ namespace Barriot.Interaction.Modules
 
                 await RespondAsync(
                     text: $":white_check_mark: **Custom acknowledgement successfully added.**",
-                    ephemeral: Context.UserData.DoEphemeral);
+                    ephemeral: Context.Member.DoEphemeral);
             }
         }
 
@@ -141,7 +141,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 text: ":wastebasket: **Delete acknowledgements:** *Select the acknowledgements you want to delete in the dropdown below.*",
                 components: cb.Build(),
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
 
         [DoUserCheck]
@@ -164,7 +164,7 @@ namespace Barriot.Interaction.Modules
 
             await RespondAsync(
                 text: $":white_check_mark: **Successfully removed {selectedAcks.Length} acknowledgements.**",
-                ephemeral: Context.UserData.DoEphemeral);
+                ephemeral: Context.Member.DoEphemeral);
         }
     }
 }
