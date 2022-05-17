@@ -16,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{9395C46D-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{A35773E8-42A1-4A94-A353-7CFE3770EA26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barriot.Extensions", "Barriot.Extensions\Barriot.Extensions.csproj", "{A57D0031-3870-4C55-A873-24BC038FF625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barriot.Extensions", "Barriot.Extensions\Barriot.Extensions.csproj", "{A57D0031-3870-4C55-A873-24BC038FF625}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{0360CCDE-2C8B-4A98-B3DF-59BF52726BB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,7 +45,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F89847A5-5E24-4DD4-BCF6-1D528ABAA8B3} = {9395C46D-C233-4349-8BB4-246079CA9827}
 		{F1B9C363-C724-468A-A257-197574D543F9} = {A35773E8-42A1-4A94-A353-7CFE3770EA26}
-		{A57D0031-3870-4C55-A873-24BC038FF625} = {9395C46D-C233-4349-8BB4-246079CA9827}
+		{A57D0031-3870-4C55-A873-24BC038FF625} = {0360CCDE-2C8B-4A98-B3DF-59BF52726BB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DBC9783F-5C8A-4C1C-B043-2037DA254E77}
