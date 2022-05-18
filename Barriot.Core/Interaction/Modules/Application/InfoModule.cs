@@ -1,7 +1,6 @@
-﻿using Barriot.Caching;
-using Barriot.Extensions.Files;
+﻿using Barriot.Extensions.Files;
 using Barriot.Interaction.Attributes;
-using Barriot.Models;
+using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules
 {
@@ -9,16 +8,12 @@ namespace Barriot.Interaction.Modules
     public class InfoModule : BarriotModuleBase
     {
         private readonly IConfiguration _configuration;
-        private readonly DiscordRestClient _client;
-        private readonly UptimeTracker _uptime;
-        private readonly GuildCache _guilds;
+        private readonly InfoService _service;
 
-        public InfoModule(IConfiguration configuration, DiscordRestClient client, UptimeTracker uptime, GuildCache guilds)
+        public InfoModule(IConfiguration configuration, InfoService service)
         {
             _configuration = configuration;
-            _client = client;
-            _uptime = uptime;
-            _guilds = guilds;
+            _service = service;
         }
 
         [SlashCommand("help", "Barriot help & Support.")]
@@ -124,8 +119,8 @@ namespace Barriot.Interaction.Modules
         {
             var eb = new EmbedBuilder()
                 .WithColor(Context.Member.Color)
-                .WithThumbnailUrl(_client.CurrentUser.GetAvatarUrl())
-                .AddField("Total Guilds", _guilds.GetGuildCount());
+                .WithThumbnailUrl(Context.Client.CurrentUser.GetAvatarUrl())
+                .AddField("Total Guilds", _service.GuildCount);
 
             await RespondAsync(
                 text: ":bar_chart: **Guild count** This may not be fully accurate, as this data is not updated continuously.",
@@ -139,9 +134,9 @@ namespace Barriot.Interaction.Modules
         {
             var eb = new EmbedBuilder()
                 .WithColor(Context.Member.Color)
-                .WithThumbnailUrl(_client.CurrentUser.GetAvatarUrl())
-                .AddField("Start Time", _uptime.StartTime)
-                .AddField("Total Uptime", _uptime.ToString());
+                .WithThumbnailUrl(Context.Client.CurrentUser.GetAvatarUrl())
+                .AddField("Start Time", _service.OnlineSince)
+                .AddField("Total Uptime", DateTime.UtcNow - _service.OnlineSince);
 
             await RespondAsync(
                 text: ":clock1: **Uptime & start time.** This information is in UTC.",

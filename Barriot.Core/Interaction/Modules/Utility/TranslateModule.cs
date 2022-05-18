@@ -1,20 +1,18 @@
 ﻿using Barriot.API.Translation;
 using Barriot.Caching;
 using Barriot.Interaction.Attributes;
+using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules
 {
     [IgnoreBlacklistedUsers]
     public class TranslateModule : BarriotModuleBase
     {
-        private readonly ITranslateClient _translator;
+        private readonly TranslateService _service;
 
-        private readonly TranslationCache _cache;
-
-        public TranslateModule(ITranslateClient translator, TranslationCache cache)
+        public TranslateModule(TranslateService service)
         {
-            _translator = translator;
-            _cache = cache;
+            _service = service;
         }
 
         [MessageCommand("Translate")]
@@ -28,16 +26,8 @@ namespace Barriot.Interaction.Modules
             var cb = new ComponentBuilder()
                 .WithButton("Change preferred language", $"language-changing:{Context.User.Id},{args[0]}");
 
-            var result = await _translator.TranslateAsync(x =>
-            {
-                x.ApiKey = "";
-                x.Source = "auto";
-                x.Target = args[0];
-                x.Text = message.CleanContent;
-            });
-
             await FollowupAsync(
-                text: $":loudspeaker: **Translated text to {args[1]}:** \n\n> {result}",
+                text: $":loudspeaker: **Translated text to {args[1]}:** \n\n> {_service.TranslateAsync(args[0], message.CleanContent)}",
                 components: cb.Build());
         }
 
@@ -45,7 +35,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("language-changing:*")]
         public async Task ChangingLanguageAsync(string _)
         {
-            var options = await _cache.GetAllLanguagesAsync();
+            var options = await _service.GetSupportedLanguagesAsync();
 
             var cb = new ComponentBuilder();
             for (int i = 0; i < options.Count; i++)
@@ -67,7 +57,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("language-process:*,*")]
         public async Task ProcessLanguageAsync(string _, int index)
         {
-            var options = (await _cache.GetAllLanguagesAsync())[index];
+            var options = (await _service.GetSupportedLanguagesAsync())[index];
 
             var cb = new ComponentBuilder();
             var sb = new SelectMenuBuilder()
@@ -89,7 +79,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("language-changed:*")]
         public async Task ChangedLanguageAsync(string _, string[] selectedLang)
         {
-            var @new = (await _translator.GetSupportedLanguagesAsync())
+            var @new = (await _service.GetSupportedLanguagesAsync()).SelectMany(x => x)
                 .First(x => x.Code == selectedLang[0]);
 
             if (@new.Code == Context.Member.PreferredLang.Split('|')[0])

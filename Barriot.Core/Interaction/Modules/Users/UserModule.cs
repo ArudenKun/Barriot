@@ -1,5 +1,6 @@
 ﻿using Barriot.Caching;
 using Barriot.Interaction.Attributes;
+using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules
 {
@@ -8,12 +9,12 @@ namespace Barriot.Interaction.Modules
     {
         private readonly IConfiguration _configuration;
 
-        private readonly UserCache _users;
+        private readonly UserService _service;
 
-        public UserModule(IConfiguration config, UserCache users)
+        public UserModule(IConfiguration config, UserService service)
         {
             _configuration = config;
-            _users = users;
+            _service = service;
         }
 
         [SlashCommand("user-info", "Gets information about a user.")]
@@ -26,7 +27,7 @@ namespace Barriot.Interaction.Modules
             var cb = new ComponentBuilder()
                 .WithButton("View avatar", $"avatar:{Context.User.Id},{user.Id}", ButtonStyle.Primary);
 
-            var rUser = await _users.GetOneAsync(user.Id);
+            var rUser = await _service.GetOneAsync(user.Id);
 
             if (!string.IsNullOrEmpty(rUser.BannerId))
                 cb.WithButton("View banner", $"banner:{Context.User.Id},{user.Id}", ButtonStyle.Primary);
@@ -73,7 +74,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("avatar:*,*")]
         public async Task AvatarAsync(ulong _, ulong targetId)
         {
-            var rUser = await _users.GetOneAsync(targetId);
+            var rUser = await _service.GetOneAsync(targetId);
 
             var eb = new EmbedBuilder()
                 .WithColor(Context.Member.Color)
@@ -89,7 +90,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("banner:*,*")]
         public async Task BannerAsync(ulong _, ulong targetId)
         {
-            var rUser = await _users.GetOneAsync(targetId);
+            var rUser = await _service.GetOneAsync(targetId);
 
             var eb = new EmbedBuilder()
                 .WithColor(Context.Member.Color)

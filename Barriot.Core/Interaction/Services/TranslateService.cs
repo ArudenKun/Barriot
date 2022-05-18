@@ -1,10 +1,10 @@
 ﻿using Barriot.API.Translation;
 
-namespace Barriot.Caching
+namespace Barriot.Interaction.Services
 {
-    public class TranslationCache
+    public class TranslateService
     {
-        private readonly ITranslateClient _client;
+        private readonly ITranslateClient _translator;
 
         private List<IEnumerable<LanguageData>>? _languages;
 
@@ -12,19 +12,19 @@ namespace Barriot.Caching
 
         private static readonly char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
-        public TranslationCache(ITranslateClient client)
+        public TranslateService(ITranslateClient client)
         {
             _lastCheck = DateTime.UtcNow;
-            _client = client;
+            _translator = client;
         }
 
-        public async Task<List<IEnumerable<LanguageData>>> GetAllLanguagesAsync()
+        public async Task<List<IEnumerable<LanguageData>>> GetSupportedLanguagesAsync()
         {
             if (_languages is null || _lastCheck > DateTime.UtcNow.AddDays(1))
             {
                 _lastCheck = DateTime.UtcNow;
 
-                var languages = await _client.GetSupportedLanguagesAsync();
+                var languages = await _translator.GetSupportedLanguagesAsync();
 
                 List<IEnumerable<LanguageData>> data = new();
 
@@ -39,5 +39,14 @@ namespace Barriot.Caching
             else
                 return _languages;
         }
+
+        public async Task<string> TranslateAsync(string target, string text)
+            => await _translator.TranslateAsync(x =>
+            {
+                x.ApiKey = "";
+                x.Source = "auto";
+                x.Target = target;
+                x.Text = text;
+            });
     }
 }

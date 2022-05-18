@@ -113,7 +113,7 @@ namespace Barriot.Interaction.Modules.Administration
             if (sarMessage is null)
                 return;
 
-            var channel = await Context.Client.GetChannelAsync(sarMessage.ChannelId);
+            var channel = await Context.Guild.GetChannelAsync(sarMessage.ChannelId);
 
             if (channel is null || channel is not RestTextChannel textChannel)
                 return; // user deleted channel
