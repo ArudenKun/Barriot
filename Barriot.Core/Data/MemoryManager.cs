@@ -4,7 +4,7 @@ namespace Barriot
 {
     public class MemoryManager
     {
-        private Dictionary<Guid, IMemoryEntity> _data;
+        private readonly Dictionary<Guid, IMemoryEntity> _data;
 
         public MemoryManager()
         {

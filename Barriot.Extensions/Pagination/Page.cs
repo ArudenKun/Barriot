@@ -7,14 +7,14 @@ namespace Barriot.Extensions.Pagination
         /// <summary>
         ///     The embed produced by this page.
         /// </summary>
-        public Embed Embed { get; set; }
+        public EmbedBuilder Embed { get; set; }
 
         /// <summary>
         ///     The components produced by this page.
         /// </summary>
-        public MessageComponent Component { get; set; }
+        public ComponentBuilder Component { get; set; }
 
-        internal Page(Embed embed, MessageComponent component)
+        internal Page(EmbedBuilder embed, ComponentBuilder component)
         {
             Embed = embed;
             Component = component;

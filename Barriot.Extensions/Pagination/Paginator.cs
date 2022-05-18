@@ -9,16 +9,11 @@ namespace Barriot.Extensions.Pagination
         private static Paginator<T>? instance;
 
         private readonly Func<T, FieldFormatter> _valueFormatter;
-        private readonly Func<object, EmbedBuilder>? _embedBuilder;
-        private readonly Func<object, ComponentBuilder>? _componentBuilder;
         private readonly string _customId;
 
-        internal Paginator(Func<T, FieldFormatter> valueFormatter, Func<object, EmbedBuilder>? eb, Func<object, ComponentBuilder>? cb, string customId)
+        internal Paginator(Func<T, FieldFormatter> valueFormatter, string customId)
         {
             _valueFormatter = valueFormatter;
-
-            _embedBuilder = eb;
-            _componentBuilder = cb;
             _customId = customId;
 
             instance = this;
@@ -28,9 +23,9 @@ namespace Barriot.Extensions.Pagination
         ///     Attempts to grab a page from the paginator.
         /// </summary>
         /// <param name="pageNumber">The page number to create a page for.</param>
-        /// <param name="wildCards">Wildcards to add to the custom Id's of this builder.</param>
+        /// <param name="entries">The entries for all pages.</param>
         /// <returns>A <see cref="Page"/> for the respective <paramref name="pageNumber"/></returns>
-        public Page GetPage(int pageNumber, List<T> entries, object parameter, params string[] wildCards)
+        public Page GetPage(int pageNumber, List<T> entries, params object[] wildCards)
         {
             var maxPages = (int)Math.Ceiling((double)(entries.Count / pageSize));
 
@@ -40,7 +35,7 @@ namespace Barriot.Extensions.Pagination
             if (index + pageSize >= entries.Count)
                 toGather = entries.Count - index;
 
-            var eb = (_embedBuilder?.Invoke(parameter) ?? new EmbedBuilder())
+            var eb = new EmbedBuilder()
                 .WithColor(Color.Blue);
 
             var range = entries.GetRange(index, toGather);
@@ -51,8 +46,9 @@ namespace Barriot.Extensions.Pagination
                 eb.AddField(formatter.Title, formatter.Value, formatter.DoInline);
             }
 
-            var cid = _customId + string.Join(',', wildCards);
-            var cb = (_componentBuilder?.Invoke(parameter) ?? new ComponentBuilder())
+            var cid = _customId + ":" + string.Join(',', wildCards);
+
+            var cb = new ComponentBuilder()
                 .WithButton(
                     label: "Previous page",
                     customId: cid + $",{pageNumber - 1}",
@@ -66,7 +62,7 @@ namespace Barriot.Extensions.Pagination
 
             eb.WithFooter($"Page {pageNumber}/{maxPages} | Barriot by Rozen.");
 
-            return new Page(eb.Build(), cb.Build());
+            return new Page(eb, cb); // continue
         }
 
         /// <summary>

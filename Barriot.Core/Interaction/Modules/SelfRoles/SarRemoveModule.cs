@@ -2,14 +2,26 @@
 {
     public class SarRemoveModule
     {
-        [ComponentInteraction("sar-removed-message:*")]
-        public async Task RemovedMessageAsync(ulong messageId)
+        [ComponentInteraction("sar-message-removing")]
+        public async Task RemovingMessageAsync()
         {
 
         }
 
-        [ComponentInteraction("sar-removed-role:*")]
-        public async Task RemovedRoleAsync(ulong roleId)
+        [ComponentInteraction("sar-removed-message:*")]
+        public async Task RemovedMessageAsync(ulong[] selectedValues)
+        {
+
+        }
+
+        [ComponentInteraction("sar-role-removing")]
+        public async Task RemovingRoleAsync()
+        {
+
+        }
+
+        [ComponentInteraction("sar-removed-role")]
+        public async Task RemovedRoleAsync(ulong[] selectedValues)
         {
 
         }

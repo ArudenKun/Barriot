@@ -64,6 +64,13 @@ namespace Barriot.Interaction.Modules
 
         [SlashCommand("reminders", "Lists your current reminders.")]
         public async Task ListRemindersAsync([Summary("page", "The reminders page")] int page = 1)
+            => await ListRemindersInternal(page);
+
+        [ComponentInteraction("reminders-list:*")]
+        public async Task ListRemindersFromExistingAsync(int page)
+            => await ListRemindersInternal(page);
+
+        private async Task ListRemindersInternal(int page)
         {
             var reminders = (await RemindEntity.GetManyAsync(Context.User)).ToEnumerable().ToList();
 
@@ -80,53 +87,16 @@ namespace Barriot.Interaction.Modules
                             return new($"{x.Expiration} (UTC)", x.Message ?? "No message set" + sendRepeat);
                         })
                         .WithCustomId("reminders-list")
-                        .WithComponents(x => new ComponentBuilder()
-                            .WithButton("Delete reminders", $"reminders-deleting:{x}", ButtonStyle.Secondary))
                         .Build();
                 }
                 var value = paginator.GetPage(page, reminders, Context.User.Id, Context.User.Id.ToString());
 
-                await RespondAsync(
-                    text: $":page_facing_up: **Your reminders:** You are able to set a total of {25} reminders, and are currently able to add {25 - reminders.Count} more.",
-                    embed: value.Embed,
-                    components: value.Component,
-                    ephemeral: Context.Member.DoEphemeral);
-            }
-            else
-                await RespondAsync(
-                    text: $":x: **You have no reminders!** Use ` /remind ` to set reminders.",
-                    ephemeral: true);
-        }
-
-        [DoUserCheck]
-        [ComponentInteraction("reminders-list:*,*")]
-        public async Task ListRemindersAsync(ulong _, int page)
-        {
-            var reminders = (await RemindEntity.GetManyAsync(Context.User)).ToEnumerable().ToList();
-
-            if (reminders.Any())
-            {
-                if (!Paginator<RemindEntity>.TryGet(out var paginator))
-                {
-                    paginator = new PaginatorBuilder<RemindEntity>()
-                        .WithPages(x =>
-                        {
-                            string sendRepeat = "";
-                            if (x.Frequency > 1)
-                                sendRepeat = $"\n⤷ *Set to repeat {x.Frequency} more time(s).";
-                            return new($"{x.Expiration} (UTC)", x.Message ?? "No message set" + sendRepeat);
-                        })
-                        .WithCustomId("reminders-list")
-                        .WithComponents(x => new ComponentBuilder()
-                            .WithButton("Delete reminders", $"reminders-deleting:{x}", ButtonStyle.Secondary))
-                        .Build();
-                }
-                var value = paginator.GetPage(page, reminders, Context.User.Id, Context.User.Id.ToString());
+                value.Component.WithButton("Delete reminders", $"reminders-deleting:{Context.User.Id}", ButtonStyle.Secondary);
 
                 await RespondAsync(
                     text: $":page_facing_up: **Your reminders:** You are able to set a total of {25} reminders, and are currently able to add {25 - reminders.Count} more.",
-                    embed: value.Embed,
-                    components: value.Component,
+                    embed: value.Embed.Build(),
+                    components: value.Component.Build(),
                     ephemeral: Context.Member.DoEphemeral);
             }
             else

@@ -10,10 +10,6 @@ namespace Barriot.Extensions.Pagination
     {
         private Func<T, FieldFormatter>? _valueFormatter;
 
-        private Func<object, EmbedBuilder>? _embedFormatter;
-
-        private Func<object, ComponentBuilder>? _compFormatter;
-
         private string _cid = string.Empty;
 
         /// <summary>
@@ -21,11 +17,11 @@ namespace Barriot.Extensions.Pagination
         /// </summary>
         /// <param name="builder">The embed builder to pass into the paginator builder.</param>
         /// <returns>The builder instance with a new embed builder.</returns>
-        public PaginatorBuilder<T> WithEmbed(Func<object, EmbedBuilder> builder)
-        {
-            _embedFormatter = builder;
-            return this;
-        }
+        //public PaginatorBuilder<T> WithEmbed(Func<object, EmbedBuilder> builder)
+        //{
+        //    _embedFormatter = builder;
+        //    return this;
+        //}
 
         /// <summary>
         ///     Adds a pagebuilder to the builder, which provides formatting for pages to be created.
@@ -54,11 +50,11 @@ namespace Barriot.Extensions.Pagination
         /// </summary>
         /// <param name="builder">The component builder to pass into the paginator builder.</param>
         /// <returns>The builder instance with a new component builder.</returns>
-        public PaginatorBuilder<T> WithComponents(Func<object, ComponentBuilder> builder)
-        {
-            _compFormatter = builder;
-            return this;
-        }
+        //public PaginatorBuilder<T> WithComponents(Func<object, ComponentBuilder> builder)
+        //{
+        //    _compFormatter = builder;
+        //    return this;
+        //}
 
         /// <summary>
         ///     Builds a paginator based on the values passed by previous calls to the paginatorbuilder.
@@ -72,7 +68,7 @@ namespace Barriot.Extensions.Pagination
             if (_cid is null)
                 throw new InvalidOperationException("The custom ID of a paginatorbuilder cannot be null.");
 
-            return new Paginator<T>(_valueFormatter, _embedFormatter, _compFormatter, _cid);
+            return new Paginator<T>(_valueFormatter, _cid);
         }
     }
 }

@@ -56,7 +56,7 @@
         {
             var range = ReturnAndPopulate();
 
-            return (filter != null)
+            return (filter is not null)
                 ? range?.Where(filter)
                 : range ?? null;
         }
