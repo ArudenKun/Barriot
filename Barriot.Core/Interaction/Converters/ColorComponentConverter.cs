@@ -1,10 +1,8 @@
-﻿using Discord;
-using Discord.Interactions;
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace Barriot.Extensions.Converters
+namespace Barriot.Interaction.Converters
 {
-    public class ColorConverter : ComponentTypeConverter<Color>
+    public class ColorComponentConverter : ComponentTypeConverter<Color>
     {
         public override Task<TypeConverterResult> ReadAsync(IInteractionContext context, IComponentInteractionData option, IServiceProvider services)
         {

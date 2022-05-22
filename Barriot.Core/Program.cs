@@ -62,7 +62,7 @@ service.AddTypeConverter<TimeSpan>(new TimeSpanConverter());
 service.AddTypeConverter<Calculation>(new CalculationConverter());
 
 service.AddComponentTypeConverter<TimeSpan>(new TimeSpanComponentConverter());
-service.AddComponentTypeConverter<Color>(new ColorConverter());
+service.AddComponentTypeConverter<Color>(new ColorComponentConverter());
 
 service.AddTypeReader<ObjectId>(new ObjectIdComponentConverter());
 service.AddTypeReader<Guid>(new Barriot.Interaction.Converters.GuidConverter());
