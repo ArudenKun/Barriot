@@ -2,6 +2,7 @@
 using Barriot.Extensions.Files;
 using Barriot.Extensions.Pagination;
 using Barriot.Interaction.Attributes;
+using MongoDB.Bson;
 
 namespace Barriot.Interaction.Modules
 {
@@ -35,30 +36,33 @@ namespace Barriot.Interaction.Modules
 
             else
             {
-                try
+                if (Context.Interaction.IsDMInteraction)
                 {
-                    var embed = new EmbedBuilder()
-                        .WithDescription(FileHelper.GetInfoFromFile(InfoType.ReminderCheckUp))
-                        .WithFooter("Make sure you keep your DM's open to receive it!")
-                        .WithColor(new Color(Context.Member.Color));
+                    try
+                    {
+                        var embed = new EmbedBuilder()
+                            .WithDescription(FileHelper.GetInfoFromFile(InfoType.ReminderCheckUp))
+                            .WithFooter("Make sure you keep your DM's open to receive it!")
+                            .WithColor(new Color(Context.Member.Color));
 
-                    await Context.User.SendMessageAsync(
-                        text: ":wave: **Hi, just checking up on you!**",
-                        embed: embed.Build());
+                        await Context.User.SendMessageAsync(
+                            text: ":wave: **Hi, just checking up on you!**",
+                            embed: embed.Build());
 
-                    await RemindEntity.CreateAsync(message, spanUntil, Context.User.Id, frequency, timeBetween);
-
-                    await RespondAsync(
-                        text: $":thumbsup: **Got it!** I will remind you to {message} in {spanUntil.ToReadable()}" +
-                        $"{((frequency > 1) ? $"\n\n> This reminder will repeat {frequency} time(s) every {timeBetween?.ToReadable()}." : "")}",
-                        ephemeral: Context.Member.DoEphemeral);
+                        await RemindEntity.CreateAsync(message, spanUntil, Context.User.Id, frequency, timeBetween);
+                    }
+                    catch
+                    {
+                        await RespondAsync(
+                            text: $":x: **Reminder creation failed!** {FileHelper.GetErrorFromFile(ErrorType.ReminderSendFailed)}",
+                            ephemeral: true);
+                    }
                 }
-                catch
-                {
-                    await RespondAsync(
-                        text: $":x: **Reminder creation failed!** {FileHelper.GetErrorFromFile(ErrorType.ReminderSendFailed)}",
-                        ephemeral: true);
-                }
+
+                await RespondAsync(
+                    text: $":thumbsup: **Got it!** I will remind you to {message} in {spanUntil.ToReadable()}" +
+                    $"{((frequency > 1) ? $"\n\n> This reminder will repeat {frequency} time(s) every {timeBetween?.ToReadable()}." : "")}",
+                    ephemeral: Context.Member.DoEphemeral);
             }
         }
 
@@ -89,15 +93,15 @@ namespace Barriot.Interaction.Modules
                         .WithCustomId("reminders-list")
                         .Build();
                 }
-                var value = paginator.GetPage(page, reminders, Context.User.Id, Context.User.Id.ToString());
+                var value = paginator.GetPage(page, reminders);
 
-                value.Component.WithButton("Delete reminders", $"reminders-deleting:{Context.User.Id}", ButtonStyle.Secondary);
+                value.Component.WithButton("Delete reminders from this page", $"reminders-deleting:{page}", ButtonStyle.Secondary);
 
                 await RespondAsync(
-                    text: $":page_facing_up: **Your reminders:** You are able to set a total of {25} reminders, and are currently able to add {25 - reminders.Count} more.",
+                    text: $":page_facing_up: **Your reminders:**",
                     embed: value.Embed.Build(),
                     components: value.Component.Build(),
-                    ephemeral: Context.Member.DoEphemeral);
+                    ephemeral: true);
             }
             else
                 await RespondAsync(
@@ -105,63 +109,65 @@ namespace Barriot.Interaction.Modules
                     ephemeral: true);
         }
 
-        [DoUserCheck]
         [ComponentInteraction("reminders-deleting:*")]
-        public async Task DeletingRemindersAsync(ulong _)
+        public async Task DeletingRemindersAsync(int page)
         {
             var selection = (await RemindEntity.GetManyAsync(Context.User))
                 .ToEnumerable()
                 .ToList();
 
             if (!selection.Any())
-                await RespondAsync(
-                    text: ":x: **You have no reminders to delete!**",
-                    ephemeral: true);
+                await UpdateAsync(
+                    text: ":x: **You have no reminders to delete!**");
 
             else
             {
                 var sb = new SelectMenuBuilder()
                     .WithMinValues(1)
-                    .WithMaxValues(selection.Count)
-                    .WithCustomId($"reminders-deleted:{Context.User.Id}")
+                    .WithCustomId("reminders-deleted")
                     .WithPlaceholder("Select 1 or more reminders to delete.");
 
-                for (int i = 0; i < selection.Count; i++)
-                    sb.AddOption(selection[i].Expiration.ToString(), i.ToString(), selection[i].Message.Reduce(100));
+                int index = page * 10 - 10;
+
+                var range = selection.GetRange(index, selection.Count - index);
+                for (int i = 0; i < range.Count; i++)
+                {
+                    if (i == 10)
+                        break;
+                    sb.AddOption(range[i].Expiration.ToString(), range[i].ObjectId.ToString(), range[i].Message.Reduce(100));
+                }
+
+                sb.WithMaxValues(sb.Options.Count);
 
                 var cb = new ComponentBuilder()
                     .WithSelectMenu(sb);
 
-                await RespondAsync(
+                await UpdateAsync(
                     text: ":wastebasket: **Delete reminders:** *Select the reminders you want to delete in the dropdown below.*",
-                    components: cb.Build(),
-                    ephemeral: Context.Member.DoEphemeral);
+                    components: cb.Build());
             }
         }
 
-        [DoUserCheck]
-        [ComponentInteraction("reminders-deleted:*")]
-        public async Task DeletedRemindersAsync(ulong _, string[] selectedReminders)
+        [ComponentInteraction("reminders-deleted")]
+        public async Task DeletedRemindersAsync(ObjectId[] selectedReminders)
         {
             var selection = (await RemindEntity.GetManyAsync(Context.User)).ToEnumerable().ToList();
 
             if (!selection.Any())
-                await RespondAsync(text: ":x: **You have no reminders to delete!**",
-                    ephemeral: true);
+                await UpdateAsync(text: ":x: **You have no reminders to delete!**");
 
             else
             {
                 foreach (var value in selectedReminders)
                 {
-                    if (!int.TryParse(value, out int parsed))
-                        continue;
+                    var reminder = selection.First(x => x.ObjectId == value);
 
-                    else
-                        await selection[parsed].DeleteAsync();
+                    if (reminder is not null)
+                        await reminder.DeleteAsync();
                 }
-                await RespondAsync(
-                    text: $":white_check_mark: **Succesfully removed {selectedReminders.Length} reminder(s).",
-                    ephemeral: Context.Member.DoEphemeral);
+                await UpdateAsync(
+                    text: $":white_check_mark: **Succesfully removed {selectedReminders.Length} reminder(s).**",
+                    components: new ComponentBuilder().Build());
             }
         }
     }

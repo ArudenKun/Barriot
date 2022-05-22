@@ -34,7 +34,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             await RespondWithModalAsync(mb.Build());
         }
 
-        [ComponentInteraction("sar-message-channel-confirm")]
+        [ModalInteraction("sar-message-channel-confirm")]
         public async Task NewMessageChannelConfirmAsync(QueryModal<string> modal)
         {
             if (!ulong.TryParse(modal.Result, out var channelId))
@@ -93,7 +93,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             await RespondWithModalAsync(mb.Build());
         }
 
-        [ComponentInteraction("sar-new-message-confirm")]
+        [ModalInteraction("sar-new-message-confirm")]
         public async Task ConfirmNewMessageAsync(QueryModal<string> modal)
         {
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
@@ -182,7 +182,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         public async Task FormatQueryAsync(bool button)
             => await RespondWithModalAsync<SarMakeModal>($"sar-from-message-confirm:{button}");
 
-        [ComponentInteraction("sar-from-message-confirm:*,*")]
+        [ModalInteraction("sar-from-message-confirm:*,*")]
         public async Task ConfirmFromMessageAsync(bool button, SarMakeModal modal)
         {
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)

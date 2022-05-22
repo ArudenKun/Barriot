@@ -5,9 +5,6 @@
         public string Title
             => "Set embed color";
 
-        /// <summary>
-        ///     The color the user picked.
-        /// </summary>
         [InputLabel("Please choose a hex color.")]
         [ModalTextInput(customId: "embed-color", style: TextInputStyle.Short, placeholder: "#11806A", minLength: 1, maxLength: 7)]
         public Color Color { get; set; } = Color.Default;

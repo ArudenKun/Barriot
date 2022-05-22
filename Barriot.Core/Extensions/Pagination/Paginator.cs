@@ -27,7 +27,7 @@ namespace Barriot.Extensions.Pagination
         /// <returns>A <see cref="Page"/> for the respective <paramref name="pageNumber"/></returns>
         public Page GetPage(int pageNumber, List<T> entries, params object[] wildCards)
         {
-            var maxPages = (int)Math.Ceiling((double)(entries.Count / pageSize));
+            var maxPages = (int)Math.Ceiling((double)entries.Count / pageSize);
 
             var index = (pageNumber * pageSize) - pageSize;
 
