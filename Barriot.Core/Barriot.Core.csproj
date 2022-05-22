@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Barriot.Extensions\Barriot.Extensions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="Discord" />
     <Using Include="Discord.Rest" />
     <Using Include="Discord.Interactions" />

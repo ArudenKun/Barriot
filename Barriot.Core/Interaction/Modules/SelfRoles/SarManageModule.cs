@@ -15,6 +15,11 @@ namespace Barriot.Interaction.Modules.Administration
             var cb = new ComponentBuilder()
                 .WithButton("Add new SAR message", "sar-new-message", ButtonStyle.Primary)
                 .WithButton("Manage messages", "sar-messages-manage:1", ButtonStyle.Secondary);
+
+            await RespondAsync(
+                text: ":bar_chart: **Manage self-assign roles (SAR) in this server.** Please choose any of the below options.",
+                components: cb.Build(),
+                ephemeral: true);
         }
 
         [ComponentInteraction("sar-messages-manage:*")]
@@ -32,6 +37,11 @@ namespace Barriot.Interaction.Modules.Administration
             var value = paginator.GetPage(page, guild.SelfRoleMessages);
 
             value.Component.WithButton("Modify a message from this page", $"sar-message-select:{page}", ButtonStyle.Secondary);
+
+            await UpdateAsync(
+                text: ":newspaper: **Manage your current SAR messages.**",
+                components: value.Component.Build(),
+                embed: value.Embed.Build());
         }
 
         [ComponentInteraction("sar-message-select:*")]
@@ -57,6 +67,10 @@ namespace Barriot.Interaction.Modules.Administration
 
             var cb = new ComponentBuilder()
                 .WithSelectMenu(sb);
+
+            await UpdateAsync(
+                text: ":pen_fountain: **Select a message to edit it's self-assign roles or content.**",
+                components: cb.Build());
         }
 
         [ComponentInteraction("sar-message-selected")]
@@ -90,6 +104,11 @@ namespace Barriot.Interaction.Modules.Administration
             value.Component.WithButton("Remove role from this page", $"sar-role-removing:{messageId},{page}", ButtonStyle.Danger);
 
             var link = $"https://discord.com/channels/{Context.Guild.Id}/{message.ChannelId}/{message.MessageId}";
+
+            await UpdateAsync(
+                text: ":scroll: **Manage roles on this message.** Please select one of the below options to manage individual roles or this message's content.",
+                embed: value.Embed.Build(),
+                components: value.Component.Build());
         }
 
         [ComponentInteraction("sar-message-editing:*")]
@@ -124,6 +143,9 @@ namespace Barriot.Interaction.Modules.Administration
                 return;
 
             await userMessage.ModifyAsync(x => x.Content = modal.Result);
+
+            await UpdateAsync(
+                text: ":white_check_mark: **Succesfully modified message content!**");
         }
     }
 }

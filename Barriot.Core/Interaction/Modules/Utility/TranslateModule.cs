@@ -1,6 +1,4 @@
-﻿using Barriot.API.Translation;
-using Barriot.Caching;
-using Barriot.Interaction.Attributes;
+﻿using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules

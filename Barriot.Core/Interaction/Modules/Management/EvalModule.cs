@@ -168,7 +168,7 @@ namespace Barriot.Interaction.Modules
                 }
 
                 var eb = new EmbedBuilder()
-                    .WithColor(Context.UserData.Color)
+                    .WithColor(Context.Member.Color)
                     .WithDescription($"```cs\n{script}\n```")
                     .AddField("Result:", context.Result ?? "None.")
                     .AddField("Compile time:", $"{compileTime.Milliseconds} ms ({compileTime.Ticks} ms/t)")

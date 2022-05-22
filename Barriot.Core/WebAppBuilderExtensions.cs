@@ -1,5 +1,4 @@
-﻿using Barriot.Caching;
-using Barriot.Interaction;
+﻿using Barriot.Interaction;
 using Barriot.Models;
 
 namespace Barriot.Extensions
@@ -24,45 +23,6 @@ namespace Barriot.Extensions
         /// <returns>The currrent <see cref="IApplicationBuilder"/> instance with the middleware configuration set.</returns>
         public static IApplicationBuilder RedirectVotes(this IApplicationBuilder builder, string path, string vak)
             => builder.MapWhen(ctx => ctx.Request.Path == path && ctx.Request.Method == "POST", app => app.UseMiddleware<VotingMiddleware>(vak));
-
-        /// <summary>
-        ///     Generates the starting time of the application once the ASP instance is started, and is kept in services until the app shuts down.
-        /// </summary>
-        /// <param name="services">The current <see cref="IServiceCollection"/> instance.</param>
-        /// <returns>The current <see cref="IServiceCollection"/> with the <see cref="UptimeTracker"/> included.</returns>
-        public static IServiceCollection WithUptimeTracker(this IServiceCollection services)
-        {
-            var appStart = new UptimeTracker();
-
-            return services.AddSingleton(appStart);
-        }
-
-        /// <summary>
-        ///     Sets up caching for any guilds Barriot has access to and can converse with. 
-        ///     Calls to the API shouldn't be made frequently, and this prevents just that.
-        /// </summary>
-        /// <param name="services">The current <see cref="IServiceCollection"/> instance.</param>
-        /// <returns>The current <see cref="IServiceCollection"/> with the <see cref="GuildCache"/> included.</returns>
-        public static IServiceCollection WithGuildCaching(this IServiceCollection services)
-            => services.AddSingleton<GuildCache>();
-
-        /// <summary>
-        ///     Sets up caching for any users Barriot communicates with. 
-        ///     Calls to the API shouldn't be made frequently, and this prevents just that.
-        /// </summary>
-        /// <param name="services">The current <see cref="IServiceCollection"/> instance.</param>
-        /// <returns>The current <see cref="IServiceCollection"/> with the <see cref="UserCache"/> included.</returns>
-        public static IServiceCollection WithUserCaching(this IServiceCollection services)
-            => services.AddSingleton<UserCache>();
-
-        /// <summary>
-        ///     Sets up caching for all languages in the LibreLang translate book.
-        ///     Calls to the API are reduced and languages are sorted at a lower level so all languages can be included in multiple dropdown menu's.
-        /// </summary>
-        /// <param name="services">The current <see cref="IServiceCollection"/> instance.</param>
-        /// <returns>The current <see cref="IServiceCollection"/> with the <see cref="TranslationCache"/> included.</returns>
-        public static IServiceCollection WithTranslationCaching(this IServiceCollection services)
-            => services.AddSingleton<TranslationCache>();
 
         /// <summary>
         ///     Adds the interaction service alongside its respective configuration to the service collection.

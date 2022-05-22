@@ -2,9 +2,10 @@ using Barriot;
 using Barriot.API.Translation;
 using Barriot.Data;
 using Barriot.Extensions;
-using Barriot.Extensions.Converters;
 using Barriot.Extensions.Models;
 using Barriot.Interaction;
+using Barriot.Interaction.Converters;
+using Barriot.Interaction.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -30,10 +31,6 @@ builder.Services.AddLogging();
 builder.Services.AddSingleton(client);
 builder.Services.AddInteractionService();
 
-builder.Services.WithUptimeTracker();
-builder.Services.WithGuildCaching();
-builder.Services.WithUserCaching();
-
 builder.Services.AddSingleton(new MongoClient(new MongoUrlBuilder(
     builder.Configuration["DbToken"])
     .ToMongoUrl()));
@@ -44,16 +41,16 @@ builder.Services.AddHttpClient<ITranslateClient, TranslateClient>(client =>
     client.BaseAddress = new Uri(builder.Configuration["TranslateAPI"]);
 });
 
-//builder.Services.AddHttpClient<IVoteClient, VoteClient>(client =>
-//{
-//    client.BaseAddress = new Uri(builder.Configuration["VoteAPI"]);
-//    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Authorization", builder.Configuration["VoteAPIKey"]);
-//});
-
-// Add the operators
+// Add logic management
 builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddSingleton<ClientManager>();
 builder.Services.AddSingleton<PostExecutionHandler>();
+
+// Add services
+builder.Services.AddSingleton<InfoService>();
+builder.Services.AddSingleton<SarMakeService>();
+builder.Services.AddSingleton<TranslateService>();
+builder.Services.AddSingleton<UserService>();
 
 // Create the application.
 var app = builder.Build();
@@ -68,7 +65,7 @@ service.AddComponentTypeConverter<TimeSpan>(new TimeSpanComponentConverter());
 service.AddComponentTypeConverter<Color>(new ColorConverter());
 
 service.AddTypeReader<ObjectId>(new ObjectIdComponentConverter());
-service.AddTypeReader<Guid>(new Barriot.Extensions.Converters.GuidConverter());
+service.AddTypeReader<Guid>(new Barriot.Interaction.Converters.GuidConverter());
 
 // Register all modules.
 await service.AddModulesAsync(typeof(Program).Assembly, app.Services);
