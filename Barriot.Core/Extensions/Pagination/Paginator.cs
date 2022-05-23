@@ -1,6 +1,4 @@
-﻿using Discord;
-
-namespace Barriot.Extensions.Pagination
+﻿namespace Barriot.Extensions.Pagination
 {
     public class Paginator<T>
     {
@@ -8,10 +6,10 @@ namespace Barriot.Extensions.Pagination
 
         private static Paginator<T>? instance;
 
-        private readonly Func<T, FieldFormatter> _valueFormatter;
+        private readonly Func<T, PageFormatter> _valueFormatter;
         private readonly string _customId;
 
-        internal Paginator(Func<T, FieldFormatter> valueFormatter, string customId)
+        internal Paginator(Func<T, PageFormatter> valueFormatter, string customId)
         {
             _valueFormatter = valueFormatter;
             _customId = customId;
@@ -28,6 +26,9 @@ namespace Barriot.Extensions.Pagination
         public Page GetPage(int pageNumber, List<T> entries, params object[] wildCards)
         {
             var maxPages = (int)Math.Ceiling((double)entries.Count / pageSize);
+
+            if (pageNumber > maxPages)
+                pageNumber = maxPages;
 
             var index = (pageNumber * pageSize) - pageSize;
 
@@ -46,17 +47,23 @@ namespace Barriot.Extensions.Pagination
                 eb.AddField(formatter.Title, formatter.Value, formatter.DoInline);
             }
 
-            var cid = _customId + ":" + string.Join(',', wildCards);
+            var cid = _customId + ":";
+
+            if (wildCards.Any())
+                cid += string.Join(',', wildCards) + ",";
+
+            Console.WriteLine(cid);
+            Console.WriteLine(cid + $"{pageNumber + 1}");
 
             var cb = new ComponentBuilder()
                 .WithButton(
                     label: "Previous page",
-                    customId: cid + $",{pageNumber - 1}",
+                    customId: cid + $"{pageNumber - 1}",
                     style: ButtonStyle.Danger,
                     disabled: pageNumber <= 1)
                 .WithButton(
                     label: "Next page",
-                    customId: cid + $",{pageNumber + 1}",
+                    customId: cid + $"{pageNumber + 1}",
                     style: ButtonStyle.Primary,
                     disabled: pageNumber >= maxPages);
 

@@ -36,7 +36,7 @@ namespace Barriot.Interaction.Modules
 
             else
             {
-                if (Context.Interaction.IsDMInteraction)
+                if (!Context.Interaction.IsDMInteraction)
                 {
                     try
                     {
@@ -72,10 +72,15 @@ namespace Barriot.Interaction.Modules
 
         [ComponentInteraction("reminders-list:*")]
         public async Task ListRemindersFromExistingAsync(int page)
-            => await ListRemindersInternal(page);
+        {
+            await ListRemindersInternal(page);
+        }
 
         private async Task ListRemindersInternal(int page)
         {
+            if (page < 1)
+                page = 1;
+
             var reminders = (await RemindEntity.GetManyAsync(Context.User)).ToEnumerable().ToList();
 
             if (reminders.Any())

@@ -1,6 +1,6 @@
 ﻿namespace Barriot.Extensions.Pagination
 {
-    public class FieldFormatter
+    public class PageFormatter
     {
         /// <summary>
         ///     The title of the field in this formatter.
@@ -12,6 +12,9 @@
         /// </summary>
         public string Value { get; set; }
 
+        /// <summary>
+        ///     If the fields should be inlined.
+        /// </summary>
         public bool DoInline { get; set; }
 
         /// <summary>
@@ -20,7 +23,7 @@
         /// <param name="title">The title of the embed field.</param>
         /// <param name="value">The value of the embed field.</param>
         /// <param name="doInline">Wether to format the field inline or not.</param>
-        public FieldFormatter(string title, string value, bool doInline = false)
+        public PageFormatter(string title, string value, bool doInline = false)
         {
             Title = title;
             Value = value;

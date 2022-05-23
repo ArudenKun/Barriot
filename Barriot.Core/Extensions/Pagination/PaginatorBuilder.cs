@@ -8,7 +8,7 @@ namespace Barriot.Extensions.Pagination
     /// <typeparam name="T">The argument for which a paginator should be created.</typeparam>
     public class PaginatorBuilder<T>
     {
-        private Func<T, FieldFormatter>? _valueFormatter;
+        private Func<T, PageFormatter>? _valueFormatter;
 
         private string _cid = string.Empty;
 
@@ -28,7 +28,7 @@ namespace Barriot.Extensions.Pagination
         /// </summary>
         /// <param name="fieldFormatter">The method in which the fields will be formatted.</param>
         /// <returns>The builder instance with a page builder included.</returns>
-        public PaginatorBuilder<T> WithPages(Func<T, FieldFormatter> fieldFormatter)
+        public PaginatorBuilder<T> WithPages(Func<T, PageFormatter> fieldFormatter)
         {
             _valueFormatter = fieldFormatter;
             return this;
