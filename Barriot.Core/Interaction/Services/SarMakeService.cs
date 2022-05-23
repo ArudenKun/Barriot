@@ -6,8 +6,12 @@
 
         private readonly System.Timers.Timer _timer;
 
-        public SarMakeService()
+        private readonly SarManageService _manageService;
+
+        public SarMakeService(SarManageService service)
         {
+            _manageService = service;
+
             _timer = new(900000)
             {
                 AutoReset = true,
@@ -38,6 +42,14 @@
                 _dataCache[userId] = new(message);
             else
                 _dataCache.Add(userId, new(message));
+        }
+
+        public void CreateFromManageCache(ulong userId, ulong messageId)
+        {
+            if (!_manageService.TryGetData(messageId, out var message))
+                throw new InvalidOperationException();
+
+            CreateFromMessage(userId, message);
         }
 
         public bool TryAddData(ulong userId, Action<SarCreationArgs> action)

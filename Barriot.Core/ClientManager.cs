@@ -65,28 +65,24 @@ namespace Barriot
             var now = DateTime.UtcNow;
             var reminders = await RemindEntity.GetManyAsync(now);
 
-            await foreach (var reminder in reminders)
+            foreach (var reminder in reminders) // comes in at 1
             {
-                if (reminder.Frequency <= 0)
-                    await reminder.DeleteAsync();
+                reminder.Frequency--; // decrease frequency, now 0
+                reminder.Expiration += reminder.SpanToRepeat; // irrelevant to later check.
 
-                else
+                var user = await _client.GetUserAsync(reminder.UserId);
+
+                try
                 {
-                    reminder.Frequency--;
-                    reminder.Expiration += reminder.SpanToRepeat;
-
-                    var user = await _client.GetUserAsync(reminder.UserId);
-
-                    try
-                    {
-                        await user.SendMessageAsync($":alarm_clock: **Reminder!**\n\n> {reminder.Message}");
-                        await reminder.UpdateAsync();
-                    }
-                    catch
-                    {
-                        await reminder.UpdateAsync();
-                    }
+                    await user.SendMessageAsync($":alarm_clock: **Reminder!**\n\n> {reminder.Message}");
                 }
+                catch
+                {
+                    _logger.LogDebug("Failed to send reminder for: {} ({}) due to sharing no mutual guilds to send messages from.", user.Id, user.ToString());
+                }
+
+                if (reminder.Frequency <= 0) // if 0 or lower, delete.
+                    await reminder.DeleteAsync();
             }
 
             await PollEntity.DeleteManyAsync(now);

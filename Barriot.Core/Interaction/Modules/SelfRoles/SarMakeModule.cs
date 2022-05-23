@@ -13,7 +13,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         }
 
         [ComponentInteraction("sar-new-message")]
-        public async Task MakeNewMessageAsync()
+        public async Task NewMessageAsync()
         {
             var cb = new ComponentBuilder()
                 .WithButton("Start message creation", "sar-new-message-channel", ButtonStyle.Primary);
@@ -24,7 +24,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         }
 
         [ComponentInteraction("sar-new-message-channel")]
-        public async Task CheckNewMessageChannelAsync()
+        public async Task FindingChannelAsync()
         {
             var mb = new ModalBuilder()
                 .WithTitle("Specify message channel:")
@@ -35,7 +35,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         }
 
         [ModalInteraction("sar-message-channel-confirm")]
-        public async Task NewMessageChannelConfirmAsync(QueryModal<string> modal)
+        public async Task ChannelFoundAsync(QueryModal<string> modal)
         {
             if (!ulong.TryParse(modal.Result, out var channelId))
             {
@@ -83,7 +83,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         }
 
         [ComponentInteraction("sar-new-message-creating")]
-        public async Task CreatingNewMessageAsync()
+        public async Task CreateContentAsync()
         {
             var mb = new ModalBuilder()
                 .WithTitle("Write the message you want to use:")
@@ -94,7 +94,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         }
 
         [ModalInteraction("sar-new-message-confirm")]
-        public async Task ConfirmNewMessageAsync(QueryModal<string> modal)
+        public async Task CreatedContentAsync(QueryModal<string> modal)
         {
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
@@ -119,9 +119,16 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 .WithButton("Format as embed", $"sar-from-message-defined:{true}", ButtonStyle.Secondary)
                 .WithButton("Format as text", $"sar-from-message-defined:{false}", ButtonStyle.Secondary);
 
-            await UpdateAsync(
+            var eb = new EmbedBuilder()
+                .WithTitle("Message content:")
+                .WithColor(Color.Blue)
+                .WithDescription(modal.Result);
+
+            await RespondAsync(
                 text: ":question: **How do you want to format your message?**",
-                components: cb.Build());
+                embed: eb.Build(),
+                components: cb.Build(),
+                ephemeral: true);
         }
 
         [ComponentInteraction("sar-from-message-defined:*")]
@@ -143,38 +150,21 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 .WithButton("Drop-down", $"sar-from-message-format:{false}", ButtonStyle.Secondary);
 
             await UpdateAsync(
-                text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready, by pressing an option, the creation menu will open.",
+                text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready, by pressing an option, the creation menu will open.*",
                 components: cb.Build());
         }
 
-        [ComponentInteraction("sar-from-message-source:*,*")]
+        [ComponentInteraction("sar-from-message-source:*")]
         public async Task MessageSourceAsync(ulong messageId)
         {
-            var guild = await GuildEntity.GetAsync(Context.Guild.Id);
-
-            var sarMessage = guild.SelfRoleMessages.First(x => x.MessageId == messageId);
-
-            if (sarMessage is null)
-                return;
-
-            var channel = await Context.Guild.GetChannelAsync(sarMessage.ChannelId);
-
-            if (channel is null || channel is not RestTextChannel textChannel)
-                return; // user deleted channel
-
-            var message = await textChannel.GetMessageAsync(messageId);
-
-            if (message is null || message is not RestUserMessage userMessage)
-                return;
-
-            _service.CreateFromMessage(Context.User.Id, userMessage);
+            _service.CreateFromManageCache(Context.User.Id, messageId);
 
             var cb = new ComponentBuilder()
                 .WithButton("Button", $"sar-from-message-format:{true}", ButtonStyle.Secondary)
                 .WithButton("Drop-down", $"sar-from-message-format:{false}", ButtonStyle.Secondary);
 
             await UpdateAsync(
-                text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready, by pressing an option, the creation menu will open.",
+                text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready, by pressing an option, the creation menu will open.*",
                 components: cb.Build());
         }
 
@@ -182,7 +172,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
         public async Task FormatQueryAsync(bool button)
             => await RespondWithModalAsync<SarMakeModal>($"sar-from-message-confirm:{button}");
 
-        [ModalInteraction("sar-from-message-confirm:*,*")]
+        [ModalInteraction("sar-from-message-confirm:*")]
         public async Task ConfirmFromMessageAsync(bool button, SarMakeModal modal)
         {
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
@@ -211,8 +201,6 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 return;
             }
 
-            var guild = await GuildEntity.GetAsync(Context.Guild.Id);
-
             var message = args.Message;
 
             if (message is null)
@@ -229,7 +217,10 @@ namespace Barriot.Interaction.Modules.SelfRoles
                     embed: eb?.Build());
             }
 
-            var name = modal.Label ?? role.Name;
+            var name = string.IsNullOrEmpty(modal.Label) 
+                ? role.Name 
+                : modal.Label;
+
             var cb = message.Components.Any() 
                 ? ComponentBuilder.FromMessage(message) 
                 : new();
@@ -249,13 +240,12 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 var sb = new SelectMenuBuilder()
                     .WithCustomId("sar-from-menu")
                     .WithMinValues(1)
-                    .WithMaxValues(1)
                     .WithPlaceholder("Select a (or more) roles to remove/add.");
 
-                if (cb.ActionRows.Any())
+                if (cb.ActionRows is not null && cb.ActionRows.Any())
                 {
                     var rows = cb.ActionRows.Where(x => x.Components.Any(x => x is SelectMenuComponent));
-                    if (rows.Any())
+                    if (rows is not null && rows.Any())
                     {
                         actionRow = rows.First();
                         sb = (actionRow.Components.First() as SelectMenuComponent)!.ToBuilder();
@@ -277,8 +267,8 @@ namespace Barriot.Interaction.Modules.SelfRoles
 
                 actionRow.AddComponent(sb.WithMaxValues(sb.Options.Count).Build());
 
+                cb.ActionRows = new();
                 cb.ActionRows.Add(actionRow);
-
                 cb.ActionRows = cb.ActionRows.OrderBy(x => x.Components.Count).ToList();
 
                 await message.ModifyAsync(x =>
@@ -287,8 +277,13 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 });
             }
 
-            await UpdateAsync(
-                text: $":white_check_mark: **Succesfully added SAR to message.**\n\n> Link: https://discord.com/channels/{Context.Guild.Id}/{args.Channel.Id}/{message.Id}");
+            var link = $"https://discord.com/channels/{Context.Guild.Id}/{args.Channel.Id}/{message.Id}";
+
+            _service.TryRemoveData(Context.User.Id);
+
+            await RespondAsync(
+                text: $":white_check_mark: **Succesfully added SAR to message.**\n\n> Link: {link}",
+                ephemeral: true);
         }
     }
 }

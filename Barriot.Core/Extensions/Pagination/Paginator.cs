@@ -52,9 +52,6 @@
             if (wildCards.Any())
                 cid += string.Join(',', wildCards) + ",";
 
-            Console.WriteLine(cid);
-            Console.WriteLine(cid + $"{pageNumber + 1}");
-
             var cb = new ComponentBuilder()
                 .WithButton(
                     label: "Previous page",

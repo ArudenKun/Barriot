@@ -1,6 +1,8 @@
 ﻿using Barriot.Interaction.Attributes;
 using Barriot.Extensions.Pagination;
 using Barriot.Interaction.Modals;
+using Barriot.Extensions;
+using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules.Administration
 {
@@ -9,12 +11,19 @@ namespace Barriot.Interaction.Modules.Administration
     [IgnoreBlacklistedUsers]
     public class SarManageModule : BarriotModuleBase
     {
+        private readonly SarManageService _service;
+
+        public SarManageModule(SarManageService service)
+        {
+            _service = service;
+        }
+
         [SlashCommand("self-roles", "Manage self-assign roles for this guild.")]
         public async Task ManageAsync()
         {
             var cb = new ComponentBuilder()
                 .WithButton("Add new SAR message", "sar-new-message", ButtonStyle.Primary)
-                .WithButton("Manage messages", "sar-messages-manage:1", ButtonStyle.Secondary);
+                .WithButton("Edit a SAR message", "sar-message-manage", ButtonStyle.Secondary);
 
             await RespondAsync(
                 text: ":bar_chart: **Manage self-assign roles (SAR) in this server.** Please choose any of the below options.",
@@ -22,97 +31,69 @@ namespace Barriot.Interaction.Modules.Administration
                 ephemeral: true);
         }
 
-        [ComponentInteraction("sar-messages-manage:*")]
-        public async Task ManageMessagesAsync(int page)
+        [ComponentInteraction("sar-message-manage")]
+        public async Task FindingMessageAsync()
         {
-            var guild = await GuildEntity.GetAsync(Context.Guild.Id);
+            var mb = new ModalBuilder()
+                .WithCustomId("sar-message-view")
+                .WithTitle("Manage an existing SAR message:")
+                .AddTextInput("Message link:", "entry", TextInputStyle.Short);
 
-            if (!Paginator<SelfAssignMessage>.TryGet(out var paginator))
-            {
-                paginator = new PaginatorBuilder<SelfAssignMessage>()
-                    .WithCustomId("sar-messages-manage")
-                    .WithPages(x => new($"{x.MessageId}", $"In channel: <#{x.ChannelId}> ({x.AssignRoles.Count} roles)"))
-                    .Build();
-            }
-            var value = paginator.GetPage(page, guild.SelfRoleMessages);
-
-            value.Component.WithButton("Modify a message from this page", $"sar-message-select:{page}", ButtonStyle.Secondary);
-
-            await UpdateAsync(
-                text: ":newspaper: **Manage your current SAR messages.**",
-                components: value.Component.Build(),
-                embed: value.Embed.Build());
+            await RespondWithModalAsync(mb.Build());
         }
 
-        [ComponentInteraction("sar-message-select:*")]
-        public async Task SelectMessageAsync(int page)
+        [ModalInteraction("sar-message-view")]
+        public async Task ManageMessageAsync(QueryModal<string> modal)
         {
-            var guild = await GuildEntity.GetAsync(Context.Guild.Id);
-
-            var sb = new SelectMenuBuilder()
-                .WithMinValues(1)
-                .WithMaxValues(1)
-                .WithCustomId("sar-message-selected")
-                .WithPlaceholder("Please select a message to edit.");
-
-            int index = page * 10 - 10;
-
-            var range = guild.SelfRoleMessages.GetRange(index, guild.SelfRoleMessages.Count - index);
-            for (int i = 0; i < range.Count; i++)
+            if (!modal.Result.TryGetLinkData(out var data))
             {
-                if (i == 10)
-                    break;
-                sb.AddOption($"ID: {range[i].MessageId}", $"{range[i].MessageId}", $"From channel: <#{range[i].ChannelId}>");
+                await RespondAsync(
+                    text: ":x: **Input link is not a Discord message link!**",
+                    ephemeral: true);
+                return;
             }
 
+            var channel = await Context.Guild.GetChannelAsync(data[1]);
+
+            if (channel is null || channel is not RestTextChannel textChannel)
+            {
+                await RespondAsync(
+                    text: ":x: **The message link does not lead to a usable/viewable channel.**",
+                    ephemeral: true);
+                return;
+            }
+
+            var message = await textChannel.GetMessageAsync(data[2]);
+
+            if (message is null || message is not RestUserMessage userMessage)
+            {
+                await RespondAsync(
+                    text: ":x: **The message link does not lead to a usable message.**",
+                    ephemeral: true);
+                return;
+            }
+
+            if (userMessage.Interaction is not null || userMessage.Author.Id != Context.Client.CurrentUser.Id)
+            {
+                await RespondAsync(
+                    text: ":x: **This message is not a valid self-assign role message!** *The message has to be created by Barriot and not be part of an interaction.*",
+                    ephemeral: true);
+                return;
+            }
+
+            _service.CreateFromMessage(userMessage.Id, userMessage);
+
             var cb = new ComponentBuilder()
-                .WithSelectMenu(sb);
+                .WithButton("Add new role to message", $"sar-from-message-source:{userMessage.Id}", ButtonStyle.Success)
+                .WithButton("Modify message content", $"sar-message-editing:{userMessage.Id}", ButtonStyle.Secondary);
 
             await UpdateAsync(
-                text: ":pen_fountain: **Select a message to edit it's self-assign roles or content.**",
+                text: ":scroll: **Manage this message.** *Please select one of the below options to add a role or modify this message's content.*",
                 components: cb.Build());
         }
 
-        [ComponentInteraction("sar-message-selected")]
-        public async Task ManageSingleMessageAsync(ulong[] selectedValues)
-            => await ManageSingleMessageInternalAsync(selectedValues[0]);
-
-        [ComponentInteraction("sar-message-view:*,*")]
-        public async Task ManageMessageRolesAsync(ulong messageId, int page)
-            => await ManageSingleMessageInternalAsync(messageId, page);
-
-        private async Task ManageSingleMessageInternalAsync(ulong messageId, int page = 1)
-        {
-            var guild = await GuildEntity.GetAsync(Context.Guild.Id);
-
-            var message = guild.SelfRoleMessages.First(x => x.MessageId == messageId);
-
-            if (message is null)
-                return; // failsafe
-
-            if (!Paginator<SelfAssignRole>.TryGet(out var paginator))
-            {
-                paginator = new PaginatorBuilder<SelfAssignRole>()
-                    .WithPages(x => new($"{x.Name}", $"{x.Description}"))
-                    .WithCustomId("sar-message-view")
-                    .Build();
-            }
-            var value = paginator.GetPage(page, message.AssignRoles, messageId);
-
-            value.Component.WithButton("Add new role to message", $"sar-from-message-defined:{messageId}", ButtonStyle.Success);
-            value.Component.WithButton("Modify message content", $"sar-message-editing:{messageId}", ButtonStyle.Secondary);
-            value.Component.WithButton("Remove role from this page", $"sar-role-removing:{messageId},{page}", ButtonStyle.Danger);
-
-            var link = $"https://discord.com/channels/{Context.Guild.Id}/{message.ChannelId}/{message.MessageId}";
-
-            await UpdateAsync(
-                text: ":scroll: **Manage roles on this message.** Please select one of the below options to manage individual roles or this message's content.",
-                embed: value.Embed.Build(),
-                components: value.Component.Build());
-        }
-
         [ComponentInteraction("sar-message-editing:*")]
-        public async Task EditMessageContentAsync(ulong messageId)
+        public async Task EditingContentAsync(ulong messageId)
         {
             var mb = new ModalBuilder()
                 .WithTitle("Modify message content:")
@@ -123,28 +104,21 @@ namespace Barriot.Interaction.Modules.Administration
         }
 
         [ModalInteraction("sar-message-edited:*")]
-        public async Task EditContentSuccessAsync(ulong messageId, QueryModal<string> modal)
+        public async Task EditSuccessAsync(ulong messageId, QueryModal<string> modal)
         {
-            var guild = await GuildEntity.GetAsync(Context.Guild.Id);
-
-            var sarMessage = guild.SelfRoleMessages.First(x => x.MessageId == messageId);
-
-            if (sarMessage is null)
+            if (!_service.TryGetData(messageId, out var data))
+            {
+                await RespondAsync(
+                    text: ":x: **This message modification has been abandoned!** \n\n> This could be the case because it took over 15 minutes to finish your message, or because you started on another message.",
+                    ephemeral: true);
                 return;
+            }
 
-            var channel = await Context.Guild.GetChannelAsync(sarMessage.ChannelId);
+            _service.TryRemoveData(messageId);
 
-            if (channel is null || channel is not RestTextChannel textChannel)
-                return; // user deleted channel
+            await data.ModifyAsync(x => x.Content = modal.Result);
 
-            var message = await textChannel.GetMessageAsync(messageId);
-
-            if (message is null || message is not RestUserMessage userMessage)
-                return;
-
-            await userMessage.ModifyAsync(x => x.Content = modal.Result);
-
-            await UpdateAsync(
+            await RespondAsync(
                 text: ":white_check_mark: **Succesfully modified message content!**");
         }
     }

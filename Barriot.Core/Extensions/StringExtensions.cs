@@ -40,16 +40,24 @@ namespace Barriot.Extensions
             else return input;
         }
 
-        public static bool TryGetLinkData(this string messageLink, out ulong[] data)
+        public static bool TryGetLinkData(this string? messageLink, out ulong[] data)
         {
+            data = Array.Empty<ulong>();
+
+            if (string.IsNullOrEmpty(messageLink))
+                return false;
+
             var extraction = messageLink.Split('/');
-            data = new ulong[extraction.Length];
 
             for (int i = 0; i < extraction.Length; i++)
             {
                 if (ulong.TryParse(extraction[i], out data[i]))
                     continue;
             }
+
+            if (data.Length == 3)
+                return true;
+
             return false;
         }
     }

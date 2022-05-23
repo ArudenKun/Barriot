@@ -11,7 +11,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 return;
 
             bool added = true;
-            if (guildUser.RoleIds.Any(x => x == roleId))
+            if (!guildUser.RoleIds.Any(x => x == roleId))
                 await guildUser.AddRoleAsync(roleId);
 
             else
@@ -40,7 +40,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             foreach(var roleId in selectedValues)
             {
                 bool added = true;
-                if (guildUser.RoleIds.Any(x => x == roleId))
+                if (!guildUser.RoleIds.Any(x => x == roleId))
                     await guildUser.AddRoleAsync(roleId);
 
                 else

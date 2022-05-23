@@ -48,16 +48,17 @@ namespace Barriot.Interaction.Modules
                         await Context.User.SendMessageAsync(
                             text: ":wave: **Hi, just checking up on you!**",
                             embed: embed.Build());
-
-                        await RemindEntity.CreateAsync(message, spanUntil, Context.User.Id, frequency, timeBetween);
                     }
                     catch
                     {
                         await RespondAsync(
                             text: $":x: **Reminder creation failed!** {FileHelper.GetErrorFromFile(ErrorType.ReminderSendFailed)}",
                             ephemeral: true);
+                        return;
                     }
                 }
+
+                await RemindEntity.CreateAsync(message, spanUntil, Context.User.Id, frequency, timeBetween);
 
                 await RespondAsync(
                     text: $":thumbsup: **Got it!** I will remind you to {message} in {spanUntil.ToReadable()}" +
@@ -81,7 +82,7 @@ namespace Barriot.Interaction.Modules
             if (page < 1)
                 page = 1;
 
-            var reminders = (await RemindEntity.GetManyAsync(Context.User)).ToEnumerable().ToList();
+            var reminders = await RemindEntity.GetManyAsync(Context.User);
 
             if (reminders.Any())
             {
@@ -117,9 +118,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("reminders-deleting:*")]
         public async Task DeletingRemindersAsync(int page)
         {
-            var selection = (await RemindEntity.GetManyAsync(Context.User))
-                .ToEnumerable()
-                .ToList();
+            var selection = await RemindEntity.GetManyAsync(Context.User);
 
             if (!selection.Any())
                 await UpdateAsync(
@@ -156,7 +155,7 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("reminders-deleted")]
         public async Task DeletedRemindersAsync(ObjectId[] selectedReminders)
         {
-            var selection = (await RemindEntity.GetManyAsync(Context.User)).ToEnumerable().ToList();
+            var selection = await RemindEntity.GetManyAsync(Context.User);
 
             if (!selection.Any())
                 await UpdateAsync(text: ":x: **You have no reminders to delete!**");
