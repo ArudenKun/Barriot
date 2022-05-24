@@ -104,15 +104,14 @@ namespace Barriot.Interaction.Modules
                 value.Component.WithButton("Delete reminders from this page", $"reminders-deleting:{page}", ButtonStyle.Secondary);
 
                 await RespondAsync(
-                    text: $":page_facing_up: **Your reminders:**",
-                    embed: value.Embed.Build(),
-                    components: value.Component.Build(),
-                    ephemeral: true);
+                    page: value,
+                    header: "Your reminders:");
             }
             else
                 await RespondAsync(
-                    text: $":x: **You have no reminders!** Use ` /remind ` to set reminders.",
-                    ephemeral: true);
+                    format: ResultFormat.Failure,
+                    header: "You have no reminders!",
+                    context: "Use ` /remind ` to set reminders.");
         }
 
         [ComponentInteraction("reminders-deleting:*")]
@@ -122,7 +121,8 @@ namespace Barriot.Interaction.Modules
 
             if (!selection.Any())
                 await UpdateAsync(
-                    text: ":x: **You have no reminders to delete!**");
+                    format: ResultFormat.Failure,
+                    header: "You have no reminders to delete!");
 
             else
             {
@@ -147,7 +147,9 @@ namespace Barriot.Interaction.Modules
                     .WithSelectMenu(sb);
 
                 await UpdateAsync(
-                    text: ":wastebasket: **Delete reminders:** *Select the reminders you want to delete in the dropdown below.*",
+                    format: ResultFormat.Deleting,
+                    header: "Delete reminders:",
+                    context: "Select the reminders you want to delete in the dropdown below.",
                     components: cb.Build());
             }
         }
@@ -158,7 +160,9 @@ namespace Barriot.Interaction.Modules
             var selection = await RemindEntity.GetManyAsync(Context.User);
 
             if (!selection.Any())
-                await UpdateAsync(text: ":x: **You have no reminders to delete!**");
+                await UpdateAsync(
+                    format: ResultFormat.Failure,
+                    header: "You have no reminders to delete!");
 
             else
             {
@@ -170,7 +174,8 @@ namespace Barriot.Interaction.Modules
                         await reminder.DeleteAsync();
                 }
                 await UpdateAsync(
-                    text: $":white_check_mark: **Succesfully removed {selectedReminders.Length} reminder(s).**");
+                    format: ResultFormat.Success,
+                    header: $"Succesfully removed {selectedReminders.Length} reminder(s).");
             }
         }
     }

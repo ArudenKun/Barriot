@@ -1,10 +1,14 @@
-﻿namespace Barriot.Interaction
+﻿using Barriot.Extensions.Pagination;
+
+namespace Barriot.Interaction
 {
     /// <summary>
     ///     Represents a non-generic Barriot module base that implements <see cref="BarriotInteractionContext"/>.
     /// </summary>
     public class BarriotModuleBase : RestInteractionModuleBase<BarriotInteractionContext>
     {
+        #region UpdateAsync
+
         /// <summary>
         ///     Updates the interaction the current <see cref="ComponentInteractionAttribute"/> marked method sources from.
         /// </summary>
@@ -62,17 +66,61 @@
         }
 
         /// <summary>
+        ///     Updates the interaction the current <see cref="ComponentInteractionAttribute"/> marked method sources from with an error.
+        /// </summary>
+        /// <param name="error">The error message to send.</param>
+        /// <param name="context"></param>
+        /// <param name="description"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
+        public async Task UpdateAsync(string error, string? context = null, string? description = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(ResultFormat.Failure)
+                .WithHeader(error)
+                .WithContext(context)
+                .WithDescription(description);
+
+            await UpdateAsync(
+                text: tb.Build());
+        }
+
+        /// <summary>
+        ///     Updates the interaction the current <see cref="ComponentInteractionAttribute"/> marked method sources from with a page.
+        /// </summary>
+        /// <param name="page">The page to send.</param>
+        /// <param name="context"></param>
+        /// <param name="description"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task UpdateAsync(Page page, string header, string? context = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(ResultFormat.List)
+                .WithHeader(header)
+                .WithContext(context);
+
+            await UpdateAsync(
+                text: tb.Build(),
+                components: page.Component.Build(),
+                embed: page.Embed.Build());
+        }
+
+        #endregion
+
+        #region RespondAsync
+
+        /// <summary>
         ///     Responds to the current <see cref="RestInteraction"/>.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="header"></param>
         /// <param name="context"></param>
         /// <param name="description"></param>
-        /// <param name="components">The components to update to.</param>
-        /// <param name="embed">The embed to update to.</param>
+        /// <param name="components">The components to send.</param>
+        /// <param name="embed">The embed to send.</param>
         /// <param name="ephemeral">If the message should be ephemerally sent.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
-        public async Task RespondAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null, bool ephemeral = false)
+        public async Task RespondAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null, bool? ephemeral = null)
         {
             var tb = new TextBuilder()
                 .WithResult(format)
@@ -80,12 +128,110 @@
                 .WithDescription(description)
                 .WithContext(context);
 
+            if (format == ResultFormat.Failure || format == ResultFormat.List)
+                ephemeral = true;
+
+            else
+                ephemeral ??= Context.Member.DoEphemeral;
+
             await base.RespondAsync(
                 text: tb.Build(),
                 components: components,
                 embed: embed,
-                ephemeral: ephemeral);
+                ephemeral: ephemeral.Value);
         }
+
+        /// <summary>
+        ///     Responds to the current <see cref="RestInteraction"/> with an error.
+        /// </summary>
+        /// <param name="error">The error to send.</param>
+        /// <param name="context">Error context if applicable.</param>
+        /// <param name="description"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task RespondAsync(string error, string? context = null, string? description = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(ResultFormat.Failure)
+                .WithHeader(error)
+                .WithContext(context)
+                .WithDescription(description);
+
+            await base.RespondAsync(
+                text: tb.Build(),
+                ephemeral: true);
+        }
+
+        /// <summary>
+        ///     Responds to the current <see cref="RestInteraction"/> with a page.
+        /// </summary>
+        /// <param name="page">The page to send.</param>
+        /// <param name="header"></param>
+        /// <param name="context"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task RespondAsync(Page page, string header, string? context = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(ResultFormat.List)
+                .WithHeader(header)
+                .WithContext(context);
+
+            await base.RespondAsync(
+                text: tb.Build(),
+                components: page.Component.Build(),
+                embed: page.Embed.Build(),
+                ephemeral: true);
+        }
+
+        #endregion
+
+        #region FollowupAsync
+
+        /// <summary>
+        ///     Follows up to the current <see cref="RestInteraction"/>.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="header"></param>
+        /// <param name="context"></param>
+        /// <param name="description"></param>
+        /// <param name="components">The components to send.</param>
+        /// <param name="embed">The embed to send.</param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task FollowupAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(format)
+                .WithHeader(header)
+                .WithDescription(description)
+                .WithContext(context);
+
+            await base.FollowupAsync(
+                text: tb.Build(),
+                components: components,
+                embed: embed);
+        }
+
+        /// <summary>
+        ///     Follows up to the current <see cref="RestInteraction"/> with an error.
+        /// </summary>
+        /// <param name="error">The error to send.</param>
+        /// <param name="context"></param>
+        /// <param name="description"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task FollowupAsync(string error, string? context = null, string? description = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(ResultFormat.Failure)
+                .WithHeader(error)
+                .WithContext(context)
+                .WithDescription(description);
+
+            await base.FollowupAsync(
+                text: tb.Build());
+        }
+
+        #endregion
+
+        #region Post-processing
 
         private static int CalculateTier(long currentPoints, ref int ranking)
         {
@@ -166,5 +312,7 @@
                         ephemeral: true);
             }
         }
+
+        #endregion
     }
 }

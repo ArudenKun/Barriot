@@ -1,4 +1,6 @@
-﻿namespace Barriot
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Barriot
 {
     public readonly struct ResultFormat
     {
@@ -28,7 +30,32 @@
         public static ResultFormat Warning
             => new("warning");
 
+        public static ResultFormat Deleting
+            => new("wastebucket");
+
         public override string ToString()
             => _format;
+
+        public override bool Equals([NotNullWhen(true)] object? obj)
+        {
+            if (obj is ResultFormat format && format._format == _format)
+                return true;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return _format.GetHashCode();
+        }
+
+        public static bool operator ==(ResultFormat left, ResultFormat right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ResultFormat left, ResultFormat right)
+        {
+            return !(left == right);
+        }
     }
 }

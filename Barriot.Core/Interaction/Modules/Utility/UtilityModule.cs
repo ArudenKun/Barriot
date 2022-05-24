@@ -21,14 +21,15 @@ namespace Barriot.Interaction.Modules
                           $"{string.Join("\n", message.Attachments.Select(x => x.Url))}");
 
                 await RespondAsync(
-                    text: ":white_check_mark: **Sent message content in DM!**",
-                    ephemeral: Context.Member.DoEphemeral);
+                    format: ResultFormat.Success,
+                    header: "Sent message content in DM!");
             }
             catch
             {
                 await RespondAsync(
-                    text: ":x: **I was not able to DM you!** If you want to use this command, please make sure Barriot can DM you.",
-                    ephemeral: true);
+                    format: ResultFormat.Failure,
+                    header: "I was not able to DM you!",
+                    context: " If you want to use this command, please make sure Barriot can DM you.");
             }
         }
 
@@ -37,38 +38,29 @@ namespace Barriot.Interaction.Modules
         {
             if (calculation.Result is double.NaN)
                 await RespondAsync(
-                    text: $":x: **Calculation failed!** {calculation.Error}",
-                    ephemeral: true);
+                    format: ResultFormat.Failure,
+                    header: "Calculation failed!",
+                    context: calculation.Error);
 
             else
                 await RespondAsync(
-                    text: $":abacus: **The result is:** {calculation}",
-                    ephemeral: Context.Member.DoEphemeral);
+                    format: new ResultFormat("abacus"),
+                    header: "The result is:",
+                    context: calculation.ToString());
         }
 
         [SlashCommand("ping", "Pong! See if the bot works. If this command fails, all is lost...")]
         public async Task PingAsync()
-        {
-            var tb = new TextBuilder()
-                .WithEmoji("ping_pong")
-                .WithHeader("Pong!");
-
-            await RespondAsync(
-                text: tb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
-        }
+            => await RespondAsync(
+                format: new ResultFormat("ping_pong"),
+                header: "Pong!");
 
         [SlashCommand("coinflip", "Flips a coin.")]
         public async Task CoinFlipAsync()
-        {
-            var tb = new TextBuilder()
-                .WithEmoji("coin");
-
-            await RespondAsync(
+            => await RespondAsync(
                 text: (new Random().Next(2) < 1) 
-                    ? tb.WithHeader("Heads").Build() 
-                    : tb.WithHeader("Tails").Build(),
+                    ? ":coin: **Heads!**" 
+                    : ":coin: **Tails!**",
                 ephemeral: Context.Member.DoEphemeral);
-        }
     }
 }

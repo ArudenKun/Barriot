@@ -25,7 +25,9 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Change preferred language", $"language-changing:{Context.User.Id},{args[0]}");
 
             await FollowupAsync(
-                text: $":loudspeaker: **Translated text to {args[1]}:** \n\n> {_service.TranslateAsync(args[0], message.CleanContent)}",
+                format: ResultFormat.Success,
+                header: $"Translated text to {args[1]}:",
+                description: await _service.TranslateAsync(args[0], message.CleanContent),
                 components: cb.Build());
         }
 
@@ -46,7 +48,9 @@ namespace Barriot.Interaction.Modules
             }
 
             await UpdateAsync(
-                text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.*",
+                format: ResultFormat.Question,
+                header: "What do you want your default translation language to be?",
+                context: $"Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.",
                 components: cb.Build());
         }
 
@@ -67,7 +71,9 @@ namespace Barriot.Interaction.Modules
             cb.WithSelectMenu(sb);
 
             await UpdateAsync(
-                text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.*",
+                format: ResultFormat.Question,
+                header: "What do you want your default translation language to be?",
+                context: $"Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.",
                 components: cb.Build());
         }
 
@@ -85,7 +91,9 @@ namespace Barriot.Interaction.Modules
             else
             {
                 await UpdateAsync(
-                    text: $":white_check_mark: **Succesfully changed target language!** The translate command will now respond in {@new.Name}.");
+                    format: ResultFormat.Success,
+                    header: "Succesfully changed target language!",
+                    context: $"The translate command will now respond in {@new.Name}.");
 
                 Context.Member.PreferredLang = $"{@new.Code}|{@new.Name}";
             }
