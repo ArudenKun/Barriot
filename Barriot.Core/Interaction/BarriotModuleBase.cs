@@ -36,6 +36,57 @@
             await Context.InteractionResponseCallback(payload);
         }
 
+        /// <summary>
+        ///     Updates the interaction the current <see cref="ComponentInteractionAttribute"/> marked method sources from.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="header"></param>
+        /// <param name="context"></param>
+        /// <param name="description"></param>
+        /// <param name="components">The components to update to.</param>
+        /// <param name="embed">The embed to update to.</param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
+        public async Task UpdateAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null)
+        {
+            var tb = new TextBuilder()
+                .WithResult(format)
+                .WithHeader(header)
+                .WithDescription(description)
+                .WithContext(context);
+
+            await UpdateAsync(
+                text: tb.Build(),
+                components: components,
+                embed: embed);
+        }
+
+        /// <summary>
+        ///     Responds to the current <see cref="RestInteraction"/>.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="header"></param>
+        /// <param name="context"></param>
+        /// <param name="description"></param>
+        /// <param name="components">The components to update to.</param>
+        /// <param name="embed">The embed to update to.</param>
+        /// <param name="ephemeral">If the message should be ephemerally sent.</param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task RespondAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null, bool ephemeral = false)
+        {
+            var tb = new TextBuilder()
+                .WithResult(format)
+                .WithHeader(header)
+                .WithDescription(description)
+                .WithContext(context);
+
+            await base.RespondAsync(
+                text: tb.Build(),
+                components: components,
+                embed: embed,
+                ephemeral: ephemeral);
+        }
+
         private static int CalculateTier(long currentPoints, ref int ranking)
         {
             int tier = 0;
@@ -76,7 +127,7 @@
 
                 if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateChampion(tier, ranking)))
                     await FollowupAsync(
-                        text: $":star: **Congratulations!** You have won over ` {ranking} ` challenges and have been granted a new acknowledgement!" +
+                        text: $":star: **Congratulations!** *You have won over ` {ranking} ` challenges and have been granted a new acknowledgement!*" +
                         $"\n\n> You can find your acknowledgements by executing ` /statistics `",
                         ephemeral: true);
             }
@@ -90,7 +141,7 @@
 
                 if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateComponent(tier, ranking)))
                     await FollowupAsync(
-                        text: $":star: **Congratulations!** You have pressed over ` {ranking} ` buttons and have been granted a new acknowledgement!" +
+                        text: $":star: **Congratulations!** *You have pressed over ` {ranking} ` buttons and have been granted a new acknowledgement!*" +
                         $"\n\n> You can find your acknowledgements by executing ` /statistics `",
                         ephemeral: true);
             }
@@ -110,7 +161,7 @@
 
                 if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateCommand(tier, ranking)))
                     await FollowupAsync(
-                        text: $":star: **Congratulations!** You have executed over ` {ranking} ` commands and been granted a new acknowledgement!" +
+                        text: $":star: **Congratulations!** *You have executed over ` {ranking} ` commands and been granted a new acknowledgement!*" +
                         $"\n\n> You can find your acknowledgements by executing ` /statistics `",
                         ephemeral: true);
             }

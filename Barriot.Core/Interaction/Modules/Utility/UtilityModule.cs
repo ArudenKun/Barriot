@@ -48,14 +48,27 @@ namespace Barriot.Interaction.Modules
 
         [SlashCommand("ping", "Pong! See if the bot works. If this command fails, all is lost...")]
         public async Task PingAsync()
-            => await RespondAsync(
-                text: $":ping_pong: **Pong!**",
+        {
+            var tb = new TextBuilder()
+                .WithEmoji("ping_pong")
+                .WithHeader("Pong!");
+
+            await RespondAsync(
+                text: tb.Build(),
                 ephemeral: Context.Member.DoEphemeral);
+        }
 
         [SlashCommand("coinflip", "Flips a coin.")]
         public async Task CoinFlipAsync()
-            => await RespondAsync(
-                text: (new Random().Next(2) < 1) ? ":coin: **Heads!**" : ":coin: **Tails!**",
+        {
+            var tb = new TextBuilder()
+                .WithEmoji("coin");
+
+            await RespondAsync(
+                text: (new Random().Next(2) < 1) 
+                    ? tb.WithHeader("Heads").Build() 
+                    : tb.WithHeader("Tails").Build(),
                 ephemeral: Context.Member.DoEphemeral);
+        }
     }
 }
