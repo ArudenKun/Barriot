@@ -22,15 +22,15 @@ namespace Barriot.Interaction.Modules
                     .AddField("Challenges", $"Won ` every ` challenge.");
 
                 await RespondAsync(
-                    text: $":sunglasses: **Barriot's statistics.** *Cool, you found an easter egg!*",
-                    embed: eb.Build(),
-                    ephemeral: Context.Member.DoEphemeral);
+                    format: "sunglasses",
+                    header: "Barriot's statistics.",
+                    context: "Cool, you found an easter egg!",
+                    embed: eb.Build());
             }
 
             else if (user.IsBot || user.IsWebhook)
                 await RespondAsync(
-                    text: $":x: **This user cannot interact with Barriot!**",
-                    ephemeral: Context.Member.DoEphemeral);
+                    error: "This user cannot interact with Barriot!");
 
             else
             {
@@ -54,10 +54,10 @@ namespace Barriot.Interaction.Modules
                     .AddField("Challenges", $"Won ` {target.GamesWon} ` challenge{((target.GamesWon != 1) ? "s" : "")}.");
 
                 await RespondAsync(
-                    text: $":bar_chart: **<@{user.Id}>'s Barriot statistics**",
+                    format: "bar_chart",
+                    header: $"{user.Username}#{user.Discriminator}'s Barriot statistics**",
                     embed: eb.Build(),
-                    components: cb.Build(),
-                    ephemeral: Context.Member.DoEphemeral);
+                    components: cb.Build());
             }
         }
 
@@ -98,7 +98,9 @@ namespace Barriot.Interaction.Modules
             }
 
             await UpdateAsync(
-                text: $":medal: **<@{targetId}>'s Acknowledgements.** Rewarded for contributions, regular use of the bot, donations and more.",
+                format: "medal",
+                header: $"<@{targetId}>'s Acknowledgements.",
+                context: "Rewarded for contributions, regular use of the bot, donations and more.",
                 embed: eb.Build(),
                 components: cb?.Build());
         }

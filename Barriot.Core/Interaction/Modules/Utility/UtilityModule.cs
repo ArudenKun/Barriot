@@ -27,8 +27,7 @@ namespace Barriot.Interaction.Modules
             catch
             {
                 await RespondAsync(
-                    format: ResultFormat.Failure,
-                    header: "I was not able to DM you!",
+                    error: "I was not able to DM you!",
                     context: " If you want to use this command, please make sure Barriot can DM you.");
             }
         }
@@ -38,13 +37,12 @@ namespace Barriot.Interaction.Modules
         {
             if (calculation.Result is double.NaN)
                 await RespondAsync(
-                    format: ResultFormat.Failure,
-                    header: "Calculation failed!",
+                    error: "Calculation failed!",
                     context: calculation.Error);
 
             else
                 await RespondAsync(
-                    format: new ResultFormat("abacus"),
+                    format: "abacus",
                     header: "The result is:",
                     context: calculation.ToString());
         }
@@ -52,7 +50,7 @@ namespace Barriot.Interaction.Modules
         [SlashCommand("ping", "Pong! See if the bot works. If this command fails, all is lost...")]
         public async Task PingAsync()
             => await RespondAsync(
-                format: new ResultFormat("ping_pong"),
+                format: "ping_pong",
                 header: "Pong!");
 
         [SlashCommand("coinflip", "Flips a coin.")]

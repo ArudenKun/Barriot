@@ -109,8 +109,7 @@ namespace Barriot.Interaction.Modules
             }
             else
                 await RespondAsync(
-                    format: ResultFormat.Failure,
-                    header: "You have no reminders!",
+                    error: "You have no reminders!",
                     context: "Use ` /remind ` to set reminders.");
         }
 
@@ -121,8 +120,7 @@ namespace Barriot.Interaction.Modules
 
             if (!selection.Any())
                 await UpdateAsync(
-                    format: ResultFormat.Failure,
-                    header: "You have no reminders to delete!");
+                    error: "You have no reminders to delete!");
 
             else
             {
@@ -161,8 +159,7 @@ namespace Barriot.Interaction.Modules
 
             if (!selection.Any())
                 await UpdateAsync(
-                    format: ResultFormat.Failure,
-                    header: "You have no reminders to delete!");
+                    error: "You have no reminders to delete!");
 
             else
             {

@@ -57,5 +57,8 @@ namespace Barriot
         {
             return !(left == right);
         }
+
+        public static implicit operator ResultFormat(string input)
+            => new(input);
     }
 }

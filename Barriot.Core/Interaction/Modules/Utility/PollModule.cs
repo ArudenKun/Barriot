@@ -16,7 +16,9 @@ namespace Barriot.Interaction.Modules
         public async Task FinalizePollAsync(string _, PollModal modal)
         {
             await RespondAsync(
-                text: $":bar_chart: **Poll:** {modal.Description}",
+                format: "bar_chart",
+                header: "Poll:",
+                description: modal.Description,
                 ephemeral: false);
 
             var response = await Context.Interaction.GetOriginalResponseAsync();
@@ -63,16 +65,19 @@ namespace Barriot.Interaction.Modules
                     poll.AlreadyReplied.Add(Context.User.Id);
 
                     await RespondAsync(
-                        text: $":white_check_mark: **Thank you for voting!** Your vote has been registered.",
+                        format: ResultFormat.Success,
+                        header: "Thank you for voting!" ,
+                        context: "Your vote has been registered.",
                         ephemeral: true);
                 }
-                else await RespondAsync(
-                    text: $":x: **You already responded to this poll!**",
-                    ephemeral: true);
+                else 
+                    await RespondAsync(
+                        error: "You already responded to this poll!");
             }
-            else await RespondAsync(
-                text: $":x: **Unable to register vote!** This poll is more than 15 days old and has been pruned from the database.",
-                ephemeral: true);
+            else 
+                await RespondAsync(
+                    error: "Unable to register vote!",
+                    context: "This poll is more than 15 days old and has been pruned from the database.");
         }
 
         [ComponentInteraction("pollresults:*")]
@@ -86,14 +91,17 @@ namespace Barriot.Interaction.Modules
                     .WithColor(Context.User.AccentColor ?? Color.Blue);
                 foreach (var r in results.Options)
                     eb.AddField($"{r.Label} [{r.Id}]", $"Amount of votes: {r.Votes}");
+
                 await RespondAsync(
-                    text: $":chart_with_upwards_trend: **Results for this poll:**",
+                    format: "chart_with_upwards_trend",
+                    header: "Results for this poll:",
                     embed: eb.Build(),
                     ephemeral: true);
             }
-            else await RespondAsync(
-                text: $":x: **No results found!** This poll is more than 15 days old and has been pruned from the database.",
-                ephemeral: true);
+            else 
+                await RespondAsync(
+                    error: "No results found!",
+                    context: "This poll is more than 15 days old and has been pruned from the database.");
         }
     }
 }

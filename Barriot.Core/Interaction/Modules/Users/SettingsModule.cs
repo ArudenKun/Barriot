@@ -34,10 +34,11 @@ namespace Barriot.Interaction.Modules
             }
 
             await RespondAsync(
-                text: ":gear: **Your personal settings.** *A range of buttons is defined to modify any setting.*",
+                format: "gear",
+                header: "Your personal settings.",
+                context: "A range of buttons is defined to modify any setting.",
                 embed: eb.Build(),
-                components: cb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb.Build());
         }
 
         [DoUserCheck]
@@ -46,10 +47,20 @@ namespace Barriot.Interaction.Modules
         {
             Context.Member.DoEphemeral = !Context.Member.DoEphemeral;
 
+            var tb = new TextBuilder();
+
+            if (Context.Member.DoEphemeral)
+                tb.WithResult(ResultFormat.Success)
+                    .WithContext("Commands you execute will now be hidden for everyone but you.")
+                    .WithHeader("Commands are now hidden.");
+
+            else
+                tb.WithResult(ResultFormat.NotAllowed)
+                    .WithContext("Commands you execute will now be visible to everyone.")
+                    .WithHeader("Commands are now openly displayed.");
+
             await UpdateAsync(
-                text: Context.Member.DoEphemeral
-                    ? ":white_check_mark: **Commands are now hidden.** Commands you execute will now be hidden for everyone but you."
-                    : ":no_entry_sign: **Commands are now openly displayed.** Commands you execute will now be visible to everyone.");
+                text: tb.Build());
         }
 
         [DoUserCheck]
@@ -67,11 +78,9 @@ namespace Barriot.Interaction.Modules
         public async Task FinalizeEmbedSettingAsync(QueryModal<Color> modal)
         {
             if (modal.Result == Color.Default)
-            {
                 await RespondAsync(
-                    text: ":x: **The color you supplied is an invalid color!** Please define exclusively hex-color codes like '#ffffff'.",
-                    ephemeral: true);
-            }
+                    error: "The color you supplied is an invalid color!",
+                    context: "Please define exclusively hex-color codes like '#ffffff'.");
 
             else
             {
@@ -82,9 +91,10 @@ namespace Barriot.Interaction.Modules
                     .WithDescription("*This is an example embed to show your new embed color.*");
 
                 await RespondAsync(
-                    text: $":art: **Successfully changed your embed color to {modal.Result}!** All embeds will now display in this color.",
-                    embed: eb.Build(),
-                    ephemeral: Context.Member.DoEphemeral);
+                    format: "art",
+                    header: $"Successfully changed your embed color to {modal.Result}!",
+                    context: "All embeds will now display in this color.",
+                    embed: eb.Build());
             }
         }
     }

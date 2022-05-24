@@ -63,10 +63,10 @@ namespace Barriot.Interaction.Modules
                 }
             }
             await RespondAsync(
-                text: $":bust_in_silhouette: **Information about {user.Username}#{user.Discriminator}**",
+                format: $"bust_in_silhouette",
+                header: $"Information about {user.Username}#{user.Discriminator}",
                 embed: eb.Build(),
-                components: cb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb.Build());
         }
 
         [DoUserCheck]
@@ -80,7 +80,8 @@ namespace Barriot.Interaction.Modules
                 .WithImageUrl(rUser.GetAvatarUrl(ImageFormat.Auto, 256));
 
             await UpdateAsync(
-                text: $":selfie: **<@{targetId}>'s avatar:**",
+                format: "selfie",
+                header: $":selfie: <@{targetId}>'s avatar:",
                 embed: eb.Build());
         }
 
@@ -95,7 +96,8 @@ namespace Barriot.Interaction.Modules
                 .WithImageUrl(rUser.GetBannerUrl(ImageFormat.Auto, 256));
 
             await UpdateAsync(
-                text: $":sunrise_over_mountains: **<@{targetId}>'s banner:**",
+                format: "sunrise_over_mountains",
+                header: $"<@{targetId}>'s banner:",
                 embed: eb.Build());
         }
     }
