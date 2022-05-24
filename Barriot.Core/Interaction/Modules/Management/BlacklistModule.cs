@@ -13,9 +13,8 @@ namespace Barriot.Interaction.Modules
 
             user.IsBlacklisted = true;
 
-            await RespondAsync(
-                text: ":white_check_mark: **Succesfully blacklisted user.** This user is now unable to interact with Barriot.",
-                ephemeral: true);
+            await UpdateAsync(
+                text: ":white_check_mark: **Succesfully blacklisted user.** This user is now unable to interact with Barriot.");
         }
 
         [DoUserCheck]
@@ -26,7 +25,7 @@ namespace Barriot.Interaction.Modules
 
             user.IsBlacklisted = false;
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: ":white_check_mark: **Whitelisted user.** This user is now able to interact with Barriot again.");
         }
     }

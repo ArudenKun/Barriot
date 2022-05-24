@@ -1,4 +1,5 @@
-﻿using Barriot.Interaction.Modals;
+﻿using Barriot.Extensions.Files;
+using Barriot.Interaction.Modals;
 using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules.SelfRoles
@@ -99,7 +100,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
                 await RespondAsync(
-                    text: ":x: **This sar creation has been abandoned!** \n\n> This could be the case because it took over 15 minutes to finish your message, or because you started on another message.",
+                    text: $":x: **This sar creation has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
                     ephemeral: true);
                 return;
             }
@@ -107,7 +108,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (string.IsNullOrEmpty(modal.Result))
             {
                 await RespondAsync(
-                    text: ":x: **Cannot send an empty message!** Message creation failed because you failed to fill in content.",
+                    text: ":x: **Cannot send an empty message!** *Message creation failed because you failed to fill in content.*",
                     ephemeral: true);
                 return;
             }
@@ -137,7 +138,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
                 await RespondAsync(
-                    text: ":x: **This sar creation has been abandoned!** \n\n> This could be the case because it took over 15 minutes to finish your message, or because you started on another message.",
+                    text: $":x: **This sar creation has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
                     ephemeral: true);
                 return;
             }
@@ -150,7 +151,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 .WithButton("Drop-down", $"sar-from-message-format:{false}", ButtonStyle.Secondary);
 
             await UpdateAsync(
-                text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready, by pressing an option, the creation menu will open.*",
+                text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready. By pressing an option, the creation menu will open.*",
                 components: cb.Build());
         }
 
@@ -178,7 +179,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
                 await RespondAsync(
-                    text: ":x: **This sar creation has been abandoned!** \n\n> This could be the case because it took over 15 minutes to finish your message, or because you started on another message.",
+                    text: $":x: **This sar creation has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
                     ephemeral: true);
                 return;
             }
@@ -202,28 +203,30 @@ namespace Barriot.Interaction.Modules.SelfRoles
             }
 
             var message = args.Message;
+            var cb = new ComponentBuilder();
 
             if (message is null)
             {
-                EmbedBuilder eb = null!;
+                EmbedBuilder emb = null!;
                 if (args.FormatAsEmbed)
                 {
-                    eb = new();
-                    eb.WithColor(Color.Blue);
-                    eb.WithDescription(args.Content);
+                    emb = new();
+                    emb.WithColor(Color.Blue);
+                    emb.WithDescription(args.Content);
                 }
                 message = await args.Channel.SendMessageAsync(
-                    text: args.FormatAsEmbed ? null : args.Content,
-                    embed: eb?.Build());
+                    text: args.FormatAsEmbed 
+                        ? null 
+                        : args.Content,
+                    embed: emb?.Build());
             }
+
+            else
+                cb = ComponentBuilder.FromMessage(message);
 
             var name = string.IsNullOrEmpty(modal.Label) 
                 ? role.Name 
                 : modal.Label;
-
-            var cb = message.Components.Any() 
-                ? ComponentBuilder.FromMessage(message) 
-                : new();
 
             if (button)
             {
@@ -234,22 +237,30 @@ namespace Barriot.Interaction.Modules.SelfRoles
                     x.Components = cb.Build();
                 });
             }
+
             else
             {
-                var actionRow = new ActionRowBuilder();
-                var sb = new SelectMenuBuilder()
-                    .WithCustomId("sar-from-menu")
-                    .WithMinValues(1)
-                    .WithPlaceholder("Select a (or more) roles to remove/add.");
-
-                if (cb.ActionRows is not null && cb.ActionRows.Any())
+                var sb = new SelectMenuBuilder();
+                if (!message.Components.Any())
                 {
-                    var rows = cb.ActionRows.Where(x => x.Components.Any(x => x is SelectMenuComponent));
-                    if (rows is not null && rows.Any())
+                    sb.WithCustomId("sar-from-menu");
+                    sb.WithMinValues(1);
+                    sb.WithPlaceholder("Select a (or more) roles to remove/add.");
+                }
+
+                else
+                {
+                    var rows = cb.ActionRows.Where(x => x.Components.Any(x => x is SelectMenuComponent)).ToList();
+                    if (rows.Any())
                     {
-                        actionRow = rows.First();
-                        sb = (actionRow.Components.First() as SelectMenuComponent)!.ToBuilder();
-                        cb.ActionRows.RemoveAll(x => x.Components.Any(x => x is SelectMenuComponent)); // there can only be one.
+                        sb = (rows[0].Components.First() as SelectMenuComponent)!.ToBuilder();
+                    }
+                    else
+                    {
+                        await RespondAsync(
+                            text: ":x: **A self-assign message with only buttons cannot include a dropdown.** *Consider creating a new message starting with only a dropdown instead.*",
+                            ephemeral: true);
+                        return;
                     }
                 }
 
@@ -262,14 +273,16 @@ namespace Barriot.Interaction.Modules.SelfRoles
                 }
 
                 sb.AddOption(name, roleId.ToString(), modal.Description);
+                sb.WithMaxValues(sb.Options.Count);
 
-                actionRow.Components = new();
+                if (cb.ActionRows is null)
+                {
+                    cb.ActionRows = new(1);
+                    cb.ActionRows.Add(new ActionRowBuilder().AddComponent(sb.Build()));
+                }
 
-                actionRow.AddComponent(sb.WithMaxValues(sb.Options.Count).Build());
-
-                cb.ActionRows = new();
-                cb.ActionRows.Add(actionRow);
-                cb.ActionRows = cb.ActionRows.OrderBy(x => x.Components.Count).ToList();
+                else
+                    cb.ActionRows[0] = new ActionRowBuilder().AddComponent(sb.Build());
 
                 await message.ModifyAsync(x =>
                 {
@@ -279,10 +292,20 @@ namespace Barriot.Interaction.Modules.SelfRoles
 
             var link = $"https://discord.com/channels/{Context.Guild.Id}/{args.Channel.Id}/{message.Id}";
 
+            var eb = new EmbedBuilder()
+                .WithTitle("Click to view message")
+                .WithUrl($"https://discord.com/channels/{Context.Guild.Id}/{args.Channel.Id}/{message.Id}")
+                .WithColor(Color.Blue)
+                .AddField("Role:", name);
+
+            if (!button)
+                eb.AddField("Description:", string.IsNullOrEmpty(modal.Description) ? "None" : modal.Description);
+
             _service.TryRemoveData(Context.User.Id);
 
             await RespondAsync(
                 text: $":white_check_mark: **Succesfully added SAR to message.**\n\n> Link: {link}",
+                embed: eb.Build(),
                 ephemeral: true);
         }
     }

@@ -79,8 +79,7 @@ namespace Barriot.Interaction.Modules
             if (!cont)
             {
                 await UpdateAsync(
-                    text: $":military_medal: **The game is a tie!** No points have been distributed.",
-                    components: new ComponentBuilder().Build());
+                    text: $":military_medal: **The game is a tie!** No points have been distributed.");
 
                 await game.DeleteAsync();
                 return;
@@ -129,8 +128,7 @@ namespace Barriot.Interaction.Modules
             else
             {
                 await UpdateAsync(
-                    text: response,
-                    components: new ComponentBuilder().Build());
+                    text: response);
                 Context.WonGameInSession = true;
 
                 await game.DeleteAsync();

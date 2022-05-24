@@ -25,10 +25,12 @@
 
                 if (components is not null)
                     x.Components = components;
+                else if (x.Components.IsSpecified)
+                    x.Components = new ComponentBuilder().Build();
 
                 if (embed is not null)
                     x.Embed = embed;
-                else // set embed to null due to relation with components.
+                else if (x.Embed.IsSpecified)
                     x.Embed = null;
             });
             await Context.InteractionResponseCallback(payload);

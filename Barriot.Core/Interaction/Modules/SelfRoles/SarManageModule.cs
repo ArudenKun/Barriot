@@ -3,6 +3,7 @@ using Barriot.Extensions.Pagination;
 using Barriot.Interaction.Modals;
 using Barriot.Extensions;
 using Barriot.Interaction.Services;
+using Barriot.Extensions.Files;
 
 namespace Barriot.Interaction.Modules.Administration
 {
@@ -26,7 +27,7 @@ namespace Barriot.Interaction.Modules.Administration
                 .WithButton("Edit a SAR message", "sar-message-manage", ButtonStyle.Secondary);
 
             await RespondAsync(
-                text: ":bar_chart: **Manage self-assign roles (SAR) in this server.** Please choose any of the below options.",
+                text: ":bar_chart: **Manage self-assign roles (SAR) in this server.** *Please choose any of the below options.*",
                 components: cb.Build(),
                 ephemeral: true);
         }
@@ -48,7 +49,7 @@ namespace Barriot.Interaction.Modules.Administration
             if (!modal.Result.TryGetLinkData(out var data))
             {
                 await RespondAsync(
-                    text: ":x: **Input link is not a Discord message link!**",
+                    text: $":x: **Input link is not a Discord message link!** *Input: ({modal.Result})*",
                     ephemeral: true);
                 return;
             }
@@ -58,7 +59,7 @@ namespace Barriot.Interaction.Modules.Administration
             if (channel is null || channel is not RestTextChannel textChannel)
             {
                 await RespondAsync(
-                    text: ":x: **The message link does not lead to a usable/viewable channel.**",
+                    text: $":x: **The message link does not lead to a usable/viewable channel.** *Input: ({modal.Result})*",
                     ephemeral: true);
                 return;
             }
@@ -68,7 +69,7 @@ namespace Barriot.Interaction.Modules.Administration
             if (message is null || message is not RestUserMessage userMessage)
             {
                 await RespondAsync(
-                    text: ":x: **The message link does not lead to a usable message.**",
+                    text: $":x: **The message link does not lead to a usable message.** *Input: ({modal.Result})*",
                     ephemeral: true);
                 return;
             }
@@ -87,17 +88,18 @@ namespace Barriot.Interaction.Modules.Administration
                 .WithButton("Add new role to message", $"sar-from-message-source:{userMessage.Id}", ButtonStyle.Success)
                 .WithButton("Modify message content", $"sar-message-editing:{userMessage.Id}", ButtonStyle.Secondary);
 
-            await UpdateAsync(
+            await RespondAsync(
                 text: ":scroll: **Manage this message.** *Please select one of the below options to add a role or modify this message's content.*",
-                components: cb.Build());
+                components: cb.Build(),
+                ephemeral: true);
         }
 
         [ComponentInteraction("sar-message-editing:*")]
         public async Task EditingContentAsync(ulong messageId)
         {
             var mb = new ModalBuilder()
-                .WithTitle("Modify message content:")
-                .AddTextInput("New message content (markdown supported):", "entry", TextInputStyle.Paragraph)
+                .WithTitle("Modify message content")
+                .AddTextInput("(Markdown supported)", "entry", TextInputStyle.Paragraph)
                 .WithCustomId($"sar-message-edited:{messageId}");
 
             await RespondWithModalAsync(mb.Build());
@@ -106,20 +108,26 @@ namespace Barriot.Interaction.Modules.Administration
         [ModalInteraction("sar-message-edited:*")]
         public async Task EditSuccessAsync(ulong messageId, QueryModal<string> modal)
         {
+            var eb = new EmbedBuilder()
+                .WithTitle("New message content:")
+                .WithColor(Color.Blue)
+                .WithDescription(modal.Result);
+
             if (!_service.TryGetData(messageId, out var data))
             {
                 await RespondAsync(
-                    text: ":x: **This message modification has been abandoned!** \n\n> This could be the case because it took over 15 minutes to finish your message, or because you started on another message.",
+                    text: $":x: **This message modification has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
+                    embed: eb.Build(),
                     ephemeral: true);
                 return;
             }
 
-            _service.TryRemoveData(messageId);
-
             await data.ModifyAsync(x => x.Content = modal.Result);
 
             await RespondAsync(
-                text: ":white_check_mark: **Succesfully modified message content!**");
+                text: ":white_check_mark: **Succesfully modified message content!**",
+                embed: eb.Build(),
+                ephemeral: true);
         }
     }
 }

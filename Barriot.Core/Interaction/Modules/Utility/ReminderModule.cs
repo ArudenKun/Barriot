@@ -170,8 +170,7 @@ namespace Barriot.Interaction.Modules
                         await reminder.DeleteAsync();
                 }
                 await UpdateAsync(
-                    text: $":white_check_mark: **Succesfully removed {selectedReminders.Length} reminder(s).**",
-                    components: new ComponentBuilder().Build());
+                    text: $":white_check_mark: **Succesfully removed {selectedReminders.Length} reminder(s).**");
             }
         }
     }

@@ -40,9 +40,9 @@ namespace Barriot.Extensions
             else return input;
         }
 
-        public static bool TryGetLinkData(this string? messageLink, out ulong[] data)
+        public static bool TryGetLinkData(this string? messageLink, out List<ulong> data)
         {
-            data = Array.Empty<ulong>();
+            data = new();
 
             if (string.IsNullOrEmpty(messageLink))
                 return false;
@@ -51,11 +51,11 @@ namespace Barriot.Extensions
 
             for (int i = 0; i < extraction.Length; i++)
             {
-                if (ulong.TryParse(extraction[i], out data[i]))
-                    continue;
+                if (ulong.TryParse(extraction[i], out var ul))
+                    data.Add(ul);
             }
 
-            if (data.Length == 3)
+            if (data.Count is 3)
                 return true;
 
             return false;

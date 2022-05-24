@@ -48,6 +48,7 @@ builder.Services.AddSingleton<PostExecutionHandler>();
 
 // Add services
 builder.Services.AddSingleton<InfoService>();
+builder.Services.AddSingleton<SarManageService>();
 builder.Services.AddSingleton<SarMakeService>();
 builder.Services.AddSingleton<TranslateService>();
 builder.Services.AddSingleton<UserService>();

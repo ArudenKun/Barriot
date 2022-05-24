@@ -42,10 +42,9 @@ namespace Barriot.Interaction.Modules
 
             cb.WithButton("Create custom acknowledgement", $"cflag-creating:{Context.User.Id},{targetId}");
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: ":writing_hand: **Add acknowledgements:** *Select the acknowledgements you want to add or create a custom one below.*",
-                components: cb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb.Build());
         }
 
         [DoUserCheck]
@@ -76,9 +75,8 @@ namespace Barriot.Interaction.Modules
             var user = await UserEntity.GetAsync(targetId);
             user.Flags = new(flags.Concat(user.Flags));
 
-            await RespondAsync(
-                text: $":white_check_mark: **Successfully added {values.Length} acknowledgements.**",
-                ephemeral: Context.Member.DoEphemeral);
+            await UpdateAsync(
+                text: $":white_check_mark: **Successfully added {values.Length} acknowledgements.**");
         }
 
         [DoUserCheck]
@@ -138,10 +136,9 @@ namespace Barriot.Interaction.Modules
             var cb = new ComponentBuilder()
                 .WithSelectMenu(sb);
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: ":wastebasket: **Delete acknowledgements:** *Select the acknowledgements you want to delete in the dropdown below.*",
-                components: cb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb.Build());
         }
 
         [DoUserCheck]
@@ -162,9 +159,8 @@ namespace Barriot.Interaction.Modules
 
             user.Flags = new(selection);
 
-            await RespondAsync(
-                text: $":white_check_mark: **Successfully removed {selectedAcks.Length} acknowledgements.**",
-                ephemeral: Context.Member.DoEphemeral);
+            await UpdateAsync(
+                text: $":white_check_mark: **Successfully removed {selectedAcks.Length} acknowledgements.**");
         }
     }
 }

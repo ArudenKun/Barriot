@@ -16,5 +16,10 @@
         ///     Sending reminders cannot be done because user disabled DM.
         /// </summary>
         ReminderSendFailed,
+
+        /// <summary>
+        ///     Self-assign role creation/modification context took too long.
+        /// </summary>
+        SARContextAbandoned,
     }
 }
