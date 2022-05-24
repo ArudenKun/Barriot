@@ -66,9 +66,8 @@ namespace Barriot.Interaction.Modules
                         flags.Add(UserFlag.Support);
                         break;
                     default:
-                        await RespondAsync(
-                            text: ":x: **This acknowledgement does not exist!** Please report this error.",
-                            ephemeral: true);
+                        await UpdateAsync(
+                            text: ":x: **This acknowledgement does not exist!** Please report this error.");
                         break;
                 }
             }

@@ -79,10 +79,9 @@ namespace Barriot.Interaction.Modules
                 .WithColor(Context.Member.Color)
                 .WithImageUrl(rUser.GetAvatarUrl(ImageFormat.Auto, 256));
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: $":selfie: **<@{targetId}>'s avatar:**",
-                embed: eb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                embed: eb.Build());
         }
 
         [DoUserCheck]
@@ -95,10 +94,9 @@ namespace Barriot.Interaction.Modules
                 .WithColor(Context.Member.Color)
                 .WithImageUrl(rUser.GetBannerUrl(ImageFormat.Auto, 256));
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: $":sunrise_over_mountains: **<@{targetId}>'s banner:**",
-                embed: eb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                embed: eb.Build());
         }
     }
 }

@@ -46,11 +46,10 @@ namespace Barriot.Interaction.Modules
         {
             Context.Member.DoEphemeral = !Context.Member.DoEphemeral;
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: Context.Member.DoEphemeral
                     ? ":white_check_mark: **Commands are now hidden.** Commands you execute will now be hidden for everyone but you."
-                    : ":no_entry_sign: **Commands are now openly displayed.** Commands you execute will now be visible to everyone.",
-                ephemeral: Context.Member.DoEphemeral);
+                    : ":no_entry_sign: **Commands are now openly displayed.** Commands you execute will now be visible to everyone.");
         }
 
         [DoUserCheck]

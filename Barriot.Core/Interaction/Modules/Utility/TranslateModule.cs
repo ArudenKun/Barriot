@@ -45,10 +45,9 @@ namespace Barriot.Interaction.Modules
                     style: ButtonStyle.Secondary);
             }
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.*",
-                components: cb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb.Build());
         }
 
         [DoUserCheck]
@@ -67,10 +66,9 @@ namespace Barriot.Interaction.Modules
                 sb.AddOption(opt.Name, opt.Code);
             cb.WithSelectMenu(sb);
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: $":speech_balloon: **What do you want your default translation language to be?** *Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.*",
-                components: cb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb.Build());
         }
 
         [DoUserCheck]
@@ -81,15 +79,13 @@ namespace Barriot.Interaction.Modules
                 .First(x => x.Code == selectedLang[0]);
 
             if (@new.Code == Context.Member.PreferredLang.Split('|')[0])
-                await RespondAsync(
-                    text: ":x: **Canceled selection!** Your preferred language remains the same.",
-                    ephemeral: Context.Member.DoEphemeral);
+                await UpdateAsync(
+                    text: ":x: **Canceled selection!** Your preferred language remains the same.");
 
             else
             {
-                await RespondAsync(
-                    text: $":white_check_mark: **Succesfully changed target language!** The translate command will now respond in {@new.Name}.",
-                    ephemeral: Context.Member.DoEphemeral);
+                await UpdateAsync(
+                    text: $":white_check_mark: **Succesfully changed target language!** The translate command will now respond in {@new.Name}.");
 
                 Context.Member.PreferredLang = $"{@new.Code}|{@new.Name}";
             }

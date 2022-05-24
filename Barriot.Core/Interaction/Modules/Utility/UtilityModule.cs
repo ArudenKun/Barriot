@@ -57,12 +57,5 @@ namespace Barriot.Interaction.Modules
             => await RespondAsync(
                 text: (new Random().Next(2) < 1) ? ":coin: **Heads!**" : ":coin: **Tails!**",
                 ephemeral: Context.Member.DoEphemeral);
-
-        [EnabledInDm(false)]
-        [SlashCommand("membercount", "Views the amount of members in the current guild.")]
-        public async Task MemberCountAsync()
-            => await RespondAsync(
-                text: $":1234: **Approximate membercount of this server: ` {Context.Guild.ApproximateMemberCount ?? 0}`** *(0 if unable to gather data)*",
-                ephemeral: Context.Member.DoEphemeral);
     }
 }

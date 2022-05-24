@@ -97,11 +97,10 @@ namespace Barriot.Interaction.Modules
                 cb.WithButton("Remove acknowledgement(s)", $"flag-deleting:{userId},{targetId}", ButtonStyle.Danger);
             }
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: $":medal: **<@{targetId}>'s Acknowledgements.** Rewarded for contributions, regular use of the bot, donations and more.",
                 embed: eb.Build(),
-                components: cb?.Build(),
-                ephemeral: Context.Member.DoEphemeral);
+                components: cb?.Build());
         }
     }
 }
