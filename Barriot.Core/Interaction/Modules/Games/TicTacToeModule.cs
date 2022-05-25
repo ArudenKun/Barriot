@@ -3,6 +3,7 @@ using MongoDB.Bson;
 
 namespace Barriot.Interaction.Modules
 {
+    // TODO, rework SEND
     [IgnoreBlacklistedUsers]
     public class TicTacToeModule : BarriotModuleBase
     {

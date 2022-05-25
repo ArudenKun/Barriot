@@ -1,7 +1,7 @@
 ﻿using Barriot.Extensions;
-using Barriot.Extensions.Files;
-using Barriot.Extensions.Pagination;
 using Barriot.Interaction.Attributes;
+using Barriot.Models.Files;
+using Barriot.Pagination;
 using MongoDB.Bson;
 
 namespace Barriot.Interaction.Modules
@@ -21,12 +21,12 @@ namespace Barriot.Interaction.Modules
 
             if (spanUntil == TimeSpan.Zero)
                 await RespondAsync(
-                    text: FileHelper.GetErrorFromFile(ErrorType.InvalidTimeSpan, "time until this reminder is sent"),
+                    text: FileExtensions.GetError(ErrorInfo.InvalidTimeSpan, "time until this reminder is sent"),
                     ephemeral: true);
 
             else if (timeBetween is null && frequency > 1)
                 await RespondAsync(
-                    text: FileHelper.GetErrorFromFile(ErrorType.InvalidTimeSpan, "time between reminders"),
+                    text: FileExtensions.GetError(ErrorInfo.InvalidTimeSpan, "time between reminders"),
                     ephemeral: true);
 
             else if (timeBetween is not null && timeBetween?.TotalMinutes < 5d)
@@ -41,7 +41,7 @@ namespace Barriot.Interaction.Modules
                     try
                     {
                         var embed = new EmbedBuilder()
-                            .WithDescription(FileHelper.GetInfoFromFile(InfoType.ReminderCheckUp))
+                            .WithDescription(FileExtensions.GetEmbedContent(EmbedInfo.ReminderCheckUp))
                             .WithFooter("Make sure you keep your DM's open to receive it!")
                             .WithColor(new Color(Context.Member.Color));
 
@@ -52,7 +52,7 @@ namespace Barriot.Interaction.Modules
                     catch
                     {
                         await RespondAsync(
-                            text: $":x: **Reminder creation failed!** {FileHelper.GetErrorFromFile(ErrorType.ReminderSendFailed)}",
+                            text: $":x: **Reminder creation failed!** {FileExtensions.GetError(ErrorInfo.ReminderSendFailed)}",
                             ephemeral: true);
                         return;
                     }

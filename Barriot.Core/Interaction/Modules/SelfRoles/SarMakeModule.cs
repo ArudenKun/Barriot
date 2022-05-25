@@ -1,9 +1,13 @@
-﻿using Barriot.Extensions.Files;
+﻿using Barriot.Extensions;
+using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Modals;
 using Barriot.Interaction.Services;
+using Barriot.Models.Files;
 
 namespace Barriot.Interaction.Modules.SelfRoles
 {
+    // TODO, rework SEND
+    [IgnoreBlacklistedUsers]
     public class SarMakeModule : BarriotModuleBase
     {
         private readonly SarMakeService _service;
@@ -100,7 +104,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
                 await RespondAsync(
-                    text: $":x: **This sar creation has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
+                    text: $":x: **This sar creation has been abandoned!** {FileExtensions.GetError(ErrorInfo.SARContextAbandoned)}",
                     ephemeral: true);
                 return;
             }
@@ -138,7 +142,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
                 await RespondAsync(
-                    text: $":x: **This sar creation has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
+                    text: $":x: **This sar creation has been abandoned!** {FileExtensions.GetError(ErrorInfo.SARContextAbandoned)}",
                     ephemeral: true);
                 return;
             }
@@ -179,7 +183,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
             if (!_service.TryGetData(Context.User.Id, out var args) || args is null)
             {
                 await RespondAsync(
-                    text: $":x: **This sar creation has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
+                    text: $":x: **This sar creation has been abandoned!** {FileExtensions.GetError(ErrorInfo.SARContextAbandoned)}",
                     ephemeral: true);
                 return;
             }

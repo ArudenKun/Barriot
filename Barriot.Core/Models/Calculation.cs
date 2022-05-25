@@ -1,24 +1,24 @@
-﻿namespace Barriot.Extensions.Models
+﻿namespace Barriot
 {
     /// <summary>
     ///     A calculation along with its result.
     /// </summary>
-    public struct Calculation
+    public readonly struct Calculation
     {
         /// <summary>
         ///     The base equation executed over the converter.
         /// </summary>
-        public string Equation { get; set; }
+        public string Equation { get; }
 
         /// <summary>
         ///     The equation result. NaN or default(double) if unsuccesful.
         /// </summary>
-        public double Result { get; set; } = double.NaN;
+        public double Result { get; } = double.NaN;
 
         /// <summary>
         ///     The error of this calculation. If no error occurred, this will be <see cref="string.Empty"/>
         /// </summary>
-        public string Error { get; set; } = string.Empty;
+        public string Error { get; } = string.Empty;
 
         public Calculation(string equation, string errorReason = "")
         {

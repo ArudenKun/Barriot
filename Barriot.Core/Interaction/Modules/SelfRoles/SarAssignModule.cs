@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using Barriot.Interaction.Attributes;
+using System.Text;
 
 namespace Barriot.Interaction.Modules.SelfRoles
 {
+    // TODO, rework SEND
+    [IgnoreBlacklistedUsers]
     public class SarAssignModule : BarriotModuleBase
     {
         [ComponentInteraction("sar-from-button:*")]

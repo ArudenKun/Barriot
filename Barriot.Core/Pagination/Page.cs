@@ -1,18 +1,16 @@
-﻿using Discord;
-
-namespace Barriot.Extensions.Pagination
+﻿namespace Barriot.Pagination
 {
-    public struct Page
+    public readonly struct Page
     {
         /// <summary>
         ///     The embed produced by this page.
         /// </summary>
-        public EmbedBuilder Embed { get; set; }
+        public EmbedBuilder Embed { get; }
 
         /// <summary>
         ///     The components produced by this page.
         /// </summary>
-        public ComponentBuilder Component { get; set; }
+        public ComponentBuilder Component { get; }
 
         internal Page(EmbedBuilder embed, ComponentBuilder component)
         {

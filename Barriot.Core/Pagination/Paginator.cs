@@ -1,4 +1,4 @@
-﻿namespace Barriot.Extensions.Pagination
+﻿namespace Barriot.Pagination
 {
     public class Paginator<T>
     {
@@ -6,10 +6,10 @@
 
         private static Paginator<T>? instance;
 
-        private readonly Func<T, PageFormatter> _valueFormatter;
+        private readonly Func<T, PageFieldBuilder> _valueFormatter;
         private readonly string _customId;
 
-        internal Paginator(Func<T, PageFormatter> valueFormatter, string customId)
+        internal Paginator(Func<T, PageFieldBuilder> valueFormatter, string customId)
         {
             _valueFormatter = valueFormatter;
             _customId = customId;

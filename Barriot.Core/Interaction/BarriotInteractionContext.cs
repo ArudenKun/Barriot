@@ -15,6 +15,12 @@
         /// </summary>
         public bool WonGameInSession { get; set; } = false;
 
+        /// <summary>
+        ///     Creates a new context for upcoming interaction handlers to make use of.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="interaction"></param>
+        /// <param name="responseCallback"></param>
         internal BarriotInteractionContext(DiscordRestClient client, RestInteraction interaction, Func<string, Task> responseCallback)
             : base(client, interaction, responseCallback)
         {

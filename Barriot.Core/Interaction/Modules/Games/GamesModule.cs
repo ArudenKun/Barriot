@@ -1,15 +1,16 @@
-﻿using Barriot.Extensions.Files;
+﻿using Barriot.Extensions;
 using Barriot.Interaction.Attributes;
 
 namespace Barriot.Interaction.Modules
 {
+    // TODO, rework SEND
     [IgnoreBlacklistedUsers]
     public class GamesModule : BarriotModuleBase
     {
         [SlashCommand("riddle", "Gets a random riddle.")]
         public async Task RiddleAsync()
         {
-            var file = FileHelper.GetDataFromFile("Riddles");
+            var file = FileExtensions.GetDataFromFile("Riddles");
 
             var cb = new ComponentBuilder()
                 .WithButton("Answer", $"riddle:{Context.User.Id},{file.Index}");
@@ -25,7 +26,7 @@ namespace Barriot.Interaction.Modules
         public async Task RiddleAsync(ulong _, int riddleId)
         {
             await RespondAsync(
-                text: $":eyes: **The answer to your riddle is:** {FileHelper.GetDataFromFile("Riddles").Lines[riddleId].Split('|').Last()}",
+                text: $":eyes: **The answer to your riddle is:** {FileExtensions.GetDataFromFile("Riddles").Lines[riddleId].Split('|').Last()}",
                 ephemeral: Context.Member.DoEphemeral);
         }
 
@@ -34,7 +35,7 @@ namespace Barriot.Interaction.Modules
             [Summary("question", "The question to ask")] string? _ = null)
         {
             await RespondAsync(
-                text: $":speech_balloon: **{FileHelper.GetDataFromFile("Answers").SelectedLine}**",
+                text: $":speech_balloon: **{FileExtensions.GetDataFromFile("Answers").SelectedLine}**",
                 ephemeral: Context.Member.DoEphemeral);
         }
 
@@ -42,7 +43,7 @@ namespace Barriot.Interaction.Modules
         public async Task RandomFactAsync()
         {
             await RespondAsync(
-                text: $":bulb: **Did you know that:** {FileHelper.GetDataFromFile("Facts").SelectedLine}",
+                text: $":bulb: **Did you know that:** {FileExtensions.GetDataFromFile("Facts").SelectedLine}",
                 ephemeral: Context.Member.DoEphemeral);
         }
 
@@ -50,7 +51,7 @@ namespace Barriot.Interaction.Modules
         public async Task ShowerThoughtsAsync()
         {
             await RespondAsync(
-                text: $":thinking: **Have you ever thought about:** {FileHelper.GetDataFromFile("Thoughts").SelectedLine}",
+                text: $":thinking: **Have you ever thought about:** {FileExtensions.GetDataFromFile("Thoughts").SelectedLine}",
                 ephemeral: Context.Member.DoEphemeral);
         }
 
@@ -58,7 +59,7 @@ namespace Barriot.Interaction.Modules
         public async Task DadJokeAsync()
         {
             await RespondAsync(
-                text: $":man_facepalming: **Heres a good one:** {FileHelper.GetDataFromFile("Jokes").SelectedLine}",
+                text: $":man_facepalming: **Heres a good one:** {FileExtensions.GetDataFromFile("Jokes").SelectedLine}",
                 ephemeral: Context.Member.DoEphemeral);
         }
     }

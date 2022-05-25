@@ -1,19 +1,21 @@
-﻿namespace Barriot.Extensions.Files
+﻿using Barriot.Models.Files;
+
+namespace Barriot.Extensions
 {
-    public static class FileHelper
+    internal static class FileExtensions
     {
         /// <summary>
         ///     Gets the data from a file.
         /// </summary>
         /// <param name="fileName">The name of the file to get all data from.</param>
-        /// <returns>A populated type of <see cref="FileData"/></returns>
-        public static FileData GetDataFromFile(string fileName)
+        /// <returns>A populated type of <see cref="RandomizedFileData"/></returns>
+        public static RandomizedFileData GetDataFromFile(string fileName)
         {
             var data = File.ReadAllLines(Path.Combine("Files", fileName + ".txt"));
             return new(data);
         }
 
-        private static readonly Dictionary<ErrorType, string[]> _errorData = new();
+        private static readonly Dictionary<ErrorInfo, string[]> _errorData = new();
 
         /// <summary>
         ///     Gets an appended error string from the given <paramref name="error"/>
@@ -22,7 +24,7 @@
         /// <param name="parameter">The parameter this applies to.</param>
         /// <param name="seperator">The seperator applying to the format in which this result is returned.</param>
         /// <returns>A string matching the data from <paramref name="error"/></returns>
-        public static string GetErrorFromFile(ErrorType error, string parameter = "", string seperator = "\n")
+        public static string GetError(ErrorInfo error, string parameter = "")
         {
             if (!_errorData.TryGetValue(error, out var data))
             {
@@ -33,25 +35,30 @@
             if (!string.IsNullOrEmpty(parameter))
                 data[0] = data[0].Replace(@"{parameter}", parameter);
 
-            return string.Join(seperator, data);
+            var tb = new TextBuilder()
+                .WithResult(ResultFormat.Failure)
+                .WithHeader(data[0])
+                .WithContext(data[1])
+                .WithDescription(string.Join("\n", data[2..]));
+
+            return tb.Build();
         }
 
-        private static readonly Dictionary<InfoType, string[]> _infoData = new();
+        private static readonly Dictionary<EmbedInfo, string[]> _embedData = new();
 
         /// <summary>
         ///     Gets an appended info string from the given <paramref name="info"/>
         /// </summary>
         /// <param name="info">The information type to get all file data for.</param>
-        /// <param name="seperator">The seperator applying to the format in which this result is returned.</param>
         /// <returns>A string matching the data from <paramref name="info"/></returns>
-        public static string GetInfoFromFile(InfoType info, string seperator = "\n")
+        public static string GetEmbedContent(EmbedInfo info)
         {
-            if (!_infoData.TryGetValue(info, out var data))
+            if (!_embedData.TryGetValue(info, out var data))
             {
                 data = File.ReadAllLines(Path.Combine("Files", "Info", info + ".txt"));
-                _infoData.Add(info, data);
+                _embedData.Add(info, data);
             }
-            return string.Join(seperator, data);
+            return string.Join("\n", data);
         }
     }
 }

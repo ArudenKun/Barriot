@@ -11,6 +11,7 @@ using System.Text;
 
 namespace Barriot.Interaction.Modules
 {
+    // TODO, rework SEND
     [IgnoreBlacklistedUsers]
     [DefaultMemberPermissions(GuildPermission.Administrator)]
     public class EvaluationModule : BarriotModuleBase

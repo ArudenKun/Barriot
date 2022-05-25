@@ -2,10 +2,22 @@
 {
     public class InfoService
     {
+        private int _guildCount;
+
+        private DateTime _lastChecked;
+
+        private readonly DiscordRestClient _client;
+
+        /// <summary>
+        ///     Controls when the client has started (UTC)
+        /// </summary>
         public DateTime OnlineSince { get; set; }
 
-        public int GuildCount 
-        { 
+        /// <summary>
+        ///     Gets the current total guild count.
+        /// </summary>
+        public int GuildCount
+        {
             get
             {
                 if (_guildCount is 0 || DateTime.UtcNow.AddMinutes(15) <= _lastChecked)
@@ -17,12 +29,6 @@
                 return _guildCount;
             }
         }
-
-        private int _guildCount;
-
-        private DateTime _lastChecked;
-
-        private readonly DiscordRestClient _client;
 
         public InfoService(DiscordRestClient client)
         {

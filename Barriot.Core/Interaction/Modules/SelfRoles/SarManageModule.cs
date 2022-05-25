@@ -1,9 +1,8 @@
 ﻿using Barriot.Interaction.Attributes;
-using Barriot.Extensions.Pagination;
 using Barriot.Interaction.Modals;
 using Barriot.Extensions;
 using Barriot.Interaction.Services;
-using Barriot.Extensions.Files;
+using Barriot.Models.Files;
 
 namespace Barriot.Interaction.Modules.Administration
 {
@@ -27,7 +26,9 @@ namespace Barriot.Interaction.Modules.Administration
                 .WithButton("Edit a SAR message", "sar-message-manage", ButtonStyle.Secondary);
 
             await RespondAsync(
-                text: ":bar_chart: **Manage self-assign roles (SAR) in this server.** *Please choose any of the below options.*",
+                format: "bar_chart",
+                header: "Manage self-assign roles (SAR) in this server.", 
+                context: "Please choose any of the below options.",
                 components: cb.Build(),
                 ephemeral: true);
         }
@@ -49,8 +50,8 @@ namespace Barriot.Interaction.Modules.Administration
             if (!modal.Result.TryGetLinkData(out var data))
             {
                 await RespondAsync(
-                    text: $":x: **Input link is not a Discord message link!** *Input: ({modal.Result})*",
-                    ephemeral: true);
+                    error: "Input link is not a Discord message link!",
+                    context: $"Input: ({modal.Result})");
                 return;
             }
 
@@ -59,8 +60,8 @@ namespace Barriot.Interaction.Modules.Administration
             if (channel is null || channel is not RestTextChannel textChannel)
             {
                 await RespondAsync(
-                    text: $":x: **The message link does not lead to a usable/viewable channel.** *Input: ({modal.Result})*",
-                    ephemeral: true);
+                    error: "The message link does not lead to a usable/viewable channel.",
+                    context: $"Input: ({modal.Result})");
                 return;
             }
 
@@ -69,16 +70,16 @@ namespace Barriot.Interaction.Modules.Administration
             if (message is null || message is not RestUserMessage userMessage)
             {
                 await RespondAsync(
-                    text: $":x: **The message link does not lead to a usable message.** *Input: ({modal.Result})*",
-                    ephemeral: true);
+                    error: "The message link does not lead to a usable message.",
+                    context: $"Input: ({modal.Result})");
                 return;
             }
 
             if (userMessage.Interaction is not null || userMessage.Author.Id != Context.Client.CurrentUser.Id)
             {
                 await RespondAsync(
-                    text: ":x: **This message is not a valid self-assign role message!** *The message has to be created by Barriot and not be part of an interaction.*",
-                    ephemeral: true);
+                    error: "This message is not a valid self-assign role message!",
+                    context: "The message has to be created by Barriot and not be part of an interaction.");
                 return;
             }
 
@@ -89,7 +90,9 @@ namespace Barriot.Interaction.Modules.Administration
                 .WithButton("Modify message content", $"sar-message-editing:{userMessage.Id}", ButtonStyle.Secondary);
 
             await RespondAsync(
-                text: ":scroll: **Manage this message.** *Please select one of the below options to add a role or modify this message's content.*",
+                format: "scroll",
+                header: "Manage this message.", 
+                context: "Please select one of the below options to add a role or modify this message's content.",
                 components: cb.Build(),
                 ephemeral: true);
         }
@@ -116,7 +119,7 @@ namespace Barriot.Interaction.Modules.Administration
             if (!_service.TryGetData(messageId, out var data))
             {
                 await RespondAsync(
-                    text: $":x: **This message modification has been abandoned!** {FileHelper.GetErrorFromFile(ErrorType.SARContextAbandoned)}",
+                    text: $":x: **This message modification has been abandoned!** {FileExtensions.GetError(ErrorInfo.SARContextAbandoned)}",
                     embed: eb.Build(),
                     ephemeral: true);
                 return;
@@ -125,7 +128,8 @@ namespace Barriot.Interaction.Modules.Administration
             await data.ModifyAsync(x => x.Content = modal.Result);
 
             await RespondAsync(
-                text: ":white_check_mark: **Succesfully modified message content!**",
+                format: ResultFormat.Success,
+                header: "Succesfully modified message content!",
                 embed: eb.Build(),
                 ephemeral: true);
         }

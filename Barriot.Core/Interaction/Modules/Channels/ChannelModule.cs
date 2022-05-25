@@ -3,6 +3,7 @@ using Barriot.Interaction.Modals;
 
 namespace Barriot.Interaction.Modules
 {
+    // TODO, rework SEND
     [EnabledInDm(false)]
     [RequireBotPermission(ChannelPermission.ManageChannels)]
     [IgnoreBlacklistedUsers]

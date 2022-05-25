@@ -1,5 +1,4 @@
-﻿using Barriot.Extensions.Models;
-using Barriot.Interaction.Attributes;
+﻿using Barriot.Interaction.Attributes;
 
 namespace Barriot.Interaction.Modules
 {

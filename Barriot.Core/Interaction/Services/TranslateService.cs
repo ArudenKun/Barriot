@@ -18,6 +18,10 @@ namespace Barriot.Interaction.Services
             _translator = client;
         }
 
+        /// <summary>
+        ///     Get all supported languages.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<IEnumerable<LanguageData>>> GetSupportedLanguagesAsync()
         {
             if (_languages is null || _lastCheck > DateTime.UtcNow.AddDays(1))
@@ -40,6 +44,12 @@ namespace Barriot.Interaction.Services
                 return _languages;
         }
 
+        /// <summary>
+        ///     Translates text to the target language.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public async Task<string> TranslateAsync(string target, string text)
             => await _translator.TranslateAsync(x =>
             {

@@ -28,10 +28,4 @@ namespace Barriot.API.Voting
             return false;
         }
     }
-
-    public class Vote
-    {
-        [JsonProperty("voted")]
-        public int HasVoted { get; set; }
-    }
 }

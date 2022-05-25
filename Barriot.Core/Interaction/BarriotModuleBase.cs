@@ -1,4 +1,6 @@
-﻿using Barriot.Extensions.Pagination;
+﻿using Barriot.Models.Files;
+using Barriot.Pagination;
+using Barriot.Extensions;
 
 namespace Barriot.Interaction
 {
@@ -83,6 +85,14 @@ namespace Barriot.Interaction
 
             await UpdateAsync(
                 text: tb.Build());
+        }
+
+        public async Task UpdateAsync(ErrorInfo error, string parameter = "")
+        {
+            var text = FileExtensions.GetError(error, parameter);
+
+            await UpdateAsync(
+                text: text);
         }
 
         /// <summary>

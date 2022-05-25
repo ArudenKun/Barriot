@@ -1,16 +1,14 @@
-﻿namespace Barriot.Extensions.Files
+﻿namespace Barriot.Models.Files
 {
-    public enum ErrorType
+    /// <summary>
+    ///     Control for what error should be fetched from a file.
+    /// </summary>
+    public enum ErrorInfo
     {
         /// <summary>
         ///     An invalid timespan.
         /// </summary>
         InvalidTimeSpan,
-
-        /// <summary>
-        ///     The input of a certain string is too long.
-        /// </summary>
-        InputTooLong,
 
         /// <summary>
         ///     Sending reminders cannot be done because user disabled DM.

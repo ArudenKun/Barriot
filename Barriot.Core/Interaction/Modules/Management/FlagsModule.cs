@@ -3,6 +3,7 @@ using Barriot.Interaction.Modals;
 
 namespace Barriot.Interaction.Modules
 {
+    // TODO, rework SEND
     [IgnoreBlacklistedUsers]
     public class FlagsModule : BarriotModuleBase
     {

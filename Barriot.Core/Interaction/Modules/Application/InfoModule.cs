@@ -1,9 +1,10 @@
-﻿using Barriot.Extensions.Files;
+﻿using Barriot.Extensions;
 using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Services;
 
 namespace Barriot.Interaction.Modules
 {
+    // TODO, rework SEND
     [IgnoreBlacklistedUsers]
     public class InfoModule : BarriotModuleBase
     {
@@ -39,7 +40,7 @@ namespace Barriot.Interaction.Modules
                 .WithThumbnailUrl("https://rozen.one/Files/B_monogram.png")
                 .AddField("Commands", "Click on the buttons below to navigate through command examples & to get further support if required!")
                 .AddField("Note", "Discord currently does not support Message or User commands on mobile devices!")
-                .WithDescription(string.Join("\n", FileHelper.GetDataFromFile("HelpText").Lines));
+                .WithDescription(string.Join("\n", FileExtensions.GetDataFromFile("HelpText").Lines));
 
             await RespondAsync(
                 text: ":question: **Barriot help & support**",
@@ -74,7 +75,7 @@ namespace Barriot.Interaction.Modules
         {
             var eb = new EmbedBuilder()
                 .WithColor(Context.Member.Color)
-                .WithDescription(string.Join("\n", FileHelper.GetDataFromFile("Changelog").Lines));
+                .WithDescription(string.Join("\n", FileExtensions.GetDataFromFile("Changelog").Lines));
 
             var cb = new ComponentBuilder()
                 .WithButton("Get new version notifications", style: ButtonStyle.Link, url: _configuration["Domain"] + "discord")

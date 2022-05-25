@@ -1,6 +1,9 @@
-﻿namespace Barriot.Extensions.Files
+﻿namespace Barriot.Models.Files
 {
-    public sealed class FileData
+    /// <summary>
+    ///     Represents data fetched from a file with a randomizer to control the value returned.
+    /// </summary>
+    internal sealed class RandomizedFileData
     {
         private static readonly Random _random = new();
 
@@ -19,7 +22,7 @@
         /// </summary>
         public int Index;
 
-        internal FileData(string[] fileEnties)
+        internal RandomizedFileData(string[] fileEnties)
         {
             Lines = fileEnties;
             Index = _random.Next(0, Lines.Length);

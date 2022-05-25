@@ -2,7 +2,6 @@ using Barriot;
 using Barriot.API.Translation;
 using Barriot.Data;
 using Barriot.Extensions;
-using Barriot.Extensions.Models;
 using Barriot.Interaction;
 using Barriot.Interaction.Converters;
 using Barriot.Interaction.Services;

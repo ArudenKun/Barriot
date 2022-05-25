@@ -1,4 +1,6 @@
-﻿namespace Barriot.Interaction.Services
+﻿using Barriot.Models.Services;
+
+namespace Barriot.Interaction.Services
 {
     public class SarManageService
     {
@@ -24,6 +26,11 @@
                     _dataCache.Remove(kvp.Key);
         }
 
+        /// <summary>
+        ///     Creates new cache data from an existing message.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <param name="message"></param>
         public void CreateFromMessage(ulong messageId, RestUserMessage message)
         {
             if (_dataCache.ContainsKey(messageId))
@@ -32,6 +39,12 @@
                 _dataCache.Add(messageId, new(message));
         }
 
+        /// <summary>
+        ///     Attempts to get data matching the provided message Id.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public bool TryGetData(ulong messageId, out RestUserMessage args)
         {
             args = null!;
@@ -44,23 +57,20 @@
                 return false;
         }
 
+        /// <summary>
+        ///     Checks if a message is contained in the current cache.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
         public bool ContainsMessage(ulong messageId)
             => _dataCache.ContainsKey(messageId);
 
+        /// <summary>
+        ///     Attempts to remove message data from cache.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
         public bool TryRemoveData(ulong messageId)
             => _dataCache.Remove(messageId);
-
-        public class SarManageArgs
-        { 
-            public DateTime CreationDate { get; }
-
-            public RestUserMessage Message { get; }
-
-            public SarManageArgs(RestUserMessage message)
-            {
-                CreationDate = DateTime.UtcNow;
-                Message = message;
-            }
-        }
     }
 }
