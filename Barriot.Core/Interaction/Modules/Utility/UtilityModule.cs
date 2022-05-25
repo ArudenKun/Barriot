@@ -55,8 +55,8 @@ namespace Barriot.Interaction.Modules
         [SlashCommand("coinflip", "Flips a coin.")]
         public async Task CoinFlipAsync()
             => await RespondAsync(
-                text: (new Random().Next(2) < 1) 
-                    ? ":coin: **Heads!**" 
+                text: (new Random().Next(2) < 1)
+                    ? ":coin: **Heads!**"
                     : ":coin: **Tails!**",
                 ephemeral: Context.Member.DoEphemeral);
     }

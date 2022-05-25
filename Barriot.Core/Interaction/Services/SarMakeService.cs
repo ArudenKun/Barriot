@@ -25,7 +25,7 @@ namespace Barriot.Interaction.Services
 
         private void ClearCache(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            foreach(var kvp in _dataCache)
+            foreach (var kvp in _dataCache)
                 if (kvp.Value is not null && DateTime.UtcNow.AddMinutes(15) <= kvp.Value.CreationDate)
                     _dataCache.Remove(kvp.Key);
         }

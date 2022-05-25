@@ -1,6 +1,6 @@
-﻿using Barriot.Interaction.Attributes;
+﻿using Barriot.Extensions;
+using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Modals;
-using Barriot.Extensions;
 using Barriot.Interaction.Services;
 using Barriot.Models.Files;
 
@@ -27,7 +27,7 @@ namespace Barriot.Interaction.Modules.Administration
 
             await RespondAsync(
                 format: "bar_chart",
-                header: "Manage self-assign roles (SAR) in this server.", 
+                header: "Manage self-assign roles (SAR) in this server.",
                 context: "Please choose any of the below options.",
                 components: cb.Build(),
                 ephemeral: true);
@@ -91,7 +91,7 @@ namespace Barriot.Interaction.Modules.Administration
 
             await RespondAsync(
                 format: "scroll",
-                header: "Manage this message.", 
+                header: "Manage this message.",
                 context: "Please select one of the below options to add a role or modify this message's content.",
                 components: cb.Build(),
                 ephemeral: true);

@@ -66,15 +66,15 @@ namespace Barriot.Interaction.Modules
 
                     await RespondAsync(
                         format: ResultFormat.Success,
-                        header: "Thank you for voting!" ,
+                        header: "Thank you for voting!",
                         context: "Your vote has been registered.",
                         ephemeral: true);
                 }
-                else 
+                else
                     await RespondAsync(
                         error: "You already responded to this poll!");
             }
-            else 
+            else
                 await RespondAsync(
                     error: "Unable to register vote!",
                     context: "This poll is more than 15 days old and has been pruned from the database.");
@@ -98,7 +98,7 @@ namespace Barriot.Interaction.Modules
                     embed: eb.Build(),
                     ephemeral: true);
             }
-            else 
+            else
                 await RespondAsync(
                     error: "No results found!",
                     context: "This poll is more than 15 days old and has been pruned from the database.");

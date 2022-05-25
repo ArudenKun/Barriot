@@ -1,7 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Barriot.Entities.Pins;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using Barriot.Entities.Pins;
 
 namespace Barriot
 {

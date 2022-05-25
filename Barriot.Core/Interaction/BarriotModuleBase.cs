@@ -1,6 +1,6 @@
-﻿using Barriot.Models.Files;
+﻿using Barriot.Extensions;
+using Barriot.Models.Files;
 using Barriot.Pagination;
-using Barriot.Extensions;
 
 namespace Barriot.Interaction
 {

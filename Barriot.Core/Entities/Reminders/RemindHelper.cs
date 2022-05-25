@@ -39,7 +39,7 @@ namespace Barriot.Entities.Reminders
         }
 
         public static async IAsyncEnumerable<RemindEntity> GetManyAsync(DateTime time)
-        { 
+        {
             var documents = await _client.FindManyDocumentsAsync(x => x.Expiration <= time);
 
             await foreach (var document in documents)

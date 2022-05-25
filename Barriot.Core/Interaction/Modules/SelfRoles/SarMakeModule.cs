@@ -219,8 +219,8 @@ namespace Barriot.Interaction.Modules.SelfRoles
                     emb.WithDescription(args.Content);
                 }
                 message = await args.Channel.SendMessageAsync(
-                    text: args.FormatAsEmbed 
-                        ? null 
+                    text: args.FormatAsEmbed
+                        ? null
                         : args.Content,
                     embed: emb?.Build());
             }
@@ -228,8 +228,8 @@ namespace Barriot.Interaction.Modules.SelfRoles
             else
                 cb = ComponentBuilder.FromMessage(message);
 
-            var name = string.IsNullOrEmpty(modal.Label) 
-                ? role.Name 
+            var name = string.IsNullOrEmpty(modal.Label)
+                ? role.Name
                 : modal.Label;
 
             if (button)

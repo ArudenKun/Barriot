@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Barriot.Extensions
+﻿namespace Barriot.Extensions
 {
     internal static class StringExtensions
     {

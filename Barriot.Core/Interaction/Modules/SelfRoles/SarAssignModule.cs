@@ -40,7 +40,7 @@ namespace Barriot.Interaction.Modules.SelfRoles
 
             builder.AppendLine(":white_check_mark: **Succesfully modified roles:**\n");
 
-            foreach(var roleId in selectedValues)
+            foreach (var roleId in selectedValues)
             {
                 bool added = true;
                 if (!guildUser.RoleIds.Any(x => x == roleId))
