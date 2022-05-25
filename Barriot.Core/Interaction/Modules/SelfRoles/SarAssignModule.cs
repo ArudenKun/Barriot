@@ -1,7 +1,7 @@
 ﻿using Barriot.Interaction.Attributes;
 using System.Text;
 
-namespace Barriot.Interaction.Modules.SelfRoles
+namespace Barriot.Interaction.Modules
 {
     // TODO, rework SEND
     [IgnoreBlacklistedUsers]

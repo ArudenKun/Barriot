@@ -1,7 +1,19 @@
-﻿namespace Barriot.Extensions
+﻿using System.Text.RegularExpressions;
+
+namespace Barriot.Extensions
 {
     internal static class StringExtensions
     {
+        private static readonly Regex _regex = new(
+            @"(?<Prelink>\S+\s+\S*)?
+              (?<OpenBrace><)?https?:\/\/(?:(?:ptb|canary)\.)?discord(?:app)?\.com\/channels\/
+              (?<Location>\d+|@me)\/
+              (?<ChannelId>\d+)\/
+              (?<MessageId>\d+)\/?
+              (?<CloseBrace>>)?
+              (?<Postlink>\S*\s+\S+)?", 
+            RegexOptions.Compiled);
+
         /// <summary>
         ///     Reduces the length of the <paramref name="input"/> and appends the <paramref name="finalizer"/> to humanize the returned string.
         /// </summary>
@@ -51,10 +63,34 @@
                     data.Add(ul);
             }
 
-            if (data.Count is 3)
+            if (data.Count is 2)
                 return true;
 
             return false;
+        }
+
+        public static bool IsJumpUrl(this string messageUrl)
+            => _regex.IsMatch(messageUrl);
+
+        public static bool TryGetUrlData(this string messageUrl, out List<ulong> data)
+        {
+            data = new();
+
+            if (!messageUrl.IsJumpUrl())
+                return false;
+
+            var matches = _regex.Matches(messageUrl);
+
+            foreach(Match match in matches)
+            {
+                switch(match.Name)
+                {
+                    case "ChannelId":
+                        break;
+                    case "MessageId":
+                        break;
+                }
+            }
         }
     }
 }

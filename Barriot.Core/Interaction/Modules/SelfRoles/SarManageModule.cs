@@ -4,7 +4,7 @@ using Barriot.Interaction.Modals;
 using Barriot.Interaction.Services;
 using Barriot.Models.Files;
 
-namespace Barriot.Interaction.Modules.Administration
+namespace Barriot.Interaction.Modules
 {
     [EnabledInDm(false)]
     [RequireUserPermission(GuildPermission.Administrator)]

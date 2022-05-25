@@ -4,7 +4,7 @@ using Barriot.Interaction.Modals;
 using Barriot.Interaction.Services;
 using Barriot.Models.Files;
 
-namespace Barriot.Interaction.Modules.SelfRoles
+namespace Barriot.Interaction.Modules
 {
     // TODO, rework SEND
     [IgnoreBlacklistedUsers]
