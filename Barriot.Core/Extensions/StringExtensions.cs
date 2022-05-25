@@ -69,9 +69,20 @@ namespace Barriot.Extensions
             return false;
         }
 
+        /// <summary>
+        ///     Checks if the provided <paramref name="messageUrl"/> is a valid jump url.
+        /// </summary>
+        /// <param name="messageUrl"></param>
+        /// <returns></returns>
         public static bool IsJumpUrl(this string messageUrl)
             => _regex.IsMatch(messageUrl);
 
+        /// <summary>
+        ///     Attempts to fetch a jump url from the provided message url.
+        /// </summary>
+        /// <param name="messageUrl"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static bool TryGetUrlData(this string messageUrl, out List<ulong> data)
         {
             data = new();
@@ -85,12 +96,25 @@ namespace Barriot.Extensions
             {
                 switch(match.Name)
                 {
+                    case "Location":
+                        if (ulong.TryParse(match.Value, out var ul))
+                            data.Add(ul); // guild id
+                        else data.Add(0); // dm
+                        break;
                     case "ChannelId":
+                        var channelId = ulong.Parse(match.Value);
+
+                        data.Add(channelId);
                         break;
                     case "MessageId":
+                        var messageId = ulong.Parse(match.Value);
+
+                        data.Add(messageId);
                         break;
                 }
             }
+
+            return true;
         }
     }
 }

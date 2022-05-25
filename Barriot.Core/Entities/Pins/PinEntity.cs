@@ -16,10 +16,10 @@ namespace Barriot
         [BsonIgnore]
         public EntityState State { get; set; }
 
-        internal PinEntity(ulong userId, string messageUrl)
+        internal PinEntity(ulong userId, PinUrl url)
         {
             UserId = userId;
-            _url = messageUrl;
+            _url = url;
             _pinDate = DateTime.UtcNow;
         }
 
@@ -30,11 +30,11 @@ namespace Barriot
         /// </summary>
         public ulong UserId { get; set; }
 
-        private string _url;
+        private PinUrl _url;
         /// <summary>
         ///     The link to the message this pin refers to.
         /// </summary>
-        public string Url
+        public PinUrl Url
         {
             get
                 => _url;
@@ -89,6 +89,6 @@ namespace Barriot
         #endregion
 
         public override string ToString()
-            => Url;
+            => Url.ToString();
     }
 }
