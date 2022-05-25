@@ -76,7 +76,7 @@ await app.Services.GetRequiredService<DatabaseManager>()
 await app.Services.GetRequiredService<ClientManager>()
     .ConfigureAsync();
 
-// Final configuration entries.
+// Final configuration entries. 
 app.UseAuthorization();
 
 // Set up the ability to redirect REST requests.
