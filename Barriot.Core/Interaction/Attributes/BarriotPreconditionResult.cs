@@ -1,13 +1,13 @@
 ﻿namespace Barriot.Interaction.Attributes
 {
-    public class BarriotPreconditionResult : PreconditionResult
+    public sealed class BarriotPreconditionResult : PreconditionResult
     {
         /// <summary>
         ///     The reason why this precondition failed.
         /// </summary>
         public string? DisplayReason { get; }
 
-        protected BarriotPreconditionResult(InteractionCommandError? error, string reason, string? displayReason)
+        private BarriotPreconditionResult(InteractionCommandError? error, string reason, string? displayReason)
             : base(error, reason)
         {
             DisplayReason = displayReason;

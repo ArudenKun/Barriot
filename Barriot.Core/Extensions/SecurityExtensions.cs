@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Barriot.Extensions
 {
-    public static class SecurityExtensions
+    internal static class SecurityExtensions
     {
         private readonly static SHA256 _hasher = SHA256.Create();
 

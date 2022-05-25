@@ -2,10 +2,8 @@
 
 namespace Barriot.Extensions
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
-        private static readonly Lazy<Regex> _linkRegex = new(() => new(@"", RegexOptions.Compiled));
-
         /// <summary>
         ///     Reduces the length of the <paramref name="input"/> and appends the <paramref name="finalizer"/> to humanize the returned string.
         /// </summary>

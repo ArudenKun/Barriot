@@ -1,6 +1,9 @@
 ﻿namespace Barriot.Interaction.Attributes
 {
-    public class IgnoreBlacklistedUsersAttribute : PreconditionAttribute
+    /// <summary>
+    ///     An attribute that checks if the user in question is blacklisted.
+    /// </summary>
+    public sealed class IgnoreBlacklistedUsersAttribute : PreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext context, ICommandInfo commandInfo, IServiceProvider services)
         {

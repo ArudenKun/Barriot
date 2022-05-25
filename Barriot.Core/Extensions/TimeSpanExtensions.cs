@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Barriot.Extensions
 {
-    public static class TimeSpanExtensions
+    internal static class TimeSpanExtensions
     {
         private static readonly Lazy<IReadOnlyDictionary<string, Func<string, TimeSpan>>> _callback = new(ValueFactory);
 

@@ -9,6 +9,26 @@ namespace Barriot.Interaction
     /// </summary>
     public class BarriotModuleBase : RestInteractionModuleBase<BarriotInteractionContext>
     {
+        #region DeferAsync
+
+        /// <summary>
+        ///     Defers a loading setter to the current <see cref="ComponentInteractionAttribute"/> marked method sources from.
+        /// </summary>
+        /// <param name="ephemeral"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
+        public async Task DeferLoadingAsync(bool ephemeral = false)
+        {
+            if (Context.Interaction is not RestMessageComponent component)
+                throw new InvalidCastException($"{nameof(DeferLoadingAsync)} can only be executed for a {nameof(RestMessageComponent)}");
+
+            var payload = component.DeferLoading(ephemeral);
+
+            await Context.InteractionResponseCallback(payload);
+        }
+
+        #endregion
+
         #region UpdateAsync
 
         /// <summary>
@@ -87,6 +107,13 @@ namespace Barriot.Interaction
                 text: tb.Build());
         }
 
+        /// <summary>
+        ///     Updates the interaction the current <see cref="ComponentInteractionAttribute"/> marked method sources from with an error.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <param name="parameter"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
         public async Task UpdateAsync(ErrorInfo error, string parameter = "")
         {
             var text = FileExtensions.GetError(error, parameter);
@@ -172,6 +199,20 @@ namespace Barriot.Interaction
         }
 
         /// <summary>
+        ///     Responds to the current <see cref="RestInteraction"/> with an error.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <param name="parameter"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task RespondAsync(ErrorInfo error, string parameter = "")
+        {
+            var text = FileExtensions.GetError(error, parameter);
+
+            await RespondAsync(
+                text: text);
+        }
+
+        /// <summary>
         ///     Responds to the current <see cref="RestInteraction"/> with a page.
         /// </summary>
         /// <param name="page">The page to send.</param>
@@ -237,6 +278,20 @@ namespace Barriot.Interaction
 
             await base.FollowupAsync(
                 text: tb.Build());
+        }
+
+        /// <summary>
+        ///     Follows up to the current <see cref="RestInteraction"/> with an error.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <param name="parameter"></param>
+        /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
+        public async Task FollowupAsync(ErrorInfo error, string parameter = "")
+        {
+            var text = FileExtensions.GetError(error, parameter);
+
+            await FollowupAsync(
+                text: text);
         }
 
         #endregion
