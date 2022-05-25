@@ -5,13 +5,7 @@ namespace Barriot.Extensions
     internal static class StringExtensions
     {
         private static readonly Regex _regex = new(
-            @"(?<Prelink>\S+\s+\S*)?
-              (?<OpenBrace><)?https?:\/\/(?:(?:ptb|canary)\.)?discord(?:app)?\.com\/channels\/
-              (?<Location>\d+|@me)\/
-              (?<ChannelId>\d+)\/
-              (?<MessageId>\d+)\/?
-              (?<CloseBrace>>)?
-              (?<Postlink>\S*\s+\S+)?", 
+            @"(?<Prelink>\S+\s+\S*)?(?<OpenBrace><)?https?:\/\/(?:(?:ptb|canary)\.)?discord(?:app)?\.com\/channels\/(?<Location>\d+|@me)\/(?<ChannelId>\d+)\/(?<MessageId>\d+)\/?(?<CloseBrace>>)?(?<Postlink>\S*\s+\S+)?",
             RegexOptions.Compiled);
 
         /// <summary>
@@ -87,32 +81,33 @@ namespace Barriot.Extensions
         {
             data = new();
 
+            Console.WriteLine(messageUrl);
+
             if (!messageUrl.IsJumpUrl())
                 return false;
 
             var matches = _regex.Matches(messageUrl);
 
-            foreach(Match match in matches)
-            {
-                switch(match.Name)
-                {
-                    case "Location":
-                        if (ulong.TryParse(match.Value, out var ul))
-                            data.Add(ul); // guild id
-                        else data.Add(0); // dm
-                        break;
-                    case "ChannelId":
-                        var channelId = ulong.Parse(match.Value);
+            foreach (Match match in matches)
+                foreach (Group group in match.Groups)
+                    switch (group.Name)
+                    {
+                        case "Location":
+                            if (ulong.TryParse(group.Value, out var ul))
+                                data.Add(ul); // guild id
+                            else data.Add(0); // dm
+                            break;
+                        case "ChannelId":
+                            var channelId = ulong.Parse(group.Value);
 
-                        data.Add(channelId);
-                        break;
-                    case "MessageId":
-                        var messageId = ulong.Parse(match.Value);
+                            data.Add(channelId);
+                            break;
+                        case "MessageId":
+                            var messageId = ulong.Parse(group.Value);
 
-                        data.Add(messageId);
-                        break;
-                }
-            }
+                            data.Add(messageId);
+                            break;
+                    }
 
             return true;
         }
