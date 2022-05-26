@@ -1,9 +1,9 @@
-﻿namespace Barriot.Entities.Pins
+﻿namespace Barriot.Models
 {
     /// <summary>
     ///     The jump Url source.
     /// </summary>
-    public enum PinUrlType : int
+    public enum JumpUrlType : int
     {
         /// <summary>
         ///     The Url sources from a direct message.

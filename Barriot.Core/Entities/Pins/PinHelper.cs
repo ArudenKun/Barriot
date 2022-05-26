@@ -1,4 +1,5 @@
 ﻿using Barriot.Data;
+using Barriot.Models;
 using MongoDB.Driver;
 
 namespace Barriot.Entities.Pins
@@ -40,7 +41,7 @@ namespace Barriot.Entities.Pins
             }
         }
 
-        public static async Task<PinEntity> CreateAsync(ulong userId, string messageUrl)
+        public static async Task<PinEntity> CreateAsync(ulong userId, JumpUrl messageUrl)
         {
             var entity = new PinEntity(userId, messageUrl);
 

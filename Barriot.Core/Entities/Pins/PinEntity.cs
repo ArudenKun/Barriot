@@ -1,4 +1,5 @@
 ﻿using Barriot.Entities.Pins;
+using Barriot.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
@@ -16,10 +17,10 @@ namespace Barriot
         [BsonIgnore]
         public EntityState State { get; set; }
 
-        internal PinEntity(ulong userId, PinUrl url)
+        internal PinEntity(ulong userId, JumpUrl url)
         {
             UserId = userId;
-            _url = url;
+            _url = url.Url;
             _pinDate = DateTime.UtcNow;
         }
 
@@ -30,11 +31,11 @@ namespace Barriot
         /// </summary>
         public ulong UserId { get; set; }
 
-        private PinUrl _url;
+        private string _url;
         /// <summary>
         ///     The link to the message this pin refers to.
         /// </summary>
-        public PinUrl Url
+        public string Url
         {
             get
                 => _url;
@@ -42,6 +43,36 @@ namespace Barriot
             {
                 _url = value;
                 _ = ModifyAsync(Builders<PinEntity>.Update.Set(x => x.Url, value));
+            }
+        }
+
+        private ulong _channelId;
+        /// <summary>
+        /// 
+        /// </summary>
+        public ulong ChannelId
+        {
+            get
+                => _channelId;
+            set
+            {
+                _channelId = value;
+                _ = ModifyAsync(Builders<PinEntity>.Update.Set(x => x.ChannelId, value));
+            }
+        }
+
+        private ulong _messageId;
+        /// <summary>
+        /// 
+        /// </summary>
+        public ulong MessageId
+        {
+            get
+                => _messageId;
+            set
+            {
+                _messageId = value;
+                _ = ModifyAsync(Builders<PinEntity>.Update.Set(x => x.MessageId, value));
             }
         }
 
@@ -74,7 +105,7 @@ namespace Barriot
         public static async Task<List<PinEntity>> GetManyAsync(ulong userId)
             => await PinHelper.GetManyAsync(userId).ToListAsync();
 
-        public static async Task<PinEntity> CreateAsync(ulong userId, string messageUrl)
+        public static async Task<PinEntity> CreateAsync(ulong userId, JumpUrl messageUrl)
             => await PinHelper.CreateAsync(userId, messageUrl);
 
         #endregion

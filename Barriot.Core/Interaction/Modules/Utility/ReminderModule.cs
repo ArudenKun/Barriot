@@ -69,15 +69,38 @@ namespace Barriot.Interaction.Modules
 
         [SlashCommand("reminders", "Lists your current reminders.")]
         public async Task ListRemindersAsync([Summary("page", "The reminders page")] int page = 1)
-            => await ListRemindersInternal(page);
-
-        [ComponentInteraction("reminders-list:*")]
-        public async Task ListRemindersFromExistingAsync(int page)
         {
-            await ListRemindersInternal(page);
+            var value = await ListRemindersInternal(page);
+
+            if (value is not null)
+                await RespondAsync(
+                    page: value.Value,
+                    header: "Your reminders:");
+
+            else
+                await RespondAsync(
+                    error: "You have no reminders!",
+                    context: "Use ` /remind ` to set reminders.");
         }
 
-        private async Task ListRemindersInternal(int page)
+        [ComponentInteraction("reminders-list:*")]
+        public async Task ListRemindersFromButtonAsync(int page)
+        {
+            var value = await ListRemindersInternal(page);
+
+            if (value is not null)
+                await UpdateAsync(
+                    page: value.Value,
+                    header: "Your reminders:");
+
+            else
+                await UpdateAsync(
+                    error: "You have no reminders!",
+                    context: "Use ` /remind ` to set reminders.");
+
+        }
+
+        private async Task<Page?> ListRemindersInternal(int page)
         {
             if (page < 1)
                 page = 1;
@@ -103,14 +126,10 @@ namespace Barriot.Interaction.Modules
 
                 value.Component.WithButton("Delete reminders from this page", $"reminders-deleting:{page}", ButtonStyle.Secondary);
 
-                await RespondAsync(
-                    page: value,
-                    header: "Your reminders:");
+                return value;
             }
-            else
-                await RespondAsync(
-                    error: "You have no reminders!",
-                    context: "Use ` /remind ` to set reminders.");
+
+            return null;
         }
 
         [ComponentInteraction("reminders-deleting:*")]

@@ -2,34 +2,34 @@
 using Barriot.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Barriot
+namespace Barriot.Models
 {
     /// <summary>
     ///     Represents a message jump url.
     /// </summary>
-    public record PinUrl
+    public readonly struct JumpUrl
     {
         /// <summary>
         ///     The url of this message reference.
         /// </summary>
-        public string Url { get; set; }
+        public string Url { get; }
 
         /// <summary>
         ///     The source of this url.
         /// </summary>
-        public PinUrlType Type { get; set; }
+        public JumpUrlType Type { get; }
 
         /// <summary>
         ///     The Id of the channel this url jumps to.
         /// </summary>
-        public ulong ChannelId { get; set; }
+        public ulong ChannelId { get; }
 
         /// <summary>
         ///     The Id of the message this url jumps to.
         /// </summary>
-        public ulong MessageId { get; set; }
+        public ulong MessageId { get; }
 
-        public PinUrl(string url, PinUrlType type, ulong channelId, ulong messageId)
+        public JumpUrl(string url, JumpUrlType type, ulong channelId, ulong messageId)
         {
             Url = url;
             Type = type;
@@ -38,21 +38,21 @@ namespace Barriot
         }
 
         /// <summary>
-        ///     Attempts to create a <see cref="PinUrl"/> from the provided <paramref name="messageUrl"/>.
+        ///     Attempts to create a <see cref="JumpUrl"/> from the provided <paramref name="messageUrl"/>.
         /// </summary>
         /// <param name="messageUrl">The url to attempt to parse.</param>
         /// <param name="value">The returned value.</param>
         /// <returns><see langword="true"/> if succesfully parsed. <see langword="false"/> if not.</returns>
-        public static bool TryParse(string messageUrl, out PinUrl? value)
+        public static bool TryParse(string messageUrl, out JumpUrl value)
         {
-            value = null!;
+            value = new();
 
             if (!StringExtensions.TryGetUrlData(messageUrl, out var data))
                 return false;
 
             var type = (data[0] is 0ul) 
-                ? PinUrlType.DirectMessage 
-                : PinUrlType.GuildMessage;
+                ? JumpUrlType.DirectMessage 
+                : JumpUrlType.GuildMessage;
 
             value = new(messageUrl, type, data[1], data[2]);
 
@@ -60,24 +60,46 @@ namespace Barriot
         }
 
         /// <summary>
-        ///     Creates a <see cref="PinUrl"/> from the provided <paramref name="messageUrl"/>.
+        ///     Creates a <see cref="JumpUrl"/> from the provided <paramref name="messageUrl"/>.
         /// </summary>
         /// <param name="messageUrl">The url to parse.</param>
-        /// <returns>A new instance of <see cref="PinUrl"/>.</returns>
+        /// <returns>A new instance of <see cref="JumpUrl"/>.</returns>
         /// <exception cref="ArgumentException">Thrown if <paramref name="messageUrl"/> is an invalid jump url.</exception>
-        public static PinUrl Parse(string messageUrl)
+        public static JumpUrl Parse(string messageUrl)
         {
             if (!StringExtensions.TryGetUrlData(messageUrl, out var data))
                 throw new ArgumentException("Provided argument is not a valid message url.", nameof(messageUrl));
 
             var type = (data[0] is 0ul)
-                ? PinUrlType.DirectMessage
-                : PinUrlType.GuildMessage;
+                ? JumpUrlType.DirectMessage
+                : JumpUrlType.GuildMessage;
 
             return new(messageUrl, type, data[1], data[2]);
         }
 
         public override string ToString()
             => Url;
+
+        public override bool Equals([NotNullWhen(true)] object? obj)
+        {
+            if (obj is JumpUrl url && url.Url == Url)
+                return true;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Url.GetHashCode();
+        }
+
+        public static bool operator ==(JumpUrl left, JumpUrl right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(JumpUrl left, JumpUrl right)
+        {
+            return !(left == right);
+        }
     }
 }
