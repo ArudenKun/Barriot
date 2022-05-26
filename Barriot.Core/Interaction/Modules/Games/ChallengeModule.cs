@@ -102,7 +102,7 @@ namespace Barriot.Interaction.Modules
 
             await RespondAsync(
                 format: "crossed_swords",
-                header: $"<@{targetId}>! You have been challenged by <@{userId}> to a game of {gameData[1]}!" 
+                header: $"<@{targetId}>! You have been challenged by <@{userId}> to a game of {gameData[1]}!", 
                 context: "Are you up to the challenge?",
                 components: cb.Build(),
                 ephemeral: false);

@@ -2,6 +2,7 @@
 using Barriot.Pagination;
 using Barriot.Models;
 using MongoDB.Bson;
+using Barriot.Extensions;
 
 namespace Barriot.Interaction.Modules
 {
@@ -9,7 +10,7 @@ namespace Barriot.Interaction.Modules
     public class PinModule : BarriotModuleBase
     {
         [MessageCommand("Pin")]
-        public async Task PersonalPinAsync(IMessage message)
+        public async Task PinAsync(IMessage message)
         {
             if (!JumpUrl.TryParse(message.GetJumpUrl(), out var messageUrl))
             {
@@ -90,7 +91,7 @@ namespace Barriot.Interaction.Modules
                         {
                             var pinnedSince = DateTime.UtcNow - x.PinDate;
 
-                            return new($"{pinnedSince}", x.Url);
+                            return new($"{pinnedSince.ToReadable()} ago.", x.Url);
                         })
                         .Build();
                 }

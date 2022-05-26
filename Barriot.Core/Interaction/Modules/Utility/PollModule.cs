@@ -83,13 +83,21 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("pollresults:*")]
         public async Task GetPollResultsAsync(ulong messageId)
         {
-            var results = await PollEntity.GetAsync(messageId);
+            var result = await PollEntity.GetAsync(messageId);
 
-            if (results.Options.Any())
+            if (result is null)
+            {
+                await RespondAsync(
+                    error: "No results found!",
+                    context: "This poll is more than 15 days old and has been pruned from the database.");
+                return;
+            }
+
+            if (result.Options.Any())
             {
                 var eb = new EmbedBuilder()
                     .WithColor(Context.User.AccentColor ?? Color.Blue);
-                foreach (var r in results.Options)
+                foreach (var r in result.Options)
                     eb.AddField($"{r.Label} [{r.Id}]", $"Amount of votes: {r.Votes}");
 
                 await RespondAsync(
@@ -98,10 +106,6 @@ namespace Barriot.Interaction.Modules
                     embed: eb.Build(),
                     ephemeral: true);
             }
-            else
-                await RespondAsync(
-                    error: "No results found!",
-                    context: "This poll is more than 15 days old and has been pruned from the database.");
         }
     }
 }

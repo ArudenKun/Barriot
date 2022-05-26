@@ -135,9 +135,9 @@ namespace Barriot.Interaction.Modules
         [ComponentInteraction("reminders-deleting:*")]
         public async Task DeletingRemindersAsync(int page)
         {
-            var selection = await RemindEntity.GetManyAsync(Context.User);
+            var reminders = await RemindEntity.GetManyAsync(Context.User);
 
-            if (!selection.Any())
+            if (!reminders.Any())
                 await UpdateAsync(
                     error: "You have no reminders to delete!");
 
@@ -150,7 +150,7 @@ namespace Barriot.Interaction.Modules
 
                 int index = page * 10 - 10;
 
-                var range = selection.GetRange(index, selection.Count - index);
+                var range = reminders.GetRange(index, reminders.Count - index);
                 for (int i = 0; i < range.Count; i++)
                 {
                     if (i == 10)
@@ -172,26 +172,26 @@ namespace Barriot.Interaction.Modules
         }
 
         [ComponentInteraction("reminders-deleted")]
-        public async Task DeletedRemindersAsync(ObjectId[] selectedReminders)
+        public async Task DeletedRemindersAsync(ObjectId[] selectedValues)
         {
-            var selection = await RemindEntity.GetManyAsync(Context.User);
+            var reminders = await RemindEntity.GetManyAsync(Context.User);
 
-            if (!selection.Any())
+            if (!reminders.Any())
                 await UpdateAsync(
                     error: "You have no reminders to delete!");
 
             else
             {
-                foreach (var value in selectedReminders)
+                foreach (var value in selectedValues)
                 {
-                    var reminder = selection.First(x => x.ObjectId == value);
+                    var reminder = reminders.First(x => x.ObjectId == value);
 
                     if (reminder is not null)
                         await reminder.DeleteAsync();
                 }
                 await UpdateAsync(
                     format: ResultFormat.Success,
-                    header: $"Succesfully removed {selectedReminders.Length} reminder(s).");
+                    header: $"Succesfully removed {selectedValues.Length} reminder(s).");
             }
         }
     }
