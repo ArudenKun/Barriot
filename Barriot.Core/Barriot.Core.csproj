@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<RootNamespace>Barriot</RootNamespace>
 	<Version>3.1.0</Version>
-	<AssemblyVersion>3.1.0.1</AssemblyVersion>
-	<FileVersion>3.1.0.1</FileVersion>
+	<AssemblyVersion>3.1.0.7</AssemblyVersion>
+	<FileVersion>3.1.0.7</FileVersion>
 	<WarningLevel>5</WarningLevel>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
