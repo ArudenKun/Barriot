@@ -42,27 +42,6 @@ namespace Barriot.Extensions
             else return input;
         }
 
-        public static bool TryGetLinkData(this string? messageLink, out List<ulong> data)
-        {
-            data = new();
-
-            if (string.IsNullOrEmpty(messageLink))
-                return false;
-
-            var extraction = messageLink.Split('/');
-
-            for (int i = 0; i < extraction.Length; i++)
-            {
-                if (ulong.TryParse(extraction[i], out var ul))
-                    data.Add(ul);
-            }
-
-            if (data.Count is 2)
-                return true;
-
-            return false;
-        }
-
         /// <summary>
         ///     Checks if the provided <paramref name="messageUrl"/> is a valid jump url.
         /// </summary>

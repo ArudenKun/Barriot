@@ -47,7 +47,7 @@ namespace Barriot.Models
         {
             value = new();
 
-            if (!StringExtensions.TryGetUrlData(messageUrl, out var data))
+            if (!messageUrl.TryGetUrlData(out var data))
                 return false;
 
             var type = (data[0] is 0ul) 
@@ -67,7 +67,7 @@ namespace Barriot.Models
         /// <exception cref="ArgumentException">Thrown if <paramref name="messageUrl"/> is an invalid jump url.</exception>
         public static JumpUrl Parse(string messageUrl)
         {
-            if (!StringExtensions.TryGetUrlData(messageUrl, out var data))
+            if (!messageUrl.TryGetUrlData(out var data))
                 throw new ArgumentException("Provided argument is not a valid message url.", nameof(messageUrl));
 
             var type = (data[0] is 0ul)
