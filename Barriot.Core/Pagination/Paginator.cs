@@ -36,8 +36,7 @@
             if (index + pageSize >= entries.Count)
                 toGather = entries.Count - index;
 
-            var eb = new EmbedBuilder()
-                .WithColor(Color.Blue);
+            var eb = new EmbedBuilder();
 
             var range = entries.GetRange(index, toGather);
 
@@ -64,8 +63,8 @@
                     style: ButtonStyle.Primary,
                     disabled: pageNumber >= maxPages);
 
-            eb.WithFooter($"Page {pageNumber}/{maxPages} | Barriot by Rozen.");
-
+            eb.WithFooter($"Page {pageNumber}/{maxPages}");
+            
             return new Page(eb, cb); // continue
         }
 

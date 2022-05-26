@@ -17,7 +17,6 @@ namespace Barriot.Interaction.Modules
         public async Task SettingsAsync()
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .AddField("Current embed color", new Color(Context.Member.Color).ToString())
                 .AddField("Hiding commands", Context.Member.DoEphemeral);
 
@@ -37,8 +36,8 @@ namespace Barriot.Interaction.Modules
                 format: "gear",
                 header: "Your personal settings.",
                 context: "A range of buttons is defined to modify any setting.",
-                embed: eb.Build(),
-                components: cb.Build());
+                embed: eb,
+                components: cb);
         }
 
         [DoUserCheck]
@@ -94,7 +93,7 @@ namespace Barriot.Interaction.Modules
                     format: "art",
                     header: $"Successfully changed your embed color to {modal.Result}!",
                     context: "All embeds will now display in this color.",
-                    embed: eb.Build());
+                    embed: eb);
             }
         }
     }

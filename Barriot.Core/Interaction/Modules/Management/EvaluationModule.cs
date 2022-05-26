@@ -113,7 +113,6 @@ namespace Barriot.Interaction.Modules
                 .WithImports(defaultImports);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithDescription($"```cs\n{script}\n```");
 
             if (references != string.Empty)

@@ -95,7 +95,7 @@
             if (!string.IsNullOrEmpty(Context))
                 result += $" *{Context}*";
             if (!string.IsNullOrEmpty(Description))
-                result += $"\n\n>{Description}";
+                result += $"\n\n> {Description}";
 
             return result;
         }

@@ -39,7 +39,7 @@ namespace Barriot.Interaction
         /// <param name="embed">The embed to update to.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
         /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
-        public async Task UpdateAsync(string? text = null, MessageComponent? components = null, Embed? embed = null)
+        public async Task UpdateAsync(string? text = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
         {
             if (Context.Interaction is not RestMessageComponent component)
                 throw new InvalidCastException($"{nameof(UpdateAsync)} can only be executed for a {nameof(RestMessageComponent)}");
@@ -50,12 +50,25 @@ namespace Barriot.Interaction
                     x.Content = text;
 
                 if (components is not null)
-                    x.Components = components;
+                    x.Components = components.Build();
                 else if (x.Components.IsSpecified)
                     x.Components = new ComponentBuilder().Build();
 
                 if (embed is not null)
-                    x.Embed = embed;
+                {
+                    var footerText = $"Barriot by Rozen. Sent at: {TimestampTag.FromDateTime(DateTime.UtcNow, TimestampTagStyles.ShortDateTime)}";
+                    if (embed.Footer is not null)
+                    {
+                        embed.Footer.Text += " | " + footerText;
+                    }
+                    else
+                        embed.WithFooter(footerText);
+                    
+                    if (embed.Color is not null)
+                        embed.WithColor(Context.Member.Color);
+
+                    x.Embed = embed.Build();
+                }
                 else if (x.Embed.IsSpecified)
                     x.Embed = null;
             });
@@ -73,7 +86,7 @@ namespace Barriot.Interaction
         /// <param name="embed">The embed to update to.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
         /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
-        public async Task UpdateAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null)
+        public async Task UpdateAsync(ResultFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
         {
             var tb = new TextBuilder()
                 .WithResult(format)
@@ -138,13 +151,36 @@ namespace Barriot.Interaction
 
             await UpdateAsync(
                 text: tb.Build(),
-                components: page.Component.Build(),
-                embed: page.Embed.Build());
+                components: page.Component,
+                embed: page.Embed);
         }
 
         #endregion
 
         #region RespondAsync
+
+        public async Task RespondAsync(string text, ComponentBuilder? components = null, EmbedBuilder? embed = null, bool ephemeral = false)
+        {
+            if (embed is not null)
+            {
+                var footerText = $"Barriot by Rozen. Sent at: {TimestampTag.FromDateTime(DateTime.UtcNow, TimestampTagStyles.ShortDateTime)}";
+                if (embed.Footer is not null)
+                {
+                    embed.Footer.Text += " | " + footerText;
+                }
+                else
+                    embed.WithFooter(footerText);
+
+                if (embed.Color is not null)
+                    embed.WithColor(Context.Member.Color);
+            }
+
+            await base.RespondAsync(
+                text: text,
+                components: components?.Build(),
+                embed: embed?.Build(),
+                ephemeral: ephemeral);
+        }
 
         /// <summary>
         ///     Responds to the current <see cref="RestInteraction"/>.
@@ -157,7 +193,7 @@ namespace Barriot.Interaction
         /// <param name="embed">The embed to send.</param>
         /// <param name="ephemeral">If the message should be ephemerally sent.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
-        public async Task RespondAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null, bool? ephemeral = null)
+        public async Task RespondAsync(ResultFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null, bool? ephemeral = null)
         {
             var tb = new TextBuilder()
                 .WithResult(format)
@@ -171,7 +207,7 @@ namespace Barriot.Interaction
             else
                 ephemeral ??= Context.Member.DoEphemeral;
 
-            await base.RespondAsync(
+            await RespondAsync(
                 text: tb.Build(),
                 components: components,
                 embed: embed,
@@ -226,7 +262,7 @@ namespace Barriot.Interaction
                 .WithHeader(header)
                 .WithContext(context);
 
-            await base.RespondAsync(
+            await RespondAsync(
                 text: tb.Build(),
                 components: page.Component.Build(),
                 embed: page.Embed.Build(),
@@ -247,8 +283,22 @@ namespace Barriot.Interaction
         /// <param name="components">The components to send.</param>
         /// <param name="embed">The embed to send.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
-        public async Task FollowupAsync(ResultFormat format, string header, string? context = null, string? description = null, MessageComponent? components = null, Embed? embed = null)
+        public async Task FollowupAsync(ResultFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
         {
+            if (embed is not null)
+            {
+                var footerText = $"Barriot by Rozen. Sent at: {TimestampTag.FromDateTime(DateTime.UtcNow, TimestampTagStyles.ShortDateTime)}";
+                if (embed.Footer is not null)
+                {
+                    embed.Footer.Text += " | " + footerText;
+                }
+                else
+                    embed.WithFooter(footerText);
+
+                if (embed.Color is not null)
+                    embed.WithColor(Context.Member.Color);
+            }
+
             var tb = new TextBuilder()
                 .WithResult(format)
                 .WithHeader(header)
@@ -257,8 +307,8 @@ namespace Barriot.Interaction
 
             await base.FollowupAsync(
                 text: tb.Build(),
-                components: components,
-                embed: embed);
+                components: components?.Build(),
+                embed: embed?.Build());
         }
 
         /// <summary>

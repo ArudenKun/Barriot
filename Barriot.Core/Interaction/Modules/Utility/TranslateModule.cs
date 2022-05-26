@@ -28,7 +28,7 @@ namespace Barriot.Interaction.Modules
                 format: ResultFormat.Success,
                 header: $"Translated text to {args[1]}:",
                 description: await _service.TranslateAsync(args[0], message.CleanContent),
-                components: cb.Build());
+                components: cb);
         }
 
         [DoUserCheck]
@@ -51,7 +51,7 @@ namespace Barriot.Interaction.Modules
                 format: ResultFormat.Question,
                 header: "What do you want your default translation language to be?",
                 context: $"Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.",
-                components: cb.Build());
+                components: cb);
         }
 
         [DoUserCheck]
@@ -74,7 +74,7 @@ namespace Barriot.Interaction.Modules
                 format: ResultFormat.Question,
                 header: "What do you want your default translation language to be?",
                 context: $"Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.",
-                components: cb.Build());
+                components: cb);
         }
 
         [DoUserCheck]

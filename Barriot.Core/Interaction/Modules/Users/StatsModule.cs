@@ -15,7 +15,6 @@ namespace Barriot.Interaction.Modules
             if (user.Id == Context.Client.CurrentUser.Id)
             {
                 var eb = new EmbedBuilder()
-                    .WithColor(Context.Member.Color)
                     .AddField("Votes", $"Voted ` 69 ` times.")
                     .AddField("Commands", $"Executed ` 420 ` commands.")
                     .AddField("Components", $"Clicked ` 1337 ` components.")
@@ -25,7 +24,7 @@ namespace Barriot.Interaction.Modules
                     format: "sunglasses",
                     header: "Barriot's statistics.",
                     context: "Cool, you found an easter egg!",
-                    embed: eb.Build());
+                    embed: eb);
             }
 
             else if (user.IsBot || user.IsWebhook)
@@ -46,7 +45,6 @@ namespace Barriot.Interaction.Modules
                 var target = await UserEntity.GetAsync(user);
 
                 var eb = new EmbedBuilder()
-                    .WithColor(Context.Member.Color)
                     .AddField("Votes", $"Voted ` {target.Votes} ` time{((target.Votes != 1) ? "s" : "")}.")
                     .AddField("Latest command", $"` {target.LastCommand} `")
                     .AddField("Commands", $"Executed ` {target.CommandsExecuted} ` command{((target.CommandsExecuted != 1) ? "s" : "")}.")
@@ -56,8 +54,8 @@ namespace Barriot.Interaction.Modules
                 await RespondAsync(
                     format: "bar_chart",
                     header: $"{user.Username}#{user.Discriminator}'s Barriot statistics**",
-                    embed: eb.Build(),
-                    components: cb.Build());
+                    embed: eb,
+                    components: cb);
             }
         }
 
@@ -101,8 +99,8 @@ namespace Barriot.Interaction.Modules
                 format: "medal",
                 header: $"<@{targetId}>'s Acknowledgements.",
                 context: "Rewarded for contributions, regular use of the bot, donations and more.",
-                embed: eb.Build(),
-                components: cb?.Build());
+                embed: eb,
+                components: cb);
         }
     }
 }

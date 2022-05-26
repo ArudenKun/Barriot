@@ -45,7 +45,7 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 text: ":writing_hand: **Add acknowledgements:** *Select the acknowledgements you want to add or create a custom one below.*",
-                components: cb.Build());
+                components: cb);
         }
 
         [DoUserCheck]
@@ -138,7 +138,7 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 text: ":wastebasket: **Delete acknowledgements:** *Select the acknowledgements you want to delete in the dropdown below.*",
-                components: cb.Build());
+                components: cb);
         }
 
         [DoUserCheck]

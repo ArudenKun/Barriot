@@ -69,14 +69,14 @@ namespace Barriot.Interaction.Modules
                     cb.WithButton("Forfeit", $"challenge-f:{opponent.UserId},{userId}", ButtonStyle.Danger, row: 3);
                     await UpdateAsync(
                         text: $":video_game: **<@{opponent.UserId}>'s turn:**",
-                        components: cb.Build());
+                        components: cb);
                 }
 
                 else
                 {
                     await UpdateAsync(
                         text: $":military_medal: **The result is a tie!** There are no points distributed.",
-                        components: cb.Build());
+                        components: cb);
 
                     await game.DeleteAsync();
                 }
@@ -89,7 +89,7 @@ namespace Barriot.Interaction.Modules
                     cb.WithButton(pos.Icon, id + $"{pos.X},{pos.Y}", pos.Style, null, null, true, pos.Y);
                 await UpdateAsync(
                     text: $":trophy: **<@{userId}> has won.** Congratulations!",
-                    components: cb.Build());
+                    components: cb);
 
                 Context.WonGameInSession = true;
                 await game.DeleteAsync();

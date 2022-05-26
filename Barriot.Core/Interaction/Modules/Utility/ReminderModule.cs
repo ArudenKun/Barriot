@@ -42,8 +42,7 @@ namespace Barriot.Interaction.Modules
                     {
                         var embed = new EmbedBuilder()
                             .WithDescription(FileExtensions.GetEmbedContent(EmbedInfo.ReminderCheckUp))
-                            .WithFooter("Make sure you keep your DM's open to receive it!")
-                            .WithColor(new Color(Context.Member.Color));
+                            .WithFooter("Make sure you keep your DM's open to receive it!");
 
                         await Context.User.SendMessageAsync(
                             text: ":wave: **Hi, just checking up on you!**",
@@ -167,7 +166,7 @@ namespace Barriot.Interaction.Modules
                     format: ResultFormat.Deleting,
                     header: "Delete reminders:",
                     context: "Select the reminders you want to delete in the dropdown below.",
-                    components: cb.Build());
+                    components: cb);
             }
         }
 

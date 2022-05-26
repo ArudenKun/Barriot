@@ -35,7 +35,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 format: ResultFormat.Success,
                 header: "Succesfully created pin!",
-                context: "View your messages by executing ` /pins `.",
+                context: "View your pins by executing ` /pins `.",
                 description: $"Message link: {messageUrl}");
         }
 
@@ -65,8 +65,7 @@ namespace Barriot.Interaction.Modules
             if (value is not null)
                 await UpdateAsync(
                     page: value.Value,
-                    header: "A list of all your pins:",
-                    context: "Click on the button below to remove any pins from this page.");
+                    header: "A list of all your pins:");
 
             else
                 await UpdateAsync(
@@ -135,7 +134,7 @@ namespace Barriot.Interaction.Modules
                 await UpdateAsync(
                     format: ResultFormat.Deleting,
                     header: "Deleting pins:",
-                    components: cb.Build());
+                    components: cb);
             }
             else
                 await UpdateAsync(

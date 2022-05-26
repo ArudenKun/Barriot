@@ -81,8 +81,6 @@ namespace Barriot.Extensions
         {
             data = new();
 
-            Console.WriteLine(messageUrl);
-
             if (!messageUrl.IsJumpUrl())
                 return false;
 

@@ -32,7 +32,6 @@ namespace Barriot.Interaction.Modules
                 cb.WithButton("View banner", $"banner:{Context.User.Id},{user.Id}", ButtonStyle.Primary);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .AddField("Joined Discord on:", user.CreatedAt);
 
             if (user is RestGuildUser gUser)
@@ -65,8 +64,8 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 format: $"bust_in_silhouette",
                 header: $"Information about {user.Username}#{user.Discriminator}",
-                embed: eb.Build(),
-                components: cb.Build());
+                embed: eb,
+                components: cb);
         }
 
         [DoUserCheck]
@@ -76,13 +75,12 @@ namespace Barriot.Interaction.Modules
             var rUser = await _service.GetOneAsync(targetId);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithImageUrl(rUser.GetAvatarUrl(ImageFormat.Auto, 256));
 
             await UpdateAsync(
                 format: "selfie",
                 header: $":selfie: <@{targetId}>'s avatar:",
-                embed: eb.Build());
+                embed: eb);
         }
 
         [DoUserCheck]
@@ -92,13 +90,12 @@ namespace Barriot.Interaction.Modules
             var rUser = await _service.GetOneAsync(targetId);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithImageUrl(rUser.GetBannerUrl(ImageFormat.Auto, 256));
 
             await UpdateAsync(
                 format: "sunrise_over_mountains",
                 header: $"<@{targetId}>'s banner:",
-                embed: eb.Build());
+                embed: eb);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Barriot.Interaction.Modules
                 await RespondAsync(
                     format: "video_game",
                     header: $"What game do you want to play against {target.Username}#{target.Discriminator}?",
-                    components: cb.Build(),
+                    components: cb,
                     ephemeral: false);
             }
         }
@@ -104,7 +104,7 @@ namespace Barriot.Interaction.Modules
                 format: "crossed_swords",
                 header: $"<@{targetId}>! You have been challenged by <@{userId}> to a game of {gameData[1]}!", 
                 context: "Are you up to the challenge?",
-                components: cb.Build(),
+                components: cb,
                 ephemeral: false);
         }
     }

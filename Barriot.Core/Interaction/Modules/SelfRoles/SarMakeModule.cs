@@ -25,7 +25,7 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 text: ":exclamation: **Please press the button below to start message creation.** *Keep the channel ID where the message should be sent ready.*",
-                components: cb.Build());
+                components: cb);
         }
 
         [ComponentInteraction("sar-new-message-channel")]
@@ -126,7 +126,6 @@ namespace Barriot.Interaction.Modules
 
             var eb = new EmbedBuilder()
                 .WithTitle("Message content:")
-                .WithColor(Color.Blue)
                 .WithDescription(modal.Result);
 
             await RespondAsync(
@@ -156,7 +155,7 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready. By pressing an option, the creation menu will open.*",
-                components: cb.Build());
+                components: cb);
         }
 
         [ComponentInteraction("sar-from-message-source:*")]
@@ -170,7 +169,7 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 text: ":question: **How do you want to format your self-assign role (SAR)?**, *Please keep your role ID ready, by pressing an option, the creation menu will open.*",
-                components: cb.Build());
+                components: cb);
         }
 
         [ComponentInteraction("sar-from-message-format:*")]
@@ -215,7 +214,6 @@ namespace Barriot.Interaction.Modules
                 if (args.FormatAsEmbed)
                 {
                     emb = new();
-                    emb.WithColor(Color.Blue);
                     emb.WithDescription(args.Content);
                 }
                 message = await args.Channel.SendMessageAsync(
@@ -299,7 +297,6 @@ namespace Barriot.Interaction.Modules
             var eb = new EmbedBuilder()
                 .WithTitle("Click to view message")
                 .WithUrl($"https://discord.com/channels/{Context.Guild.Id}/{args.Channel.Id}/{message.Id}")
-                .WithColor(Color.Blue)
                 .AddField("Role:", name);
 
             if (!button)

@@ -36,7 +36,6 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Privacy Policy", style: ButtonStyle.Link, url: _configuration["Domain"] + "privacy", row: 1);
 
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithThumbnailUrl("https://rozen.one/Files/B_monogram.png")
                 .AddField("Commands", "Click on the buttons below to navigate through command examples & to get further support if required!")
                 .AddField("Note", "Discord currently does not support Message or User commands on mobile devices!")
@@ -74,7 +73,6 @@ namespace Barriot.Interaction.Modules
         public async Task ChangelogAsync()
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithDescription(string.Join("\n", FileExtensions.GetDataFromFile("Changelog").Lines));
 
             var cb = new ComponentBuilder()
@@ -119,7 +117,6 @@ namespace Barriot.Interaction.Modules
         public async Task StatsAsync(ulong _)
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithThumbnailUrl(Context.Client.CurrentUser.GetAvatarUrl())
                 .AddField("Total Guilds", _service.GuildCount);
 
@@ -134,7 +131,6 @@ namespace Barriot.Interaction.Modules
         public async Task UptimeAsync(ulong _)
         {
             var eb = new EmbedBuilder()
-                .WithColor(Context.Member.Color)
                 .WithThumbnailUrl(Context.Client.CurrentUser.GetAvatarUrl())
                 .AddField("Start Time", _service.OnlineSince)
                 .AddField("Total Uptime", DateTime.UtcNow - _service.OnlineSince);

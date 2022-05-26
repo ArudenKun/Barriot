@@ -125,7 +125,7 @@ namespace Barriot.Interaction.Modules
 
                 await UpdateAsync(
                     text: response,
-                    components: cb.Build());
+                    components: cb);
             }
 
             else

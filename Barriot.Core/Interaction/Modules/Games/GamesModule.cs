@@ -19,7 +19,7 @@ namespace Barriot.Interaction.Modules
                 format: ResultFormat.Question,
                 header: "Answer me this:",
                 description: file.SelectedLine.Split('|').First(),
-                components: cb.Build());
+                components: cb);
         }
 
         [DoUserCheck]

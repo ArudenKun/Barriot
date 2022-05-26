@@ -95,15 +95,14 @@ namespace Barriot.Interaction.Modules
 
             if (result.Options.Any())
             {
-                var eb = new EmbedBuilder()
-                    .WithColor(Context.User.AccentColor ?? Color.Blue);
+                var eb = new EmbedBuilder();
                 foreach (var r in result.Options)
                     eb.AddField($"{r.Label} [{r.Id}]", $"Amount of votes: {r.Votes}");
 
                 await RespondAsync(
                     format: "chart_with_upwards_trend",
                     header: "Results for this poll:",
-                    embed: eb.Build(),
+                    embed: eb,
                     ephemeral: true);
             }
         }

@@ -2,6 +2,7 @@
 using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Modals;
 using Barriot.Interaction.Services;
+using Barriot.Models;
 using Barriot.Models.Files;
 
 namespace Barriot.Interaction.Modules
@@ -29,7 +30,7 @@ namespace Barriot.Interaction.Modules
                 format: "bar_chart",
                 header: "Manage self-assign roles (SAR) in this server.",
                 context: "Please choose any of the below options.",
-                components: cb.Build(),
+                components: cb,
                 ephemeral: true);
         }
 
@@ -47,7 +48,7 @@ namespace Barriot.Interaction.Modules
         [ModalInteraction("sar-message-view")]
         public async Task ManageMessageAsync(QueryModal<string> modal)
         {
-            if (!modal.Result.TryGetLinkData(out var data))
+            if (!JumpUrl.TryParse(modal.Result!, out var messageUrl))
             {
                 await RespondAsync(
                     error: "Input link is not a Discord message link!",
@@ -55,7 +56,7 @@ namespace Barriot.Interaction.Modules
                 return;
             }
 
-            var channel = await Context.Guild.GetChannelAsync(data[1]);
+            var channel = await Context.Guild.GetChannelAsync(messageUrl.ChannelId);
 
             if (channel is null || channel is not RestTextChannel textChannel)
             {
@@ -65,7 +66,7 @@ namespace Barriot.Interaction.Modules
                 return;
             }
 
-            var message = await textChannel.GetMessageAsync(data[2]);
+            var message = await textChannel.GetMessageAsync(messageUrl.MessageId);
 
             if (message is null || message is not RestUserMessage userMessage)
             {
@@ -93,7 +94,7 @@ namespace Barriot.Interaction.Modules
                 format: "scroll",
                 header: "Manage this message.",
                 context: "Please select one of the below options to add a role or modify this message's content.",
-                components: cb.Build(),
+                components: cb,
                 ephemeral: true);
         }
 
@@ -113,7 +114,6 @@ namespace Barriot.Interaction.Modules
         {
             var eb = new EmbedBuilder()
                 .WithTitle("New message content:")
-                .WithColor(Color.Blue)
                 .WithDescription(modal.Result);
 
             if (!_service.TryGetData(messageId, out var data))
@@ -130,7 +130,7 @@ namespace Barriot.Interaction.Modules
             await RespondAsync(
                 format: ResultFormat.Success,
                 header: "Succesfully modified message content!",
-                embed: eb.Build(),
+                embed: eb,
                 ephemeral: true);
         }
     }
