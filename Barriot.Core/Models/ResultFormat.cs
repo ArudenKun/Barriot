@@ -69,7 +69,7 @@ namespace Barriot
         /// </summary>
         /// <returns></returns>
         public override string ToString()
-            => $":{_format}:";
+            => $"{_format}";
 
         /// <summary>
         ///     Compares the underlying value of this <see cref="ResultFormat"/> to another.

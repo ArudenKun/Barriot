@@ -22,6 +22,8 @@ namespace Barriot
             UserId = userId;
             _url = url.Url;
             _pinDate = DateTime.UtcNow;
+            _channelId = url.ChannelId;
+            _messageId = url.MessageId;
         }
 
         #region PinEntity
