@@ -10,18 +10,16 @@ namespace Barriot.Interaction.Modules
         public async Task SlashChallengeAsync([Summary("target", "The user to target!")] RestUser user)
             => await ChallengeAsync(user);
 
-        [UserCommand("challenge")]
+        [UserCommand("Challenge")]
         public async Task ChallengeAsync(RestUser target)
         {
             if (target.IsBot || target.IsWebhook)
                 await RespondAsync(
-                    text: ":x: **You cannot challenge bots!**",
-                    ephemeral: Context.Member.DoEphemeral);
+                    error: "You cannot challenge bots!");
 
             else if (target.Id == Context.User.Id)
                 await RespondAsync(
-                    text: ":x: **You cannot challenge yourself!**",
-                    ephemeral: Context.Member.DoEphemeral);
+                    error: "You cannot challenge yourself!");
 
             else
             {
@@ -31,7 +29,8 @@ namespace Barriot.Interaction.Modules
                     .WithButton("Nevermind", $"challenge-n:{Context.User.Id}", ButtonStyle.Danger);
 
                 await RespondAsync(
-                    text: $":video_game: **What game do you want to play against {target.Username}#{target.Discriminator}?**",
+                    format: "video_game",
+                    header: $"What game do you want to play against {target.Username}#{target.Discriminator}?",
                     components: cb.Build(),
                     ephemeral: false);
             }
@@ -43,7 +42,8 @@ namespace Barriot.Interaction.Modules
         public async Task DeniedChallengeAsync(ulong userId, ulong targetId)
         {
             await RespondAsync(
-                text: $":x: **<@{targetId}>! <@{userId}> has denied your challenge.**",
+                format: ResultFormat.NotAllowed,
+                header: $"<@{targetId}>! <@{userId}> has denied your challenge.",
                 ephemeral: false);
         }
 
@@ -53,8 +53,7 @@ namespace Barriot.Interaction.Modules
         public async Task NevermindChallengeAsync(ulong _)
         {
             await RespondAsync(
-                text: $":x: **Okay, challenge ignored!**",
-                ephemeral: true);
+                error: "Okay, challenge ignored!");
         }
 
         [DoUserCheck]
@@ -66,7 +65,9 @@ namespace Barriot.Interaction.Modules
             tUser.GamesWon++;
 
             await RespondAsync(
-                text: $":x: **Quit challenge!** <@{targetId}> will be rewarded because of your forfeit.",
+                format: ResultFormat.NotAllowed,
+                header: "Quit challenge!",
+                context: $" <@{targetId}> will be rewarded because of your forfeit.",
                 ephemeral: false);
         }
 
@@ -100,7 +101,9 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Nope.", $"challenge-d:{targetId},{userId}", ButtonStyle.Danger);
 
             await RespondAsync(
-                text: $":crossed_swords: **<@{targetId}>! You have been challenged by <@{userId}> to a game of {gameData[1]}!** Are you up to the challenge?",
+                format: "crossed_swords",
+                header: $"<@{targetId}>! You have been challenged by <@{userId}> to a game of {gameData[1]}!" 
+                context: "Are you up to the challenge?",
                 components: cb.Build(),
                 ephemeral: false);
         }

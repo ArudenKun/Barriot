@@ -58,8 +58,8 @@ namespace Barriot.Interaction.Modules
             if (game is null) // The game can be deleted from the DB as we try to get it. This way we prevent this from happening.
             {
                 await RespondAsync(
-                    text: ":x: **This game has been abandoned!** \n\n> Due to being live for longer than a day, it's been pruned from the database and can no longer be played.",
-                    ephemeral: true);
+                    error: "This game has been abandoned!",
+                    description: "Due to being live for longer than a day, it's been pruned from the database and can no longer be played.");
                 return;
             }
 
@@ -80,7 +80,9 @@ namespace Barriot.Interaction.Modules
             if (!cont)
             {
                 await UpdateAsync(
-                    text: $":military_medal: **The game is a tie!** No points have been distributed.");
+                    format: "military_medal",
+                    header: "The game is a tie!",
+                    context: "No points have been distributed.");
 
                 await game.DeleteAsync();
                 return;

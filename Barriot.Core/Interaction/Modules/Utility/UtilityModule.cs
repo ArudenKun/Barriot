@@ -45,19 +45,5 @@ namespace Barriot.Interaction.Modules
                     header: "The result is:",
                     context: calculation.ToString());
         }
-
-        [SlashCommand("ping", "Pong! See if the bot works. If this command fails, all is lost...")]
-        public async Task PingAsync()
-            => await RespondAsync(
-                format: "ping_pong",
-                header: "Pong!");
-
-        [SlashCommand("coinflip", "Flips a coin.")]
-        public async Task CoinFlipAsync()
-            => await RespondAsync(
-                text: (new Random().Next(2) < 1)
-                    ? ":coin: **Heads!**"
-                    : ":coin: **Tails!**",
-                ephemeral: Context.Member.DoEphemeral);
     }
 }
