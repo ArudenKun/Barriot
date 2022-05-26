@@ -51,27 +51,28 @@ namespace Barriot.Interaction
 
                 if (components is not null)
                     x.Components = components.Build();
-                else if (x.Components.IsSpecified)
+                else
                     x.Components = new ComponentBuilder().Build();
 
                 if (embed is not null)
                 {
-                    var footerText = $"Barriot by Rozen. Sent at: {TimestampTag.FromDateTime(DateTime.UtcNow, TimestampTagStyles.ShortDateTime)}";
+                    var footerText = $"Brought to you by Rozen.";
                     if (embed.Footer is not null)
                     {
                         embed.Footer.Text += " | " + footerText;
                     }
                     else
                         embed.WithFooter(footerText);
-                    
-                    if (embed.Color is not null)
-                        embed.WithColor(Context.Member.Color);
+
+                    if (embed.Color is null)
+                        embed.WithColor(new Color(Context.Member.Color));
 
                     x.Embed = embed.Build();
                 }
-                else if (x.Embed.IsSpecified)
+                else
                     x.Embed = null;
             });
+
             await Context.InteractionResponseCallback(payload);
         }
 
@@ -163,7 +164,8 @@ namespace Barriot.Interaction
         {
             if (embed is not null)
             {
-                var footerText = $"Barriot by Rozen. Sent at: {TimestampTag.FromDateTime(DateTime.UtcNow, TimestampTagStyles.ShortDateTime)}";
+                var footerText = $"Brought to you by Rozen.";
+
                 if (embed.Footer is not null)
                 {
                     embed.Footer.Text += " | " + footerText;
@@ -171,8 +173,8 @@ namespace Barriot.Interaction
                 else
                     embed.WithFooter(footerText);
 
-                if (embed.Color is not null)
-                    embed.WithColor(Context.Member.Color);
+                if (embed.Color is null)
+                    embed.WithColor(new Color(Context.Member.Color));
             }
 
             await base.RespondAsync(
@@ -264,8 +266,8 @@ namespace Barriot.Interaction
 
             await RespondAsync(
                 text: tb.Build(),
-                components: page.Component.Build(),
-                embed: page.Embed.Build(),
+                components: page.Component,
+                embed: page.Embed,
                 ephemeral: true);
         }
 
@@ -287,7 +289,7 @@ namespace Barriot.Interaction
         {
             if (embed is not null)
             {
-                var footerText = $"Barriot by Rozen. Sent at: {TimestampTag.FromDateTime(DateTime.UtcNow, TimestampTagStyles.ShortDateTime)}";
+                var footerText = $"Brought to you by Rozen.";
                 if (embed.Footer is not null)
                 {
                     embed.Footer.Text += " | " + footerText;
@@ -295,8 +297,8 @@ namespace Barriot.Interaction
                 else
                     embed.WithFooter(footerText);
 
-                if (embed.Color is not null)
-                    embed.WithColor(Context.Member.Color);
+                if (embed.Color is null)
+                    embed.WithColor(new Color(Context.Member.Color));
             }
 
             var tb = new TextBuilder()

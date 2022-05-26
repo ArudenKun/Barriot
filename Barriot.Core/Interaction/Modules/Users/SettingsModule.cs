@@ -67,8 +67,9 @@ namespace Barriot.Interaction.Modules
         public async Task EmbedSettingAsync(ulong _)
         {
             var mb = new ModalBuilder()
+                .WithTitle("Modify your embed color:")
                 .WithCustomId("embed-created")
-                .AddTextInput("Color", "entry", TextInputStyle.Short, "#11806A", 1, 7, true);
+                .AddTextInput("Hex value:", "entry", TextInputStyle.Short, "#11806A", 1, 7, true);
 
             await RespondWithModalAsync(mb.Build());
         }
