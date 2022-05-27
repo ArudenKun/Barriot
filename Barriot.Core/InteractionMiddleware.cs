@@ -58,7 +58,25 @@ namespace Barriot
                 return;
             }
 
-            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body);
+            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, x =>
+            {
+                if (!string.IsNullOrEmpty(x.Name))
+                    return x.Name switch
+                    {
+                        "channel" => true,
+                        _ => false
+                    };
+
+                var range = x.CustomId.Split('-');
+                if (range.Any())
+                    return range.First() switch
+                    {
+                        "sar" => true,
+                        "channel" => true,
+                        _ => false
+                    };
+                return false;
+            });
 
             // Recognize a ping interaction from Discord to check if our receiving end functions properly
             if (interaction is RestPingInteraction pingInteraction)

@@ -3,6 +3,7 @@ using Barriot.Pagination;
 using Barriot.Models;
 using MongoDB.Bson;
 using Barriot.Extensions;
+using Barriot.Interaction.Modals;
 
 namespace Barriot.Interaction.Modules
 {
@@ -12,7 +13,20 @@ namespace Barriot.Interaction.Modules
         [MessageCommand("Pin")]
         public async Task PinAsync(IMessage message)
         {
-            if (!JumpUrl.TryParse(message.GetJumpUrl(), out var messageUrl))
+            var url = message.GetJumpUrl(Context.Interaction.IsDMInteraction, Context.Interaction.ChannelId, Context.Interaction.GuildId);
+
+            var mb = new ModalBuilder()
+                .WithTitle("Add a note to this pin:")
+                .WithCustomId($"pin-finish:{url}")
+                .AddTextInput("Note:", "entry", TextInputStyle.Short, "This is pretty funny", 1, 200);
+
+            await RespondWithModalAsync(mb.Build());
+        }
+
+        [ModalInteraction("pin-finish:*")]
+        public async Task PinFinalizeAsync(string url, QueryModal<string> modal)
+        {
+            if (!JumpUrl.TryParse(url, out var messageUrl))
             {
                 await RespondAsync(
                     error: "An unexpected error occurred while parsing this message!",
@@ -30,13 +44,20 @@ namespace Barriot.Interaction.Modules
                 return;
             }
 
-            await PinEntity.CreateAsync(Context.User.Id, messageUrl);
+            if (string.IsNullOrEmpty(modal.Result))
+            {
+                await RespondAsync(
+                    error: "The note you added to this pin is empty!");
+                return;
+            }
+
+            await PinEntity.CreateAsync(Context.User.Id, messageUrl, modal.Result);
 
             await RespondAsync(
                 format: ResultFormat.Success,
                 header: "Succesfully created pin!",
                 context: "View your pins by executing ` /pins `.",
-                description: $"Message link: {messageUrl}");
+                description: $"**Reason:** {modal.Result}\n> **Message link:** {messageUrl}");
         }
 
         [SlashCommand("pins", "View all your current pins.")]
@@ -90,18 +111,109 @@ namespace Barriot.Interaction.Modules
                         {
                             var pinnedSince = DateTime.UtcNow - x.PinDate;
 
-                            return new($"{pinnedSince.ToReadable()} ago.", x.Url);
+                            string description = "";
+                            if (!string.IsNullOrEmpty(x.Reason))
+                                description = $"> **Reason:** {x.Reason} \n";
+
+                            description += $"> **Jump to message:** {x.Url}";
+
+                            return new($"{pinnedSince.ToReadable()} ago.", description);
                         })
                         .Build();
                 }
                 var value = paginator.GetPage(page, pins);
 
                 value.Component.WithButton("Delete pins", $"pins-delete:{page}", ButtonStyle.Danger);
+                value.Component.WithButton("Modify pins", $"pins-edit:{page}", ButtonStyle.Secondary);
 
                 return value;
             }
 
             return null;
+        }
+
+        [ComponentInteraction("pins-edit:*")]
+        public async Task EditPingsAsync(int page)
+        {
+            var pins = await PinEntity.GetManyAsync(Context.User.Id);
+
+            if (pins.Any())
+            {
+                var sb = new SelectMenuBuilder()
+                    .WithMinValues(1)
+                    .WithMaxValues(1)
+                    .WithCustomId("pins-editing")
+                    .WithPlaceholder("Select the pin you want to modify.");
+
+                int index = page * 10 - 10;
+
+                var range = pins.GetRange(index, pins.Count - index);
+                for (int i = 0; i < range.Count; i++)
+                {
+                    if (i is 10)
+                        break;
+                    sb.AddOption(range[i].PinDate.ToString(), range[i].ObjectId.ToString(), range[i].MessageId.ToString());
+                }
+
+                var cb = new ComponentBuilder()
+                    .WithSelectMenu(sb);
+
+                await UpdateAsync(
+                    format: "pen_ballpoint",
+                    header: "Select a pin to edit the reason for:",
+                    components: cb);
+            }
+            else
+                await UpdateAsync(
+                    error: "You have no pins to modify!",
+                    context: "The page you selected from is outdated and does not contain any pins.");
+        }
+
+        [ComponentInteraction("pins-editing")]
+        public async Task EditingPingsAsync(ObjectId[] selectedValues)
+        {
+            var mb = new ModalBuilder()
+                .WithTitle("Edit the note to this pin:")
+                .WithCustomId($"pins-edited:{selectedValues[0]}")
+                .AddTextInput("Note:", "entry", TextInputStyle.Short, "", 1, 200);
+
+            await RespondWithModalAsync(mb.Build());
+        }
+
+        [ModalInteraction("pins-edited:*")]
+        public async Task EditedPingsAsync(ObjectId id, QueryModal<string> modal)
+        {
+            var pins = await PinEntity.GetManyAsync(Context.User.Id);
+
+            var pin = pins.First(x => x.ObjectId == id);
+
+            if (pin is not null)
+            {
+                if (string.IsNullOrEmpty(modal.Result))
+                {
+                    await RespondAsync(
+                        error: "Unable to modify a pin reason with an empty message.", 
+                        context: "Please try again while specifying a message.");
+                    return;
+                }
+
+                var eb = new EmbedBuilder()
+                    .WithUrl(pin.Url)
+                    .WithTitle("Click here to jump to message.")
+                    .AddField("Before:", string.IsNullOrEmpty(pin.Reason) ? "_ _" : pin.Reason)
+                    .AddField("After", modal.Result);
+
+                pin.Reason = modal.Result;
+
+                await RespondAsync(
+                    format: ResultFormat.Success,
+                    header: "Succesfully modified pin reason:",
+                    embed: eb);
+            }
+            else
+                await RespondAsync(
+                    error: "The pin you tried to edit does not exist!",
+                    context: "This could happen because you deleted the pin before editing it.");
         }
 
         [ComponentInteraction("pins-delete:*")]
@@ -162,7 +274,7 @@ namespace Barriot.Interaction.Modules
                 }
                 await UpdateAsync(
                     format: ResultFormat.Success,
-                    header: $"Succesfully removed {selectedValues.Length} reminder(s).");
+                    header: $"Succesfully removed {selectedValues.Length} pin(s).");
             }
         }
     }

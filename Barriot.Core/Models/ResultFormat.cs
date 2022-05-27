@@ -62,7 +62,7 @@ namespace Barriot
         ///     Format a deletion result.
         /// </summary>
         public static ResultFormat Deleting
-            => new("wastebucket");
+            => new("wastebasket");
 
         /// <summary>
         ///     Returns the internal format of this <see cref="ResultFormat"/>.

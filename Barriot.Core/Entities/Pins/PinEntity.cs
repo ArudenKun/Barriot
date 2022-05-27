@@ -17,13 +17,14 @@ namespace Barriot
         [BsonIgnore]
         public EntityState State { get; set; }
 
-        internal PinEntity(ulong userId, JumpUrl url)
+        internal PinEntity(ulong userId, JumpUrl url, string reason)
         {
             UserId = userId;
             _url = url.Url;
             _pinDate = DateTime.UtcNow;
             _channelId = url.ChannelId;
             _messageId = url.MessageId;
+            _reason = reason;
         }
 
         #region PinEntity
@@ -32,6 +33,21 @@ namespace Barriot
         ///     The ID of the user that pinned this message for themselves.
         /// </summary>
         public ulong UserId { get; set; }
+
+        private string _reason;
+        /// <summary>
+        ///     The reason of this pin.
+        /// </summary>
+        public string Reason
+        {
+            get
+                => _reason;
+            set
+            {
+                _reason = value;
+                _ = ModifyAsync(Builders<PinEntity>.Update.Set(x => x.Reason, value));
+            }
+        }
 
         private string _url;
         /// <summary>
@@ -107,8 +123,8 @@ namespace Barriot
         public static async Task<List<PinEntity>> GetManyAsync(ulong userId)
             => await PinHelper.GetManyAsync(userId).ToListAsync();
 
-        public static async Task<PinEntity> CreateAsync(ulong userId, JumpUrl messageUrl)
-            => await PinHelper.CreateAsync(userId, messageUrl);
+        public static async Task<PinEntity> CreateAsync(ulong userId, JumpUrl messageUrl, string reason)
+            => await PinHelper.CreateAsync(userId, messageUrl, reason);
 
         #endregion
 

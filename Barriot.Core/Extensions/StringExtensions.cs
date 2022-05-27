@@ -43,6 +43,17 @@ namespace Barriot.Extensions
         }
 
         /// <summary>
+        ///     Create a jump URL from the provided message.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="isDm"></param>
+        /// <param name="channelId"></param>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public static string GetJumpUrl(this IMessage message, bool isDm, ulong? channelId, ulong? guildId = null)
+            => $"https://discord.com/channels/{(isDm ? "@me" : $"{guildId}")}/{channelId}/{message.Id}";
+
+        /// <summary>
         ///     Checks if the provided <paramref name="messageUrl"/> is a valid jump url.
         /// </summary>
         /// <param name="messageUrl"></param>

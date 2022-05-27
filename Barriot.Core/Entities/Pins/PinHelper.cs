@@ -41,9 +41,9 @@ namespace Barriot.Entities.Pins
             }
         }
 
-        public static async Task<PinEntity> CreateAsync(ulong userId, JumpUrl messageUrl)
+        public static async Task<PinEntity> CreateAsync(ulong userId, JumpUrl messageUrl, string reason)
         {
-            var entity = new PinEntity(userId, messageUrl);
+            var entity = new PinEntity(userId, messageUrl, reason);
 
             await _client.InsertDocumentAsync(entity);
             entity.State = EntityState.Initialized;

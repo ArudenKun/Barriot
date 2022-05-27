@@ -17,10 +17,36 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Interactions" Version="3.7.0" />
     <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.2.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Discord.Net.Core">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\Discord.Net.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Discord.Net.Interactions">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\Discord.Net.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Discord.Net.Rest">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\Discord.Net.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="Discord.Net.WebSocket">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\Discord.Net.WebSocket.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Interactive.Async">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\System.Interactive.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>..\..\Discord.Net\src\Discord.Net.Interactions\bin\Debug\net6.0\System.Reactive.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

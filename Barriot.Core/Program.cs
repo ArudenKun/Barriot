@@ -19,7 +19,8 @@ builder.Services.AddRouting();
 var config = new DiscordRestConfig()
 {
     LogLevel = LogSeverity.Verbose,
-    FormatUsersInBidirectionalUnicode = false
+    FormatUsersInBidirectionalUnicode = false,
+    APIOnRestInteractionCreation = false,
 };
 var client = new DiscordRestClient(config);
 
