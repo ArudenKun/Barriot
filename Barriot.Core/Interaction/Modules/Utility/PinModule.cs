@@ -57,7 +57,7 @@ namespace Barriot.Interaction.Modules
                 format: ResultFormat.Success,
                 header: "Succesfully created pin!",
                 context: "View your pins by executing ` /pins `.",
-                description: $"**Reason:** {modal.Result}\n> **Message link:** {messageUrl}");
+                description: $"**Note:** {modal.Result}\n> **Message link:** {messageUrl}");
         }
 
         [SlashCommand("pins", "View all your current pins.")]
@@ -113,7 +113,7 @@ namespace Barriot.Interaction.Modules
 
                             string description = "";
                             if (!string.IsNullOrEmpty(x.Reason))
-                                description = $"> **Reason:** {x.Reason} \n";
+                                description = $"> **Note:** {x.Reason} \n";
 
                             description += $"> **Jump to message:** {x.Url}";
 
@@ -160,7 +160,7 @@ namespace Barriot.Interaction.Modules
 
                 await UpdateAsync(
                     format: "pen_ballpoint",
-                    header: "Select a pin to edit the reason for:",
+                    header: "Select a pin to edit the note for:",
                     components: cb);
             }
             else

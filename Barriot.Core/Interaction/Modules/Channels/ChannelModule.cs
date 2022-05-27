@@ -20,7 +20,6 @@ namespace Barriot.Interaction.Modules
 
             var cb = new ComponentBuilder()
                 .WithButton($"{(isLocked ? "Unlock" : "Lock")} channel", $"channel-lock:{Context.User.Id},{isLocked}", isLocked ? ButtonStyle.Success : ButtonStyle.Danger)
-                .WithButton("Clone channel", $"channel-clone:{Context.User.Id}", ButtonStyle.Secondary)
                 .WithButton("Delete channel", $"channel-delete:{Context.User.Id}", ButtonStyle.Danger)
                 .WithButton("Prune channel", $"channel-prune:{Context.User.Id}", ButtonStyle.Danger);
 
@@ -28,35 +27,6 @@ namespace Barriot.Interaction.Modules
                 text: ":woman_office_worker: **Manage this channel.** *Please select an action below:*",
                 components: cb.Build(),
                 ephemeral: true);
-        }
-
-        [DoUserCheck]
-        [ComponentInteraction("channel-clone:*")]
-        public async Task CloneAsync(ulong _)
-        {
-            if (Context.Channel is RestTextChannel channel)
-            {
-                await UpdateAsync(
-                    text: ":white_check_mark: **Cloning channel...**");
-
-                var pinnedMessages = await channel.GetPinnedMessagesAsync();
-
-                await channel.DeleteAsync();
-
-                var clone = await Context.Guild.CreateTextChannelAsync(channel.Name, x =>
-                {
-                    x.PermissionOverwrites = channel.PermissionOverwrites.ToList();
-                    x.CategoryId = channel.CategoryId;
-                    x.Position = channel.Position;
-                    x.Topic = channel.Topic;
-                    x.SlowModeInterval = channel.SlowModeInterval;
-                    x.IsNsfw = channel.IsNsfw;
-                });
-
-                await clone.SendMessageAsync(":white_check_mark: **This channel has successfully been cloned!**");
-            }
-            else
-                throw new NotSupportedException();
         }
 
         [DoUserCheck]
