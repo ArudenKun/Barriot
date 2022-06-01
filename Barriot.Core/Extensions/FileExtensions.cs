@@ -36,7 +36,7 @@ namespace Barriot.Extensions
                 data[0] = data[0].Replace(@"{parameter}", parameter);
 
             var tb = new TextBuilder()
-                .WithResult(ResultFormat.Failure)
+                .WithResult(MessageFormat.Failure)
                 .WithHeader(data[0])
                 .WithContext(data[1])
                 .WithDescription(string.Join("\n", data[2..]));

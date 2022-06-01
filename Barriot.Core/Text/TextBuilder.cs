@@ -8,7 +8,7 @@
         /// <summary>
         ///     Gets or sets the emoji sent at response base.
         /// </summary>
-        public ResultFormat Result { get; set; }
+        public MessageFormat Result { get; set; }
 
         /// <summary>
         ///     Gets or sets the response header.
@@ -31,7 +31,7 @@
         public TextBuilder()
         {
             Header = string.Empty;
-            Result = ResultFormat.Success;
+            Result = MessageFormat.Success;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@
         /// </summary>
         /// <param name="format">Thanks to an implicit string operand, this parameter will take string.</param>
         /// <returns></returns>
-        public TextBuilder WithResult(ResultFormat format)
+        public TextBuilder WithResult(MessageFormat format)
         {
             Result = format;
             return this;

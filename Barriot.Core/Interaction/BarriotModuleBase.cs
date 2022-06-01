@@ -87,7 +87,7 @@ namespace Barriot.Interaction
         /// <param name="embed">The embed to update to.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
         /// <exception cref="InvalidCastException">Thrown if this method is called on an unsupported type of interaction.</exception>
-        public async Task UpdateAsync(ResultFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
+        public async Task UpdateAsync(MessageFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
         {
             var tb = new TextBuilder()
                 .WithResult(format)
@@ -112,7 +112,7 @@ namespace Barriot.Interaction
         public async Task UpdateAsync(string error, string? context = null, string? description = null)
         {
             var tb = new TextBuilder()
-                .WithResult(ResultFormat.Failure)
+                .WithResult(MessageFormat.Failure)
                 .WithHeader(error)
                 .WithContext(context)
                 .WithDescription(description);
@@ -146,7 +146,7 @@ namespace Barriot.Interaction
         public async Task UpdateAsync(Page page, string header, string? context = null)
         {
             var tb = new TextBuilder()
-                .WithResult(ResultFormat.List)
+                .WithResult(MessageFormat.List)
                 .WithHeader(header)
                 .WithContext(context);
 
@@ -195,7 +195,7 @@ namespace Barriot.Interaction
         /// <param name="embed">The embed to send.</param>
         /// <param name="ephemeral">If the message should be ephemerally sent.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
-        public async Task RespondAsync(ResultFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null, bool? ephemeral = null)
+        public async Task RespondAsync(MessageFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null, bool? ephemeral = null)
         {
             var tb = new TextBuilder()
                 .WithResult(format)
@@ -203,7 +203,7 @@ namespace Barriot.Interaction
                 .WithDescription(description)
                 .WithContext(context);
 
-            if (format == ResultFormat.Failure || format == ResultFormat.List)
+            if (format == MessageFormat.Failure || format == MessageFormat.List)
                 ephemeral = true;
 
             else
@@ -226,7 +226,7 @@ namespace Barriot.Interaction
         public async Task RespondAsync(string error, string? context = null, string? description = null)
         {
             var tb = new TextBuilder()
-                .WithResult(ResultFormat.Failure)
+                .WithResult(MessageFormat.Failure)
                 .WithHeader(error)
                 .WithContext(context)
                 .WithDescription(description);
@@ -260,7 +260,7 @@ namespace Barriot.Interaction
         public async Task RespondAsync(Page page, string header, string? context = null)
         {
             var tb = new TextBuilder()
-                .WithResult(ResultFormat.List)
+                .WithResult(MessageFormat.List)
                 .WithHeader(header)
                 .WithContext(context);
 
@@ -285,7 +285,7 @@ namespace Barriot.Interaction
         /// <param name="components">The components to send.</param>
         /// <param name="embed">The embed to send.</param>
         /// <returns>An asynchronous <see cref="Task"/> with no return type.</returns>
-        public async Task FollowupAsync(ResultFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
+        public async Task FollowupAsync(MessageFormat format, string header, string? context = null, string? description = null, ComponentBuilder? components = null, EmbedBuilder? embed = null)
         {
             if (embed is not null)
             {
@@ -323,7 +323,7 @@ namespace Barriot.Interaction
         public async Task FollowupAsync(string error, string? context = null, string? description = null)
         {
             var tb = new TextBuilder()
-                .WithResult(ResultFormat.Failure)
+                .WithResult(MessageFormat.Failure)
                 .WithHeader(error)
                 .WithContext(context)
                 .WithDescription(description);

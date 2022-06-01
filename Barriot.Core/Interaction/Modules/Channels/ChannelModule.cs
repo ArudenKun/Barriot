@@ -24,8 +24,10 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Prune channel", $"channel-prune:{Context.User.Id}", ButtonStyle.Danger);
 
             await RespondAsync(
-                text: ":woman_office_worker: **Manage this channel.** *Please select an action below:*",
-                components: cb.Build(),
+                format: MessageFormat.Important,
+                header: "Manage this channel.",
+                context: "Please select an action below:",
+                components: cb,
                 ephemeral: true);
         }
 
@@ -40,14 +42,17 @@ namespace Barriot.Interaction.Modules
                     await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new OverwritePermissions(sendMessages: PermValue.Deny));
 
                     await UpdateAsync(
-                        text: ":no_entry_sign: **Successfully locked channel.**, *You can unlock the channel by executing `/channel` again.*");
+                        format: MessageFormat.NotAllowed,
+                        header: "Successfully locked channel.",
+                        context: "You can unlock the channel by executing `/channel` again.");
                 }
                 else
                 {
                     await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new OverwritePermissions(sendMessages: PermValue.Inherit));
 
                     await UpdateAsync(
-                        text: ":white_check_mark: **Successfully unlocked channel.**");
+                        format: MessageFormat.Success,
+                        header: "Successfully unlocked channel.");
                 }
             }
             else
@@ -61,7 +66,8 @@ namespace Barriot.Interaction.Modules
             if (Context.Channel is RestTextChannel channel)
             {
                 await UpdateAsync(
-                    text: ":white_check_mark: Deleting channel...");
+                    format: MessageFormat.Success,
+                    header: "Deleting channel...");
 
                 await Task.Delay(5000);
 
@@ -95,8 +101,9 @@ namespace Barriot.Interaction.Modules
                     await channel.DeleteMessagesAsync(messages);
 
                     await RespondAsync(
-                        text: $":white_check_mark: **Succesfully attempted to delete {result} messages from this channel.**" +
-                              $"\n\n> If not all messages disappeared, they may be older than 14 days old. Older than 14 days, Barriot will not remove messages.",
+                        format: MessageFormat.Success,
+                        header: $"Succesfully attempted to delete {result} messages from this channel.",
+                        description: "If not all messages disappeared, they may be older than 14 days old. Older than 14 days, Barriot will not remove messages.",
                         ephemeral: true);
                 }
                 else
@@ -104,9 +111,9 @@ namespace Barriot.Interaction.Modules
             }
             else
                 await RespondAsync(
-                    text: $":x: **The amount of messages to prune is invalid.** *Your value: `{modal.Result}` does not match the required 1-100.*" +
-                          $"\n\n> Consider using the `clone` command if you want to rid a channel of all of it's messages.",
-                    ephemeral: true);
+                    error: "The amount of messages to prune is invalid.",
+                    context: $"Your value: `{modal.Result}` does not match the required 1-100.",
+                    description: "Consider using the `clone` command if you want to rid a channel of all of it's messages.");
         }
     }
 }

@@ -80,6 +80,9 @@ namespace Barriot.Models
         public override string ToString()
             => Url;
 
+        public override int GetHashCode()
+            => Url.GetHashCode();
+
         public override bool Equals([NotNullWhen(true)] object? obj)
         {
             if (obj is JumpUrl url && url.Url == Url)
@@ -87,19 +90,10 @@ namespace Barriot.Models
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return Url.GetHashCode();
-        }
-
         public static bool operator ==(JumpUrl left, JumpUrl right)
-        {
-            return left.Equals(right);
-        }
+            => left.Equals(right);
 
         public static bool operator !=(JumpUrl left, JumpUrl right)
-        {
-            return !(left == right);
-        }
+            => !(left == right);
     }
 }

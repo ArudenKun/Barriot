@@ -23,8 +23,10 @@ namespace Barriot.Interaction.Modules
             cb.WithButton("Forfeit", $"challenge-f:{targetId},{userId}", ButtonStyle.Danger, row: 3);
 
             await RespondAsync(
-                text: $":video_game: **<@{targetId}>'s turn:** :exclamation: *Buttons are only available to whose turn it is!*",
-                components: cb.Build(),
+                format: "video_game",
+                header: $"<@{targetId}>'s turn:",
+                context: "Buttons are only available to whose turn it is!",
+                components: cb,
                 ephemeral: false);
         }
 
@@ -37,8 +39,8 @@ namespace Barriot.Interaction.Modules
             if (game is null) // The game can be deleted from the DB as we try to get it. This way we prevent this from happening.
             {
                 await RespondAsync(
-                    text: ":x: **This game has been abandoned!** \n\n> Due to being live for longer than a day, it's been pruned from the database and can no longer be played.",
-                    ephemeral: true);
+                    error: "This game has been abandoned!",
+                    description: "Due to being live for longer than a day, it's been pruned from the database and can no longer be played.");
                 return;
             }
 
@@ -68,14 +70,17 @@ namespace Barriot.Interaction.Modules
                 {
                     cb.WithButton("Forfeit", $"challenge-f:{opponent.UserId},{userId}", ButtonStyle.Danger, row: 3);
                     await UpdateAsync(
-                        text: $":video_game: **<@{opponent.UserId}>'s turn:**",
+                        format: "video_game",
+                        header: $"<@{opponent.UserId}>'s turn:",
                         components: cb);
                 }
 
                 else
                 {
                     await UpdateAsync(
-                        text: $":military_medal: **The result is a tie!** There are no points distributed.",
+                        format: "military_medal",
+                        header: "The result is a tie!",
+                        context: "There are no points distributed.",
                         components: cb);
 
                     await game.DeleteAsync();
@@ -88,7 +93,9 @@ namespace Barriot.Interaction.Modules
                 foreach (var pos in game.Positions)
                     cb.WithButton(pos.Icon, id + $"{pos.X},{pos.Y}", pos.Style, null, null, true, pos.Y);
                 await UpdateAsync(
-                    text: $":trophy: **<@{userId}> has won.** Congratulations!",
+                    format: "trophy",
+                    header: $"<@{userId}> has won.",
+                    context: "Congratulations!",
                     components: cb);
 
                 Context.WonGameInSession = true;

@@ -49,12 +49,12 @@ namespace Barriot.Interaction.Modules
             var tb = new TextBuilder();
 
             if (Context.Member.DoEphemeral)
-                tb.WithResult(ResultFormat.Success)
+                tb.WithResult(MessageFormat.Success)
                     .WithContext("Commands you execute will now be hidden for everyone but you.")
                     .WithHeader("Commands are now hidden.");
 
             else
-                tb.WithResult(ResultFormat.NotAllowed)
+                tb.WithResult(MessageFormat.NotAllowed)
                     .WithContext("Commands you execute will now be visible to everyone.")
                     .WithHeader("Commands are now openly displayed.");
 

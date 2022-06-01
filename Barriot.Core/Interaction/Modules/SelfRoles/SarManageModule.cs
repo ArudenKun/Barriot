@@ -128,7 +128,7 @@ namespace Barriot.Interaction.Modules
             await data.ModifyAsync(x => x.Content = modal.Result);
 
             await RespondAsync(
-                format: ResultFormat.Success,
+                format: MessageFormat.Success,
                 header: "Succesfully modified message content!",
                 embed: eb,
                 ephemeral: true);

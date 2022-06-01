@@ -1,4 +1,6 @@
-﻿namespace Barriot
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Barriot
 {
     /// <summary>
     ///     A calculation along with its result.
@@ -52,5 +54,21 @@
         /// </returns>
         public override string ToString()
             => $"{Result}";
+
+        public override int GetHashCode()
+            => Result.GetHashCode();
+
+        public override bool Equals([NotNullWhen(true)] object? obj)
+        {
+            if (obj is Calculation calc && calc.Result == Result)
+                return true;
+            return false;
+        }
+
+        public static bool operator ==(Calculation left, Calculation right)
+            => left.Equals(right);
+
+        public static bool operator !=(Calculation left, Calculation right)
+            => !(left == right);
     }
 }

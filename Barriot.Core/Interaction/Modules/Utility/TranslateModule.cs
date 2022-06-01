@@ -25,7 +25,7 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Change preferred language", $"language-changing:{Context.User.Id},{args[0]}");
 
             await FollowupAsync(
-                format: ResultFormat.Success,
+                format: MessageFormat.Success,
                 header: $"Translated text to {args[1]}:",
                 description: await _service.TranslateAsync(args[0], message.CleanContent),
                 components: cb);
@@ -48,7 +48,7 @@ namespace Barriot.Interaction.Modules
             }
 
             await UpdateAsync(
-                format: ResultFormat.Question,
+                format: MessageFormat.Question,
                 header: "What do you want your default translation language to be?",
                 context: $"Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.",
                 components: cb);
@@ -71,7 +71,7 @@ namespace Barriot.Interaction.Modules
             cb.WithSelectMenu(sb);
 
             await UpdateAsync(
-                format: ResultFormat.Question,
+                format: MessageFormat.Question,
                 header: "What do you want your default translation language to be?",
                 context: $"Click your current language ({Context.Member.PreferredLang.Split('|')[1]}) to ignore.",
                 components: cb);
@@ -91,7 +91,7 @@ namespace Barriot.Interaction.Modules
             else
             {
                 await UpdateAsync(
-                    format: ResultFormat.Success,
+                    format: MessageFormat.Success,
                     header: "Succesfully changed target language!",
                     context: $"The translate command will now respond in {@new.Name}.");
 

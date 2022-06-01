@@ -163,7 +163,7 @@ namespace Barriot.Interaction.Modules
                     .WithSelectMenu(sb);
 
                 await UpdateAsync(
-                    format: ResultFormat.Deleting,
+                    format: MessageFormat.Deleting,
                     header: "Delete reminders:",
                     context: "Select the reminders you want to delete in the dropdown below.",
                     components: cb);
@@ -189,7 +189,7 @@ namespace Barriot.Interaction.Modules
                         await reminder.DeleteAsync();
                 }
                 await UpdateAsync(
-                    format: ResultFormat.Success,
+                    format: MessageFormat.Success,
                     header: $"Succesfully removed {selectedValues.Length} reminder(s).");
             }
         }

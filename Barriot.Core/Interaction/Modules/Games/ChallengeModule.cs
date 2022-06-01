@@ -42,7 +42,7 @@ namespace Barriot.Interaction.Modules
         public async Task DeniedChallengeAsync(ulong userId, ulong targetId)
         {
             await RespondAsync(
-                format: ResultFormat.NotAllowed,
+                format: MessageFormat.NotAllowed,
                 header: $"<@{targetId}>! <@{userId}> has denied your challenge.",
                 ephemeral: false);
         }
@@ -65,7 +65,7 @@ namespace Barriot.Interaction.Modules
             tUser.GamesWon++;
 
             await RespondAsync(
-                format: ResultFormat.NotAllowed,
+                format: MessageFormat.NotAllowed,
                 header: "Quit challenge!",
                 context: $" <@{targetId}> will be rewarded because of your forfeit.",
                 ephemeral: false);

@@ -65,7 +65,7 @@ namespace Barriot.Interaction.Modules
                     poll.AlreadyReplied.Add(Context.User.Id);
 
                     await RespondAsync(
-                        format: ResultFormat.Success,
+                        format: MessageFormat.Success,
                         header: "Thank you for voting!",
                         context: "Your vote has been registered.",
                         ephemeral: true);

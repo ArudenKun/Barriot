@@ -54,7 +54,7 @@ namespace Barriot.Interaction.Modules
             await PinEntity.CreateAsync(Context.User.Id, messageUrl, modal.Result);
 
             await RespondAsync(
-                format: ResultFormat.Success,
+                format: MessageFormat.Success,
                 header: "Succesfully created pin!",
                 context: "View your pins by executing ` /pins `.",
                 description: $"**Note:** {modal.Result}\n> **Message link:** {messageUrl}");
@@ -206,7 +206,7 @@ namespace Barriot.Interaction.Modules
                 pin.Reason = modal.Result;
 
                 await RespondAsync(
-                    format: ResultFormat.Success,
+                    format: MessageFormat.Success,
                     header: "Succesfully modified pin reason:",
                     embed: eb);
             }
@@ -244,7 +244,7 @@ namespace Barriot.Interaction.Modules
                     .WithSelectMenu(sb);
 
                 await UpdateAsync(
-                    format: ResultFormat.Deleting,
+                    format: MessageFormat.Deleting,
                     header: "Deleting pins:",
                     components: cb);
             }
@@ -273,7 +273,7 @@ namespace Barriot.Interaction.Modules
                         await pin.DeleteAsync();
                 }
                 await UpdateAsync(
-                    format: ResultFormat.Success,
+                    format: MessageFormat.Success,
                     header: $"Succesfully removed {selectedValues.Length} pin(s).");
             }
         }

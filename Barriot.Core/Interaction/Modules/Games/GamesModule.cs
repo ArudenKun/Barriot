@@ -16,7 +16,7 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Answer", $"riddle:{Context.User.Id},{file.Index}");
 
             await RespondAsync(
-                format: ResultFormat.Question,
+                format: MessageFormat.Question,
                 header: "Answer me this:",
                 description: file.SelectedLine.Split('|').First(),
                 components: cb);

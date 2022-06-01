@@ -8,11 +8,11 @@
         /// <summary>
         ///     The Url sources from a direct message.
         /// </summary>
-        DirectMessage,
+        DirectMessage = 0,
 
         /// <summary>
         ///     The Url sources from a guild message.
         /// </summary>
-        GuildMessage
+        GuildMessage = 1
     }
 }

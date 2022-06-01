@@ -1,6 +1,7 @@
 ﻿using Barriot.Extensions;
 using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Modals;
+using Barriot.Models.Services;
 using MailKit.Net.Smtp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -122,9 +123,9 @@ namespace Barriot.Interaction.Modules
                 if (range.Any(x => x.Equals("Framework.dll")))
                 {
                     await FollowupAsync(
-                        text: ":x: **You are not allowed to refer to the native codebase in evaluation!**",
-                        embed: eb.Build(),
-                        ephemeral: true);
+                        format: MessageFormat.Failure,
+                        header: "You are not allowed to refer to the native codebase in evaluation!",
+                        embed: eb);
                     return;
                 }
 
@@ -140,9 +141,9 @@ namespace Barriot.Interaction.Modules
                 if (range.Any(x => x.Contains("Barriot")))
                 {
                     await FollowupAsync(
-                        text: ":x: **You are not allowed to refer to the native codebase in evaluation!**",
-                        embed: eb.Build(),
-                        ephemeral: true);
+                        format: MessageFormat.Failure,
+                        header: "You are not allowed to refer to the native codebase in evaluation!",
+                        embed: eb);
                     return;
                 }
 
@@ -153,17 +154,17 @@ namespace Barriot.Interaction.Modules
 
             if (script == string.Empty)
                 await FollowupAsync(
-                    text: ":x: **An empty script cannot be evaluated!**",
-                    embed: eb.Build(),
-                    ephemeral: true);
+                    format: MessageFormat.Failure,
+                    header: "An empty script cannot be evaluated!",
+                    embed: eb);
 
             else
             {
-                var context = new EvalContext(Context);
+                var context = new EvaluationArgs(Context);
                 var stopwatch = new Stopwatch();
 
                 IEnumerable<Diagnostic> diagnostics;
-                var code = CSharpScript.Create(script, options, typeof(EvalContext));
+                var code = CSharpScript.Create(script, options, typeof(EvaluationArgs));
 
                 try
                 {
@@ -194,9 +195,10 @@ namespace Barriot.Interaction.Modules
                             ephemeral: true);
                     }
                     await FollowupAsync(
-                        text: $":x: **Failed to compile your script:**\n\n> {ex.Message}",
-                        embed: eb.Build(),
-                        ephemeral: true);
+                        format: MessageFormat.Failure,
+                        header: "Failed to compile your script!",
+                        context: ex.Message,
+                        embed: eb);
                     return;
                 }
 
@@ -216,6 +218,9 @@ namespace Barriot.Interaction.Modules
 
                     if (exception.Length > 1020)
                     {
+                        eb.WithColor(Context.Member.Color);
+                        eb.WithFooter("Brought to you by Rozen");
+
                         using var memStream = new MemoryStream(Encoding.ASCII.GetBytes(exception));
 
                         await FollowupWithFileAsync(
@@ -230,9 +235,10 @@ namespace Barriot.Interaction.Modules
                         eb.AddField("Exception:", exception);
 
                         await FollowupAsync(
-                            text: $":x: **Failed to run your script, a runtime error has occured:**\n\n {ex.Message}",
-                            embed: eb.Build(),
-                            ephemeral: true);
+                            format: MessageFormat.Failure,
+                            header: "Failed to run your script, a runtime error has occured.",
+                            context: ex.Message,
+                            embed: eb);
                     }
                     return;
                 }
@@ -240,28 +246,11 @@ namespace Barriot.Interaction.Modules
                 eb.AddField("Result:", context.Result ?? "None.");
 
                 await FollowupAsync(
-                    text: ":white_check_mark: **Script ran successfully!** *Displayed below is the full output of the evaluation.*",
-                    embed: eb.Build(),
-                    ephemeral: true);
+                    format: MessageFormat.Success,
+                    header: "Script ran successfully!",
+                    context: "Displayed below is the full output of the evaluation.",
+                    embed: eb);
             }
         }
-    }
-
-    internal class EvalContext
-    {
-        public BarriotInteractionContext Context { get; }
-
-        public string? Result { get; private set; } = null;
-
-        public string? Attachment { get; private set; } = null;
-
-        public EvalContext(BarriotInteractionContext context)
-            => Context = context;
-
-        public void Print(object result)
-            => Result = result.ToString();
-
-        public void Attach(object attachment)
-            => Attachment = attachment.ToString();
     }
 }

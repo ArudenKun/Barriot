@@ -20,7 +20,7 @@ namespace Barriot.Interaction.Modules
                           $"{string.Join("\n", message.Attachments.Select(x => x.Url))}");
 
                 await RespondAsync(
-                    format: ResultFormat.Success,
+                    format: MessageFormat.Success,
                     header: "Sent message content in DM!");
             }
             catch
