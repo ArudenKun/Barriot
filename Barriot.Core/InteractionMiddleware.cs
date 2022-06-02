@@ -63,6 +63,7 @@ namespace Barriot
                 if (!string.IsNullOrEmpty(x.Name))
                     return x.Name switch
                     {
+                        "challenge" => true,
                         "channel" => true,
                         _ => false
                     };

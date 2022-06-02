@@ -37,42 +37,36 @@ namespace Barriot.Interaction.Modules
         }
 
         [DoUserCheck]
-        [DisableSource]
         [ComponentInteraction("challenge-d:*,*")]
         public async Task DeniedChallengeAsync(ulong userId, ulong targetId)
         {
-            await RespondAsync(
+            await UpdateAsync(
                 format: MessageFormat.NotAllowed,
-                header: $"<@{targetId}>! <@{userId}> has denied your challenge.",
-                ephemeral: false);
+                header: $"<@{targetId}>! <@{userId}> has denied your challenge.");
         }
 
         [DoUserCheck]
-        [DisableSource]
         [ComponentInteraction("challenge-n:*")]
         public async Task NevermindChallengeAsync(ulong _)
         {
-            await RespondAsync(
+            await UpdateAsync(
                 error: "Okay, challenge ignored!");
         }
 
         [DoUserCheck]
-        [DisableSource]
         [ComponentInteraction("challenge-f:*,*")]
         public async Task ForfeitChallengeAsync(ulong _, ulong targetId)
         {
             using var tUser = await UserEntity.GetAsync(targetId);
             tUser.GamesWon++;
 
-            await RespondAsync(
+            await UpdateAsync(
                 format: MessageFormat.NotAllowed,
                 header: "Quit challenge!",
-                context: $" <@{targetId}> will be rewarded because of your forfeit.",
-                ephemeral: false);
+                context: $" <@{targetId}> will be rewarded because of your forfeit.");
         }
 
         [DoUserCheck]
-        [DisableSource]
         [ComponentInteraction("challenge-s:*,*,*")]
         public async Task StartChallengeAsync(ulong userId, ulong targetId, string type)
         {
@@ -100,12 +94,11 @@ namespace Barriot.Interaction.Modules
                 .WithButton("Yes!", $"{gameData[0]}:{targetId},{userId}", ButtonStyle.Success)
                 .WithButton("Nope.", $"challenge-d:{targetId},{userId}", ButtonStyle.Danger);
 
-            await RespondAsync(
+            await UpdateAsync(
                 format: "crossed_swords",
                 header: $"<@{targetId}>! You have been challenged by <@{userId}> to a game of {gameData[1]}!", 
                 context: "Are you up to the challenge?",
-                components: cb,
-                ephemeral: false);
+                components: cb);
         }
     }
 }

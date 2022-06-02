@@ -8,7 +8,6 @@ namespace Barriot.Interaction.Modules
     public class Connect4Module : BarriotModuleBase
     {
         [DoUserCheck]
-        [DisableSource]
         [ComponentInteraction("connect-init:*,*")]
         public async Task ConnectInitialAsync(ulong userId, ulong targetId)
         {
@@ -43,10 +42,9 @@ namespace Barriot.Interaction.Modules
                 .WithSelectMenu(sb)
                 .WithButton("Forfeit", $"challenge-f:{targetId},{userId}", ButtonStyle.Danger, row: 2);
 
-            await RespondAsync(
+            await UpdateAsync(
                 text: response,
-                components: cb.Build(),
-                ephemeral: false);
+                components: cb);
         }
 
         [DoUserCheck]

@@ -8,7 +8,6 @@ namespace Barriot.Interaction.Modules
     public class TicTacToeModule : BarriotModuleBase
     {
         [DoUserCheck]
-        [DisableSource]
         [ComponentInteraction("tictactoe-init:*,*")]
         public async Task TicTacToeInitialAsync(ulong userId, ulong targetId)
         {
@@ -22,12 +21,11 @@ namespace Barriot.Interaction.Modules
 
             cb.WithButton("Forfeit", $"challenge-f:{targetId},{userId}", ButtonStyle.Danger, row: 3);
 
-            await RespondAsync(
+            await UpdateAsync(
                 format: "video_game",
                 header: $"<@{targetId}>'s turn:",
                 context: "Buttons are only available to whose turn it is!",
-                components: cb,
-                ephemeral: false);
+                components: cb);
         }
 
         [DoUserCheck]
