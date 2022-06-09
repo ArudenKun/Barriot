@@ -14,7 +14,7 @@ namespace Barriot
 
         /// <inheritdoc/>
         [BsonIgnore]
-        public EntityState State { get; set; }
+        public EntityState State { get; set; } = EntityState.Deserializing;
 
         internal RemindEntity(ulong userId, string message, TimeSpan span, int frequency, TimeSpan toRepeat)
         {

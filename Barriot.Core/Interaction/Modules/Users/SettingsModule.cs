@@ -1,5 +1,6 @@
 ﻿using Barriot.Interaction.Attributes;
 using Barriot.Interaction.Modals;
+using Barriot.Extensions;
 
 namespace Barriot.Interaction.Modules
 {
@@ -17,11 +18,18 @@ namespace Barriot.Interaction.Modules
         public async Task SettingsAsync()
         {
             var eb = new EmbedBuilder()
-                .AddField("Current embed color", new Color(Context.Member.Color).ToString())
-                .AddField("Hiding commands", Context.Member.DoEphemeral);
+                .AddField("Current embed color", new Color(Context.Member.Color).ToString());
 
             var cb = new ComponentBuilder()
-                .WithButton($"{(Context.Member.DoEphemeral ? "Unhide" : "Hide")} commands", $"command-toggle:{Context.User.Id}", style: Context.Member.DoEphemeral ? ButtonStyle.Danger : ButtonStyle.Success);
+                .WithButton($"{(Context.Member.DoEphemeral ? "Unhide" : "Hide")} commands", $"command-toggle:{Context.User.Id}", Context.Member.DoEphemeral ? ButtonStyle.Danger : ButtonStyle.Success);
+
+            if (Context.Member.Flags.Any())
+            {
+                eb.AddField("Featured acknowledgement:", Context.Member.FeaturedFlag is null ? "None" : $"**{Context.Member.FeaturedFlag}**\n> {Context.Member.FeaturedFlag.Description}");
+                cb.WithButton("Change Featured", $"flag-setting:{Context.User.Id}", ButtonStyle.Secondary);
+            }
+                
+            eb.AddField("Hiding commands", Context.Member.DoEphemeral);
 
             if (Context.Member.HasVoted())
                 cb.WithButton($"Set custom embed color", $"embed-creating:{Context.User.Id}");
@@ -60,6 +68,58 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 text: tb.Build());
+        }
+
+        [DoUserCheck]
+        [ComponentInteraction("flag-setting:*")]
+        public async Task FlagSettingAsync(ulong _)
+        {
+            var sb = new SelectMenuBuilder()
+                .WithMinValues(1)
+                .WithMaxValues(1)
+                .WithCustomId($"flag-set:{Context.User.Id}")
+                .WithPlaceholder("Select an acknowledgement to continue");
+
+            foreach (var flag in Context.Member.Flags)
+                sb.AddOption(flag.Title, flag.Emoji.Trim(':'), flag.Description.Reduce(99));
+
+            var cb = new ComponentBuilder()
+                .WithSelectMenu(sb);
+
+
+            await RespondAsync(
+                format: MessageFormat.Question,
+                header: "Choose an acknowledgement to feature in your profile!",
+                components: cb);
+        }
+
+        [DoUserCheck]
+        [ComponentInteraction("flag-set:*")]
+        public async Task FlagSetAsync(ulong _, string[] selectedValues)
+        {
+            var value = selectedValues[0];
+
+            var flag = Context.Member.Flags.FirstOrDefault(x => x is not null && x.Emoji.Trim(':') == value, null);
+
+            if (flag is null)
+                await UpdateAsync(
+                    format: MessageFormat.Failure,
+                    header: "Something went wrong when trying to match your value!",
+                    context: "Please report this behavior to the Developers.");
+
+            else
+            {
+                Context.Member.FeaturedFlag = flag;
+
+                var eb = new EmbedBuilder()
+                    .WithTitle("New featured acknowledgement:")
+                    .AddField(flag.ToString(), flag.Description);
+
+                await UpdateAsync(
+                    format: MessageFormat.Success,
+                    header: "Succesfully set acknowledgement!",
+                    embed: eb);
+            }
         }
 
         [DoUserCheck]

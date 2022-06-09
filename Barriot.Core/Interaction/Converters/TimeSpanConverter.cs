@@ -8,6 +8,6 @@ namespace Barriot.Interaction.Converters
             => ApplicationCommandOptionType.String;
 
         public override Task<TypeConverterResult> ReadAsync(IInteractionContext context, IApplicationCommandInteractionDataOption option, IServiceProvider services)
-            => Task.FromResult(TypeConverterResult.FromSuccess(TimeSpanExtensions.GetSpan((option.Value as string)!)));
+            => Task.FromResult(TypeConverterResult.FromSuccess(TimeExtensions.GetTimeSpan((option.Value as string)!)));
     }
 }

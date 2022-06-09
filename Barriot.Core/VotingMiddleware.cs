@@ -88,6 +88,10 @@ namespace Barriot
 
             user.LastVotedAt = DateTime.UtcNow;
             user.Votes++;
+
+            var bumps = await BumpsEntity.GetAsync(user.UserId);
+
+            bumps.BumpsToGive++;
         }
     }
 

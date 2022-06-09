@@ -15,7 +15,7 @@ namespace Barriot
 
         /// <inheritdoc/>
         [BsonIgnore]
-        public EntityState State { get; set; }
+        public EntityState State { get; set; } = EntityState.Deserializing;
 
         internal PinEntity(ulong userId, JumpUrl url, string reason)
         {

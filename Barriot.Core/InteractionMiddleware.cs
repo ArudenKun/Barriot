@@ -61,10 +61,13 @@ namespace Barriot
             RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, x =>
             {
                 if (!string.IsNullOrEmpty(x.Name))
-                    return x.Name switch
+                    return x.Name.ToLower() switch
                     {
                         "challenge" => true,
                         "channel" => true,
+                        "user-info" => true,
+                        "stats" => true,
+                        "profile" => true,
                         _ => false
                     };
 

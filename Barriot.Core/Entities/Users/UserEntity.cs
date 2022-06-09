@@ -32,6 +32,7 @@ namespace Barriot
             _lastCommand = "None";
             _votes = 0;
             _monthlyVotes = 0;
+            _featuredFlag = null;
         }
 
         #region UserEntity
@@ -188,6 +189,21 @@ namespace Barriot
             {
                 _ = ModifyAsync(Builders<UserEntity>.Update.Set(x => x.Flags, value));
                 _flags = value;
+            }
+        }
+
+        private UserFlag? _featuredFlag;
+        /// <summary>
+        ///     The user's featured flag.
+        /// </summary>
+        public UserFlag? FeaturedFlag
+        {
+            get
+                => _featuredFlag;
+            set
+            {
+                _ = ModifyAsync(Builders<UserEntity>.Update.Set(x => x.FeaturedFlag, value));
+                _featuredFlag = value;
             }
         }
 
