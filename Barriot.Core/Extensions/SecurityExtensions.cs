@@ -45,5 +45,8 @@ namespace Barriot.Extensions
         /// <returns>The newly generated salt.</returns>
         public static string GenerateSalt()
             => _random.NextDouble().ToString();
+
+        public static bool IsApplicationDeveloper(UserEntity user)
+            => user.Flags.Any(x => x.Emoji == UserFlag.Developer.Emoji);
     }
 }

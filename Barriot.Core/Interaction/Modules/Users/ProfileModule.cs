@@ -13,11 +13,11 @@ namespace Barriot.Interaction.Modules
         }
 
         [SlashCommand("profile", "Views your or another user's statistics.")]
-        public async Task SlashStatisticsAsync(RestUser? user = null)
-            => await StatisticsAsync(user ?? Context.User);
+        public async Task SlashProfileAsync(RestUser? user = null)
+            => await ProfileAsync(user ?? Context.User);
 
         [UserCommand("Profile")]
-        public async Task StatisticsAsync(RestUser user)
+        public async Task ProfileAsync(RestUser user)
         {
             bool isSelfUser = user.Id == Context.User.Id;
 
@@ -67,7 +67,7 @@ namespace Barriot.Interaction.Modules
 
         [DoUserCheck]
         [ComponentInteraction("stats:*,*")]
-        public async Task Stats(ulong _, ulong targetId)
+        public async Task StatsAsync(ulong _, ulong targetId)
         {
             var cb = new ComponentBuilder()
                 .WithButton("View acknowledgements", $"ack:{Context.User.Id},{targetId}");
@@ -95,7 +95,7 @@ namespace Barriot.Interaction.Modules
 
         [DoUserCheck]
         [ComponentInteraction("ack:*,*")]
-        public async Task AckmowledgementsAsync(ulong _, ulong targetId)
+        public async Task AcknowledgementsAsync(ulong _, ulong targetId)
         {
             var user = await UserEntity.GetAsync(targetId);
 
@@ -122,7 +122,7 @@ namespace Barriot.Interaction.Modules
                 eb.WithDescription("This user has no acknowledgments.");
 
             var cb = new ComponentBuilder()
-                .WithButton("View stats", $"stats:{Context.User.Id}:{targetId}");
+                .WithButton("View stats", $"stats:{Context.User.Id},{targetId}");
 
             if ((await Context.Client.GetApplicationInfoAsync()).Owner.Id == Context.User.Id)
             {
@@ -155,7 +155,7 @@ namespace Barriot.Interaction.Modules
 
             ComponentBuilder? cb = null;
             if (canGiveMore)
-                cb = new ComponentBuilder().WithButton("Bump again", $"bump:{Context.User.Id}:{targetId}", ButtonStyle.Success);
+                cb = new ComponentBuilder().WithButton("Bump again", $"bump:{Context.User.Id},{targetId}", ButtonStyle.Success);
 
             if (!Context.Member.HasVoted())
             {
