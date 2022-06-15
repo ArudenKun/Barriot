@@ -45,6 +45,21 @@ namespace Barriot
             }
         }
 
+        private DateTime _lastRedeemed;
+        /// <summary>
+        ///     Sets when a /daily has been redeemed.
+        /// </summary>
+        public DateTime LastRedeemed
+        {
+            get
+                => _lastRedeemed;
+            set
+            {
+                _ = ModifyAsync(Builders<BumpsEntity>.Update.Set(x => x.LastRedeemed, value));
+                _lastRedeemed = value;
+            }
+        }
+
         private long _receivedBumps;
         /// <summary>
         ///     All bumps this user has received.

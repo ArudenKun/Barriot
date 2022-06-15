@@ -1,4 +1,5 @@
 ﻿using Barriot.Interaction.Attributes;
+using Barriot.Extensions;
 
 namespace Barriot.Interaction.Modules
 {
@@ -10,6 +11,31 @@ namespace Barriot.Interaction.Modules
         public ProfileModule(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        [SlashCommand("daily", "Claims daily rewards.")]
+        public async Task DailyAsync()
+        {
+            var bumps = await BumpsEntity.GetAsync(Context.User.Id);
+
+            if (bumps.LastRedeemed <= DateTime.UtcNow.AddDays(-1))
+            {
+                bumps.LastRedeemed = DateTime.UtcNow;
+                bumps.BumpsToGive++;
+
+                await RespondAsync(
+                    format: MessageFormat.Success,
+                    header: "Daily bump redeemed!");
+            }
+            else
+            {
+                var span = bumps.LastRedeemed - DateTime.UtcNow.AddDays(-1);
+
+                await RespondAsync(
+                    format: MessageFormat.Failure,
+                    header: "Daily bump has already been redeemed!",
+                    context: $"Please try again in {(span.ToReadable())}");
+            }
         }
 
         [SlashCommand("profile", "Views your or another user's statistics.")]
