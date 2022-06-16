@@ -2,7 +2,7 @@
 
 namespace Barriot
 {
-    public class ClientManager
+    public class ClientController
     {
         private readonly System.Timers.Timer _timer;
         private readonly string _path;
@@ -10,9 +10,9 @@ namespace Barriot
         private readonly DiscordRestClient _client;
         private readonly InteractionService _service;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<ClientManager> _logger;
+        private readonly ILogger<ClientController> _logger;
 
-        public ClientManager(DiscordRestClient client, InteractionService service, IConfiguration config, ILogger<ClientManager> logger)
+        public ClientController(DiscordRestClient client, InteractionService service, IConfiguration config, ILogger<ClientController> logger)
         {
             _client = client;
             _logger = logger;

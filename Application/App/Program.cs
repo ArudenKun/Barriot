@@ -43,7 +43,7 @@ builder.Services.AddHttpClient<ITranslateClient, TranslateClient>(client =>
 
 // Add logic management
 builder.Services.AddSingleton<DatabaseManager>();
-builder.Services.AddSingleton<ClientManager>();
+builder.Services.AddSingleton<ClientController>();
 builder.Services.AddSingleton<PostExecutionHandler>();
 
 // Add services
@@ -74,7 +74,7 @@ await service.AddModulesAsync(typeof(Program).Assembly, app.Services);
 // Configure managers.
 await app.Services.GetRequiredService<DatabaseManager>()
     .ConfigureAsync();
-await app.Services.GetRequiredService<ClientManager>()
+await app.Services.GetRequiredService<ClientController>()
     .ConfigureAsync();
 
 // Final configuration entries. 
