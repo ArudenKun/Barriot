@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barriot.App", "Barriot.App\Barriot.App.csproj", "{F89847A5-5E24-4DD4-BCF6-1D528ABAA8B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barriot.App", "Application\App\Barriot.App.csproj", "{F89847A5-5E24-4DD4-BCF6-1D528ABAA8B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barriot.Data", "Barriot.Data\Barriot.Data.csproj", "{AE1D8B21-65BC-4968-8858-DE2CB3928DDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barriot.Data", "Application\Data\Barriot.Data.csproj", "{AE1D8B21-65BC-4968-8858-DE2CB3928DDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barriot.Core", "Barriot.Core\Barriot.Core.csproj", "{4B7BF9D7-8A7C-423C-87E9-2E093C0EC098}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barriot.Core", "Application\Core\Barriot.Core.csproj", "{4B7BF9D7-8A7C-423C-87E9-2E093C0EC098}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barriot.Server", "Barriot.Server\Barriot.Server.csproj", "{F1B9C363-C724-468A-A257-197574D543F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barriot.Server", "Server\Barriot.Server.csproj", "{F1B9C363-C724-468A-A257-197574D543F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3C74F6FB-6735-4440-BA22-E109BBE1DE5A}"
 	ProjectSection(SolutionItems) = preProject

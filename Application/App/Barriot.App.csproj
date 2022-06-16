@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Barriot.Core\Barriot.Core\Barriot.Core.csproj" />
-    <ProjectReference Include="..\Barriot.Data\Barriot.Data\Barriot.Data.csproj" />
+    <ProjectReference Include="..\..\Application\Core\Barriot.Core.csproj" />
+    <ProjectReference Include="..\..\Application\Data\Barriot.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
