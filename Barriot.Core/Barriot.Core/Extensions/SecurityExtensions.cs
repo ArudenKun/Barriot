@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Barriot.Extensions
 {
-    internal static class SecurityExtensions
+    public static class SecurityExtensions
     {
         private readonly static SHA256 _hasher = SHA256.Create();
 
@@ -45,8 +45,5 @@ namespace Barriot.Extensions
         /// <returns>The newly generated salt.</returns>
         public static string GenerateSalt()
             => _random.NextDouble().ToString();
-
-        public static bool IsApplicationDeveloper(UserEntity user)
-            => user.Flags.Any(x => x.Emoji == UserFlag.Developer.Emoji);
     }
 }

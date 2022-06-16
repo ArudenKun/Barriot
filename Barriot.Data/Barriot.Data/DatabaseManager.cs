@@ -1,9 +1,11 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Barriot.Data
 {
-    internal sealed class DatabaseManager
+    public sealed class DatabaseManager
     {
         private static MongoClient? _client;
         private static MongoDatabaseBase? _database;

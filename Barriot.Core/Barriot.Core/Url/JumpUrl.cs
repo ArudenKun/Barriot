@@ -1,5 +1,4 @@
-﻿using Barriot.Entities.Pins;
-using Barriot.Extensions;
+﻿using Barriot.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Barriot.Models

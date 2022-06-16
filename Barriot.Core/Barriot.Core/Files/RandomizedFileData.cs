@@ -3,7 +3,7 @@
     /// <summary>
     ///     Represents data fetched from a file with a randomizer to control the value returned.
     /// </summary>
-    internal sealed class RandomizedFileData
+    public sealed class RandomizedFileData
     {
         private static readonly Random _random = new();
 

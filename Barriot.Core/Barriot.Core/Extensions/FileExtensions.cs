@@ -2,7 +2,7 @@
 
 namespace Barriot.Extensions
 {
-    internal static class FileExtensions
+    public static class FileExtensions
     {
         /// <summary>
         ///     Gets the data from a file.

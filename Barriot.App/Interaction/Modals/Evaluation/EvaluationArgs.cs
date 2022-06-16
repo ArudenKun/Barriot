@@ -1,6 +1,4 @@
-﻿using Barriot.Interaction;
-
-namespace Barriot.Models.Services
+﻿namespace Barriot.Interaction.Modals.Evaluation
 {
     internal sealed class EvaluationArgs
     {

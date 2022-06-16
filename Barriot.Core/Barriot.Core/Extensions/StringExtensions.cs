@@ -2,7 +2,7 @@
 
 namespace Barriot.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         private static readonly Regex _regex = new(
             @"(?<Prelink>\S+\s+\S*)?(?<OpenBrace><)?https?:\/\/(?:(?:ptb|canary)\.)?discord(?:app)?\.com\/channels\/(?<Location>\d+|@me)\/(?<ChannelId>\d+)\/(?<MessageId>\d+)\/?(?<CloseBrace>>)?(?<Postlink>\S*\s+\S+)?",

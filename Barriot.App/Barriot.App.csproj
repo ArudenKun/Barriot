@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<RootNamespace>Barriot</RootNamespace>
+	<Version>3.1.0</Version>
+	<AssemblyVersion>3.1.0.7</AssemblyVersion>
+	<FileVersion>3.1.0.7</FileVersion>
+	<WarningLevel>5</WarningLevel>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Net.Interactions" Version="3.7.2" />
+    <PackageReference Include="MailKit" Version="3.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.2.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.16.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Barriot.Core\Barriot.Core\Barriot.Core.csproj" />
+    <ProjectReference Include="..\Barriot.Data\Barriot.Data\Barriot.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Discord" />
+    <Using Include="Discord.Rest" />
+    <Using Include="Discord.Interactions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+	<CopyToOutputDirectory>true</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
+</Project>
