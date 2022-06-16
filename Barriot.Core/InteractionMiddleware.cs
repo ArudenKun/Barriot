@@ -7,18 +7,20 @@ namespace Barriot
         private readonly DiscordRestClient _client;
         private readonly PostExecutionHandler _resultHandler;
         private readonly ILogger<InteractionMiddleware> _logger;
+        private readonly ApiController _controller;
         private readonly InteractionService _interactions;
         private readonly IServiceProvider _serviceProvider;
         private readonly RequestDelegate _next;
         private readonly string _pbk;
 
         public InteractionMiddleware(DiscordRestClient client, InteractionService interactionService, string pbk,
-            ILogger<InteractionMiddleware> logger, RequestDelegate next, IServiceProvider serviceProvider, PostExecutionHandler postExec)
+            ILogger<InteractionMiddleware> logger, RequestDelegate next, IServiceProvider serviceProvider, PostExecutionHandler postExec, ApiController controller)
         {
             _logger = logger;
             _client = client;
             _resultHandler = postExec;
             _interactions = interactionService;
+            _controller = controller;
             _pbk = pbk;
             _serviceProvider = serviceProvider;
             _next = next;
@@ -58,29 +60,7 @@ namespace Barriot
                 return;
             }
 
-            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, x =>
-            {
-                if (!string.IsNullOrEmpty(x.Name))
-                    return x.Name.ToLower() switch
-                    {
-                        "challenge" => true,
-                        "channel" => true,
-                        "user-info" => true,
-                        "stats" => true,
-                        "profile" => true,
-                        _ => false
-                    };
-
-                var range = x.CustomId.Split('-');
-                if (range.Any())
-                    return range.First() switch
-                    {
-                        "sar" => true,
-                        "channel" => true,
-                        _ => false
-                    };
-                return false;
-            });
+            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, _controller.Predicate);
 
             // Recognize a ping interaction from Discord to check if our receiving end functions properly
             if (interaction is RestPingInteraction pingInteraction)

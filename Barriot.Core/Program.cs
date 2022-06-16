@@ -53,6 +53,8 @@ builder.Services.AddSingleton<SarMakeService>();
 builder.Services.AddSingleton<TranslateService>();
 builder.Services.AddSingleton<UserService>();
 
+builder.Services.AddSingleton<ApiController>();
+
 // Create the application.
 var app = builder.Build();
 

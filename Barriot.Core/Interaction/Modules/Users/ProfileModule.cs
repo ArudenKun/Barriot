@@ -38,10 +38,12 @@ namespace Barriot.Interaction.Modules
             }
         }
 
+        [AllowAPI]
         [SlashCommand("profile", "Views your or another user's statistics.")]
         public async Task SlashProfileAsync(RestUser? user = null)
             => await ProfileAsync(user ?? Context.User);
 
+        [AllowAPI]
         [UserCommand("Profile")]
         public async Task ProfileAsync(RestUser user)
         {

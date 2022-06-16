@@ -9,6 +9,7 @@ namespace Barriot.Interaction.Modules
     [IgnoreBlacklistedUsers]
     public class ChannelModule : BarriotModuleBase
     {
+        [AllowAPI]
         [SlashCommand("channel", "Manages this channel.")]
         public async Task ManageChannelAsync()
         {
@@ -31,6 +32,7 @@ namespace Barriot.Interaction.Modules
                 ephemeral: true);
         }
 
+        [AllowAPI]
         [DoUserCheck]
         [ComponentInteraction("channel-lock:*,*")]
         public async Task LockAsync(ulong _, bool isLocked)
@@ -59,6 +61,7 @@ namespace Barriot.Interaction.Modules
                 throw new InvalidOperationException();
         }
 
+        [AllowAPI]
         [DoUserCheck]
         [ComponentInteraction("channel-delete:*")]
         public async Task DeleteAsync(ulong _)
@@ -77,6 +80,7 @@ namespace Barriot.Interaction.Modules
                 throw new InvalidOperationException();
         }
 
+        [AllowAPI]
         [DoUserCheck]
         [ComponentInteraction("channel-prune:*")]
         public async Task StartPruneAsync(ulong _)
@@ -89,6 +93,7 @@ namespace Barriot.Interaction.Modules
             await RespondWithModalAsync(mb.Build());
         }
 
+        [AllowAPI]
         [ModalInteraction("channel-prune-finalize")]
         public async Task FinalizePruneAsync(QueryModal<string> modal)
         {

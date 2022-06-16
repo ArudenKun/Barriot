@@ -6,10 +6,12 @@ namespace Barriot.Interaction.Modules
     [IgnoreBlacklistedUsers]
     public class ChallengeModule : BarriotModuleBase
     {
+        [AllowAPI]
         [SlashCommand("challenge", "Challenges another user to a minigame.")]
         public async Task SlashChallengeAsync([Summary("target", "The user to target!")] RestUser user)
             => await ChallengeAsync(user);
 
+        [AllowAPI]
         [UserCommand("Challenge")]
         public async Task ChallengeAsync(RestUser target)
         {

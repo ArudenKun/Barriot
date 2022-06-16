@@ -16,10 +16,12 @@ namespace Barriot.Interaction.Modules
             _service = service;
         }
 
+        [AllowAPI]
         [SlashCommand("user-info", "Gets information about a user.")]
         public async Task SlashUserInfoAsync([Summary("user", "The user to see info about.")] RestUser? user = null)
             => await UserInfoAsync(user ?? Context.User);
 
+        [AllowAPI]
         [UserCommand("Info")]
         public async Task UserInfoAsync(RestUser user)
         {
@@ -79,7 +81,7 @@ namespace Barriot.Interaction.Modules
 
             await UpdateAsync(
                 format: "selfie",
-                header: $":selfie: <@{targetId}>'s avatar:",
+                header: $"<@{targetId}>'s avatar:",
                 embed: eb);
         }
 
