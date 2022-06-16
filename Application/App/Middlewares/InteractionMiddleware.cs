@@ -1,4 +1,4 @@
-﻿using Barriot.Interaction;
+﻿using Barriot.Interactions;
 
 namespace Barriot
 {
@@ -60,7 +60,9 @@ namespace Barriot
                 return;
             }
 
-            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, _controller.Predicate);
+            Console.WriteLine("Test");
+
+            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, x => true);
 
             // Recognize a ping interaction from Discord to check if our receiving end functions properly
             if (interaction is RestPingInteraction pingInteraction)

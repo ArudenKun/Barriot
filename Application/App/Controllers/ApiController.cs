@@ -1,7 +1,7 @@
-﻿using Barriot.Interaction.Attributes;
+﻿using Barriot.Interactions.Attributes;
 using System.Linq.Expressions;
 
-namespace Barriot.Interaction
+namespace Barriot.Interactions
 {
     public sealed class ApiController
     {
@@ -11,9 +11,7 @@ namespace Barriot.Interaction
 
         private readonly InteractionService _service;
 
-        public Func<InteractionProperties, bool> Predicate { get; private set; }
-
-        public char Filter { get; set; } = ':';
+        public Func<InteractionProperties, bool> Predicate { get; }
 
         public ApiController(InteractionService service)
         {
@@ -23,7 +21,7 @@ namespace Barriot.Interaction
             Predicate = x =>
             {
                 var name = string.IsNullOrEmpty(x.Name)
-                    ? x.CustomId.Split(Filter)[0]
+                    ? x.CustomId.Split(AllowAPIAttribute.Filter)[0]
                     : x.Name;
 
                 if (_commandMap.Any(c => c == name))

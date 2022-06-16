@@ -1,4 +1,4 @@
-﻿using Barriot.Interaction;
+﻿using Barriot.Interactions;
 
 namespace Barriot.Extensions
 {

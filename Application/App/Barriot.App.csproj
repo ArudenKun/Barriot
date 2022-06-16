@@ -32,10 +32,8 @@
 
   <ItemGroup>
     <Content Update="appsettings.json">
-	<CopyToOutputDirectory>true</CopyToOutputDirectory>
+	  <CopyToOutputDirectory>true</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -2,9 +2,9 @@ using Barriot;
 using Barriot.API.Translation;
 using Barriot.Data;
 using Barriot.Extensions;
-using Barriot.Interaction;
-using Barriot.Interaction.Converters;
-using Barriot.Interaction.Services;
+using Barriot.Interactions;
+using Barriot.Interactions.Converters;
+using Barriot.Interactions.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -66,7 +66,7 @@ service.AddComponentTypeConverter<TimeSpan>(new TimeSpanComponentConverter());
 service.AddComponentTypeConverter<Color>(new ColorComponentConverter());
 
 service.AddTypeReader<ObjectId>(new ObjectIdComponentConverter());
-service.AddTypeReader<Guid>(new Barriot.Interaction.Converters.GuidConverter());
+service.AddTypeReader<Guid>(new Barriot.Interactions.Converters.GuidConverter());
 
 // Register all modules.
 await service.AddModulesAsync(typeof(Program).Assembly, app.Services);

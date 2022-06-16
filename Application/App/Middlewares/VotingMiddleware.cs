@@ -60,7 +60,7 @@ namespace Barriot
             if (oldTime.AddMonths(1).Month == time.Month)
             {
                 // if there are more than 1 votes last month.
-                if (user.MonthlyVotes != 0)
+                if (user.MonthlyVotes is not 0)
                 {
                     var flags = user.Flags;
                     // if the user didnt vote the full month last month.
