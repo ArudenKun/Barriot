@@ -1,4 +1,4 @@
-﻿namespace Barriot.Services
+﻿namespace Barriot.Application.Services
 {
     public class UserService : IService
     {

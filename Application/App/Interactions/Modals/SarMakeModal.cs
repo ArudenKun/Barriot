@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions.Modals
+﻿namespace Barriot.Application.Interactions.Modals
 {
     public class SarMakeModal : IModal
     {

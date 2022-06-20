@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Barriot.Interactions.Converters
+namespace Barriot.Application.Interactions.Converters
 {
     public class CalculationConverter : TypeConverter<Calculation>
     {

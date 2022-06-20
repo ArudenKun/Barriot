@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions.Attributes
+﻿namespace Barriot.Application.Interactions.Attributes
 {
     /// <summary>
     ///     This attribute makes sure that the user who pressed this button is the only one who can execute it.

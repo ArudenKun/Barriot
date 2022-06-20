@@ -364,3 +364,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /Application/Barriot.Application/appsettings.json
 /Application/Barriot.Application/appsettings.Development.json
+/Application/App/appsettings.Development.json
+/Application/App/appsettings.json

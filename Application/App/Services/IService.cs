@@ -1,6 +1,7 @@
-﻿namespace Barriot.Services
+﻿namespace Barriot.Application.Services
 {
     public interface IService
     {
+
     }
 }

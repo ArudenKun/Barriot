@@ -1,7 +1,7 @@
 ﻿using Barriot.Extensions;
-using Barriot.Interactions.Attributes;
-using Barriot.Interactions.Modals;
-using Barriot.Interactions.Modals.Evaluation;
+using Barriot.Application.Interactions.Attributes;
+using Barriot.Application.Interactions.Modals;
+using Barriot.Application.Interactions.Modals.Evaluation;
 using MailKit.Net.Smtp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -10,7 +10,7 @@ using MimeKit;
 using System.Diagnostics;
 using System.Text;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     // TODO, rework SEND
     [IgnoreBlacklistedUsers]

@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions.Attributes
+﻿namespace Barriot.Application.Interactions.Attributes
 {
     /// <summary>
     ///     This attribute makes sure that components on the source message of this interaction are disabled after successful execution.

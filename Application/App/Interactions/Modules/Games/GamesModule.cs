@@ -1,7 +1,7 @@
 ﻿using Barriot.Extensions;
-using Barriot.Interactions.Attributes;
+using Barriot.Application.Interactions.Attributes;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     // TODO, rework SEND
     [IgnoreBlacklistedUsers]

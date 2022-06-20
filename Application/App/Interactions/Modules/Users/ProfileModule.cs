@@ -1,7 +1,7 @@
-﻿using Barriot.Interactions.Attributes;
+﻿using Barriot.Application.Interactions.Attributes;
 using Barriot.Extensions;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     [IgnoreBlacklistedUsers]
     public class ProfileModule : BarriotModuleBase
@@ -38,12 +38,12 @@ namespace Barriot.Interactions.Modules
             }
         }
 
-        [AllowAPI]
+        [AllowAPI(true)]
         [SlashCommand("profile", "Views your or another user's statistics.")]
         public async Task SlashProfileAsync(RestUser? user = null)
             => await ProfileAsync(user ?? Context.User);
 
-        [AllowAPI]
+        [AllowAPI(true)]
         [UserCommand("Profile")]
         public async Task ProfileAsync(RestUser user)
         {

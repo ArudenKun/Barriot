@@ -1,6 +1,7 @@
-﻿using Barriot.API.Translation;
+﻿using Barriot.Application.API;
+using Barriot.Application.API.Args;
 
-namespace Barriot.Services
+namespace Barriot.Application.Services
 {
     public class TranslateService : IService
     {

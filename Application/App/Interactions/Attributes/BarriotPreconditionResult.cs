@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions.Attributes
+﻿namespace Barriot.Application.Interactions.Attributes
 {
     public sealed class BarriotPreconditionResult : PreconditionResult
     {

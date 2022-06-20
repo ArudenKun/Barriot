@@ -1,11 +1,11 @@
-﻿using Barriot.Interactions.Attributes;
+﻿using Barriot.Application.Interactions.Attributes;
 using Barriot.Pagination;
 using Barriot.Models;
 using MongoDB.Bson;
 using Barriot.Extensions;
-using Barriot.Interactions.Modals;
+using Barriot.Application.Interactions.Modals;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     [IgnoreBlacklistedUsers]
     public class PinModule : BarriotModuleBase

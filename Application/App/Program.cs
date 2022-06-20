@@ -1,82 +1,30 @@
-using Barriot;
-using Barriot.API.Translation;
+using Barriot.Application.API;
+using Barriot.Application.Interactions;
+using Barriot.Application.Services;
 using Barriot.Data;
-using Barriot.Extensions;
-using Barriot.Interactions;
-using Barriot.Interactions.Converters;
-using MongoDB.Bson;
-using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Set the proper configuration for the application builder.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddRouting();
-
-// Configure the sharded client.
-var config = new DiscordRestConfig()
-{
-    LogLevel = LogSeverity.Verbose,
-    FormatUsersInBidirectionalUnicode = false,
-    APIOnRestInteractionCreation = false,
-};
-var client = new DiscordRestClient(config);
-
-await client.LoginAsync(TokenType.Bot, builder.Configuration["Token"]);
-
-// Add all services to the application builder.
 builder.Services.AddLogging();
+builder.Services.AddControllers();
+
+var client = await ServiceExtensions.CreateClientAsync(builder.Configuration["PrivateToken"]);
+
 builder.Services.AddSingleton(client);
-builder.Services.AddInteractionService();
+builder.Services.AddDatabase(builder.Configuration["DbToken"]);
+builder.Services.AddInteractions();
+builder.Services.AddImplementations();
+builder.Services.AddHttp(builder.Configuration.GetSection("APIs"));
 
-builder.Services.AddSingleton(new MongoClient(new MongoUrlBuilder(
-    builder.Configuration["DbToken"])
-    .ToMongoUrl()));
-
-// Configure the HTTP clients
-builder.Services.AddHttpClient<ITranslateClient, TranslateClient>(client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["TranslateAPI"]);
-});
-
-// Add logic management
-builder.Services.AddSingleton<DatabaseManager>();
-builder.Services.AddSingleton<ClientController>();
-builder.Services.AddSingleton<PostExecutionHandler>();
-
-builder.Services.AddSingleton<ApiController>();
-
-// Create the application.
 var app = builder.Build();
 
-var service = app.Services.GetRequiredService<InteractionService>();
+await InteractionExtensions.ConfigureInteractionsAsync(app);
 
-service.AddTypeConverter<ulong>(new UlongConverter());
-service.AddTypeConverter<TimeSpan>(new TimeSpanConverter());
-service.AddTypeConverter<Calculation>(new CalculationConverter());
-
-service.AddComponentTypeConverter<TimeSpan>(new TimeSpanComponentConverter());
-service.AddComponentTypeConverter<Color>(new ColorComponentConverter());
-
-service.AddTypeReader<ObjectId>(new ObjectIdComponentConverter());
-service.AddTypeReader<Guid>(new Barriot.Interactions.Converters.GuidConverter());
-
-// Register all modules.
-await service.AddModulesAsync(typeof(Program).Assembly, app.Services);
-
-// Configure managers.
 await app.Services.GetRequiredService<DatabaseManager>()
     .ConfigureAsync();
-await app.Services.GetRequiredService<ClientController>()
-    .ConfigureAsync();
 
-// Final configuration entries. 
 app.UseAuthorization();
 
-// Set up the ability to redirect REST requests.
-app.RedirectInteractions("/interactions", builder.Configuration["PBK"]);
-app.RedirectVotes("/votes", builder.Configuration["TGGAuthKey"]);
+app.MapControllers();
 
-// Run the application
 app.Run();

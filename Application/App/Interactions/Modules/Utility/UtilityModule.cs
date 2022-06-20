@@ -1,6 +1,6 @@
-﻿using Barriot.Interactions.Attributes;
+﻿using Barriot.Application.Interactions.Attributes;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     /// <summary>
     ///     A module where stuff goes that isnt really big enough to be classified in its own module.

@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions.Attributes
+﻿namespace Barriot.Application.Interactions.Attributes
 {
     /// <summary>
     ///     An attribute that checks if the user in question is blacklisted.

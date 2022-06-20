@@ -2,7 +2,7 @@
 using Barriot.Models.Files;
 using Barriot.Pagination;
 
-namespace Barriot.Interactions
+namespace Barriot.Application.Interactions
 {
     /// <summary>
     ///     Represents a non-generic Barriot module base that implements <see cref="BarriotInteractionContext"/>.

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace Barriot.Interactions.Converters
+namespace Barriot.Application.Interactions.Converters
 {
     public class ObjectIdComponentConverter : TypeReader<ObjectId>
     {

@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions
+﻿namespace Barriot.Application.Interactions
 {
     /// <summary>
     ///     The context for a Barriot interaction, including the user entity that invoked it.

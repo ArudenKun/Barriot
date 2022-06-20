@@ -1,4 +1,4 @@
-﻿namespace Barriot.Interactions.Modals.Evaluation
+﻿namespace Barriot.Application.Interactions.Modals.Evaluation
 {
     internal sealed class EvaluationArgs
     {

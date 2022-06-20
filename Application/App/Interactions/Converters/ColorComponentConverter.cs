@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Barriot.Interactions.Converters
+namespace Barriot.Application.Interactions.Converters
 {
     public class ColorComponentConverter : ComponentTypeConverter<Color>
     {

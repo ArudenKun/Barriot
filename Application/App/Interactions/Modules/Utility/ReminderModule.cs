@@ -1,10 +1,10 @@
 ﻿using Barriot.Extensions;
-using Barriot.Interactions.Attributes;
+using Barriot.Application.Interactions.Attributes;
 using Barriot.Models.Files;
 using Barriot.Pagination;
 using MongoDB.Bson;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     [IgnoreBlacklistedUsers]
     public class ReminderModule : BarriotModuleBase

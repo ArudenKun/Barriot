@@ -1,7 +1,7 @@
-﻿using Barriot.Interactions.Attributes;
-using Barriot.Interactions.Services;
+﻿using Barriot.Application.Interactions.Attributes;
+using Barriot.Application.Services;
 
-namespace Barriot.Interactions.Modules
+namespace Barriot.Application.Interactions.Modules
 {
     [IgnoreBlacklistedUsers]
     public class UserModule : BarriotModuleBase
@@ -16,12 +16,12 @@ namespace Barriot.Interactions.Modules
             _service = service;
         }
 
-        [AllowAPI]
+        [AllowAPI(true)]
         [SlashCommand("user-info", "Gets information about a user.")]
         public async Task SlashUserInfoAsync([Summary("user", "The user to see info about.")] RestUser? user = null)
             => await UserInfoAsync(user ?? Context.User);
 
-        [AllowAPI]
+        [AllowAPI(true)]
         [UserCommand("Info")]
         public async Task UserInfoAsync(RestUser user)
         {
