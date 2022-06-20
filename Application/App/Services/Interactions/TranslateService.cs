@@ -1,8 +1,8 @@
 ﻿using Barriot.API.Translation;
 
-namespace Barriot.Interactions.Services
+namespace Barriot.Services
 {
-    public class TranslateService
+    public class TranslateService : IService
     {
         private readonly ITranslateClient _translator;
 

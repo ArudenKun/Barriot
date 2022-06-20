@@ -1,12 +1,8 @@
-﻿using Barriot.Interactions.Attributes;
-using System.Linq.Expressions;
+﻿using Barriot.Application.Interactions.Attributes;
 
-namespace Barriot.Interactions
+namespace Barriot.Application.Interactions
 {
-    /// <summary>
-    ///     Resembles a control class for calling Discord API data for interaction population.
-    /// </summary>
-    public sealed class ApiController
+    public class InteractionApiManager
     {
         private readonly Func<ICommandInfo, bool> _fetchAttributeFunc = x => x.Attributes.Any(x => x is AllowAPIAttribute attr && attr.AllowAPI is true);
 
@@ -23,7 +19,7 @@ namespace Barriot.Interactions
         /// </summary>
         public Func<InteractionProperties, bool> Predicate { get; }
 
-        public ApiController(InteractionService service)
+        public InteractionApiManager(InteractionService service)
         {
             _service = service;
             Populate();
@@ -43,7 +39,7 @@ namespace Barriot.Interactions
 
         private void Populate()
         {
-            foreach(var command in _service.SlashCommands)
+            foreach (var command in _service.SlashCommands)
                 if (_fetchAttributeFunc(command))
                     _commandMap.Add(command.Name);
 
@@ -61,7 +57,7 @@ namespace Barriot.Interactions
                         _commandMap.Add(cid);
                 }
 
-            foreach(var modal in _service.ModalCommands)
+            foreach (var modal in _service.ModalCommands)
                 if (_fetchAttributeFunc(modal))
                 {
                     var cid = modal.Name;

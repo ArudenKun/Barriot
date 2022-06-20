@@ -362,3 +362,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Application/Barriot.Application/appsettings.json
+/Application/Barriot.Application/appsettings.Development.json

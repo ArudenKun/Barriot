@@ -1,6 +1,6 @@
-﻿namespace Barriot.Interactions.Services
+﻿namespace Barriot.Application.Services
 {
-    public class UserService
+    public class UserService : IService
     {
         private readonly List<CachedUser> _users;
 

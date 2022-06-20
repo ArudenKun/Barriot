@@ -4,7 +4,6 @@ using Barriot.Data;
 using Barriot.Extensions;
 using Barriot.Interactions;
 using Barriot.Interactions.Converters;
-using Barriot.Interactions.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -45,11 +44,6 @@ builder.Services.AddHttpClient<ITranslateClient, TranslateClient>(client =>
 builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddSingleton<ClientController>();
 builder.Services.AddSingleton<PostExecutionHandler>();
-
-// Add services
-builder.Services.AddSingleton<InfoService>();
-builder.Services.AddSingleton<TranslateService>();
-builder.Services.AddSingleton<UserService>();
 
 builder.Services.AddSingleton<ApiController>();
 

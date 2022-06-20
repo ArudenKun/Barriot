@@ -28,7 +28,6 @@ namespace Barriot
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            // Internal respond task so calls arent repeated.
             async Task RespondAsync(int statusCode, string responseBody)
             {
                 httpContext.Response.StatusCode = statusCode;
@@ -37,14 +36,13 @@ namespace Barriot
                 await httpContext.Response.CompleteAsync().ConfigureAwait(false);
             }
 
-            if (httpContext.Request.Method != "POST")
+            if (httpContext.Request.Method is not "POST")
             {
                 _logger.LogError("Failure (Invalid REST method)");
                 await RespondAsync(StatusCodes.Status200OK, "Success!");
                 return;
             }
 
-            // Read out the stream and parse the signatures.
             var signature = httpContext.Request.Headers["X-Signature-Ed25519"];
             var timestamp = httpContext.Request.Headers["X-Signature-Timestamp"];
             using var sr = new StreamReader(httpContext.Request.Body);
@@ -52,7 +50,6 @@ namespace Barriot
 
             await _next(httpContext);
 
-            // If the interaction is invalid, return here.
             if (!_client.IsValidHttpInteraction(_pbk, signature, timestamp, body))
             {
                 _logger.LogError("Failure (Invalid interaction signature)");
@@ -60,11 +57,7 @@ namespace Barriot
                 return;
             }
 
-            Console.WriteLine("Test");
-
-            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, x => true);
-
-            // Recognize a ping interaction from Discord to check if our receiving end functions properly
+            RestInteraction interaction = await _client.ParseHttpInteractionAsync(_pbk, signature, timestamp, body, _controller.Predicate);
             if (interaction is RestPingInteraction pingInteraction)
             {
                 _logger.LogInformation("Successful (Ping)");
@@ -72,10 +65,7 @@ namespace Barriot
                 return;
             }
 
-            // Create the context to pass into execution.
             var context = new BarriotInteractionContext(_client, interaction, (str) => RespondAsync(StatusCodes.Status200OK, str));
-
-            // Execute the command.
             var result = await _interactions.ExecuteCommandAsync(context, _serviceProvider);
 
             await _resultHandler.RunAsync(result, context).ConfigureAwait(false);

@@ -1,6 +1,6 @@
-﻿namespace Barriot.Interactions.Services
+﻿namespace Barriot.Application.Services
 {
-    public class InfoService
+    public class InfoService : IService
     {
         private int _guildCount;
 
