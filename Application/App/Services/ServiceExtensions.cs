@@ -57,23 +57,23 @@ namespace Barriot.Application.Services
 
         public static IServiceCollection AddImplementations(this IServiceCollection provider)
         {
-            provider.AddSingleton<UserService>();
-            provider.AddSingleton<TranslateService>();
-            provider.AddSingleton<InfoService>();
-
-            return provider;
-
-            //var interfaceType = typeof(IService);
-
-            //foreach (var type in typeof(Program).Assembly.GetTypes())
-            //{
-            //    if (interfaceType.IsAssignableFrom(type) && !type.IsAbstract)
-            //    {
-            //        provider.AddSingleton(interfaceType, type);
-            //    }
-            //}
+            //provider.AddSingleton<UserService>();
+            //provider.AddSingleton<TranslateService>();
+            //provider.AddSingleton<InfoService>();
 
             //return provider;
+
+            var interfaceType = typeof(IService);
+
+            foreach (var type in typeof(Program).Assembly.GetTypes())
+            {
+                if (interfaceType.IsAssignableFrom(type) && !type.IsAbstract)
+                {
+                    provider.AddSingleton(type);
+                }
+            }
+
+            return provider;
         }
 
         public static IServiceCollection AddHttp(this IServiceCollection provider, IConfigurationSection section)
