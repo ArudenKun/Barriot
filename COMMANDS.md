@@ -1,5 +1,9 @@
 # 📲 Commands & their usage.
 
+### Parameter declaration:
+- ` <param> ` Required. The command cannot execute without this parameter set.
+- ` [param] ` Optional, not required. If not set, this command will execute without this value in mind.
+
 ## 🪡 Slash Commands
 
 Commands executed by typing `/` in the message box. 
@@ -32,23 +36,36 @@ Commands executed by typing `/` in the message box.
 
 > Gets your daily bump reward.
 
-### /profile
+### /profile ` [user] `
+
+- ` [user] ` The user to view a profile for.
 
 > Views your or another user's Barriot profile. Includes buttons to view the users' acknowledgements & statistics. This command is also used to bump other users.
 
-### /challenge
+### /challenge ` [user] `
+
+- ` [user] ` The user to view a profile for.
 
 > Challenges a user to a minigame, the winner is rewarded. When executed, a number of minigames are given as options to play.
 
-### /pins
+### /pins ` [page] `
+
+- ` [page] ` The page to view.
 
 > Gets your list of active pins. This command is also used to modify existing pins.
 
-### /reminders
+### /reminders ` [page] `
+
+- ` [page] ` The page to view.
 
 > Gets your list of active reminders. This command is also used to modify existing reminders.
 
-### /remind
+### /remind ` <time> <message> [frequency] [span] `
+
+- ` <time> ` The time to pass until this reminder is sent.
+- ` <message> ` The message to remind you of.
+- ` [frequency] ` The frequency of how many times this reminder should be repeated. If span is not set, it will be default.
+- ` [span] ` The timespan between repeated sending. Default is 1 day. If set, frequency must be set as well.
 
 > Creates a new reminder, when defining a frequency and span, it will repeat every <span> for <frequency> times.
 
@@ -56,7 +73,9 @@ Commands executed by typing `/` in the message box.
 
 > Creates a new poll in the current channel, which will persist for 15 days. Use the result button to view current votes.
 
-### /user-info
+### /user-info ` [user] `
+
+- ` [user] ` The user to view a profile for.
 
 > Gets common information about a user like their roles & when they joined a server/discord. When executed, a button can be pressed to navigate either to the banner or avatar if they exist.
 
@@ -92,7 +111,9 @@ Commands executed by typing `/` in the message box.
 
 > Pings the bot.
 
-### /math
+### /math ` <calc> `
+
+- ` <calc> ` The calculation to compute.
 
 > Calculates your input.
 
