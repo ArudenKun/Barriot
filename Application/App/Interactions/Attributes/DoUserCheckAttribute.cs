@@ -3,7 +3,8 @@
     /// <summary>
     ///     This attribute makes sure that the user who pressed this button is the only one who can execute it.
     /// </summary>
-    public sealed class DoUserCheck : PreconditionAttribute
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class DoUserCheckAttribute : PreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext context, ICommandInfo commandInfo, IServiceProvider services)
         {
@@ -11,7 +12,7 @@
 
             if (context.Interaction is not RestMessageComponent component)
                 return BarriotPreconditionResult.FromError(
-                    reason: "Context unrecognized as component context.");
+                    reason: nameof(DoUserCheckAttribute) + " is only supported for message components.");
 
             else
             {

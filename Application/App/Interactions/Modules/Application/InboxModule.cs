@@ -2,7 +2,6 @@
 
 namespace Barriot.Application.Interactions.Modules
 {
-    // TODO, rework SEND
     [IgnoreBlacklistedUsers]
     public class InboxModule : BarriotModuleBase
     {

@@ -1,7 +1,7 @@
 ﻿namespace Barriot.Application.Interactions.Attributes
 {
     /// <summary>
-    ///     
+    ///     Represents an attribute that configures if a method is allowed to make API calls.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class AllowAPIAttribute : Attribute

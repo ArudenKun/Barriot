@@ -17,46 +17,6 @@ namespace Barriot.Application.Interactions.Modules
             _service = service;
         }
 
-        [SlashCommand("help", "Barriot help & Support.")]
-        public async Task HelpAsync()
-        {
-            var sb = new SelectMenuBuilder()
-                .WithMaxValues(1)
-                .WithMinValues(1)
-                .WithCustomId($"help:{Context.User.Id}")
-                .AddOption("Slash commands", "1")
-                .AddOption("User commands", "2")
-                .AddOption("Message commands", "3")
-                .WithPlaceholder("How to: Commands");
-
-            var cb = new ComponentBuilder()
-                .WithSelectMenu(sb)
-                .WithButton("Get support", style: ButtonStyle.Link, url: _configuration["Domain"] + "discord", row: 1)
-                .WithButton("Invite Barriot", style: ButtonStyle.Link, url: _configuration["Domain"] + "invite", row: 1)
-                .WithButton("Privacy Policy", style: ButtonStyle.Link, url: _configuration["Domain"] + "privacy", row: 1);
-
-            var eb = new EmbedBuilder()
-                .WithThumbnailUrl("https://rozen.one/Files/B_monogram.png")
-                .AddField("Commands", "Click on the buttons below to navigate through command examples & to get further support if required!")
-                .AddField("Note", "Discord currently does not support Message or User commands on mobile devices!")
-                .WithDescription(string.Join("\n", FileExtensions.GetDataFromFile("HelpText").Lines));
-
-            await RespondAsync(
-                text: ":question: **Barriot help & support**",
-                components: cb.Build(),
-                embed: eb.Build(),
-                ephemeral: Context.Member.DoEphemeral);
-        }
-
-        [DoUserCheck]
-        [ComponentInteraction("help:*")]
-        public async Task HelpAsync(ulong _, string[] selectedExample)
-        {
-            await RespondAsync(
-                text: $"https://rozen.one/Files/" + $"BarriotAnim{selectedExample[0]}.gif",
-                ephemeral: true);
-        }
-
         [SlashCommand("vote", "Vote for Barriot!")]
         public async Task VoteAsync()
         {

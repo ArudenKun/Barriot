@@ -10,6 +10,8 @@
         /// </summary>
         public UserEntity Member { get; }
 
+        public 
+
         /// <summary>
         ///     Creates a new context for upcoming interaction handlers to make use of.
         /// </summary>

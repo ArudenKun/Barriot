@@ -3,6 +3,7 @@
     /// <summary>
     ///     This attribute makes sure that components on the source message of this interaction are disabled after successful execution.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class DisableSourceAttribute : PreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext context, ICommandInfo commandInfo, IServiceProvider services)

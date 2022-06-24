@@ -37,8 +37,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Interactions\Modules\" />
-	  <Folder Include="Interactions\Attributes\" />
 	  <Folder Include="Interactions\Converters\" />
 	  <Folder Include="Interactions\Modals\" />
 	</ItemGroup>
