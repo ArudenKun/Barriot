@@ -6,6 +6,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class BlacklistModule : BarriotModuleBase
     {
+        public BlacklistModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [DoUserCheck]
         [ComponentInteraction("blacklist:*,*")]
         public async Task BlacklistAsync(ulong _, ulong targetId)

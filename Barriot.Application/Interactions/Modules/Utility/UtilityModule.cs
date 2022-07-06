@@ -8,6 +8,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class UtilityModule : BarriotModuleBase
     {
+        public UtilityModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [MessageCommand("Quote")]
         public async Task QuoteAsync(IMessage message)
         {

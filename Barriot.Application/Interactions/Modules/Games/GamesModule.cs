@@ -7,6 +7,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class GamesModule : BarriotModuleBase
     {
+        public GamesModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [SlashCommand("riddle", "Gets a random riddle.")]
         public async Task RiddleAsync()
         {

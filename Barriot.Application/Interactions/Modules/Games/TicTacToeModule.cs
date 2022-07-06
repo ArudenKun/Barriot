@@ -7,6 +7,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class TicTacToeModule : BarriotModuleBase
     {
+        public TicTacToeModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [DoUserCheck]
         [ComponentInteraction("tictactoe-init:*,*")]
         public async Task TicTacToeInitialAsync(ulong userId, ulong targetId)

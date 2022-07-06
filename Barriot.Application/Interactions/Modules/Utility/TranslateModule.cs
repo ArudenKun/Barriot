@@ -8,7 +8,7 @@ namespace Barriot.Application.Interactions.Modules
     {
         private readonly TranslateService _service;
 
-        public TranslateModule(TranslateService service)
+        public TranslateModule(TranslateService service, ILogger<BarriotModuleBase> logger) : base(logger)
         {
             _service = service;
         }

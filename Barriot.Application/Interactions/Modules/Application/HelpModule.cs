@@ -8,7 +8,7 @@ namespace Barriot.Application.Interactions.Modules
     {
         private readonly IConfiguration _configuration;
 
-        public HelpModule(IConfiguration config)
+        public HelpModule(IConfiguration config, ILogger<BarriotModuleBase> logger) : base(logger)
         {
             _configuration = config;
         }

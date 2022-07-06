@@ -19,8 +19,10 @@ namespace Barriot.Application.Interactions.Modules
     {
         private readonly IConfiguration _configuration;
 
-        public EvaluationModule(IConfiguration config)
-            => _configuration = config;
+        public EvaluationModule(IConfiguration config, ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+            _configuration = config;
+        }
 
         [SlashCommand("evaluate", "Evaluates/Runs a C# script.")]
         public async Task AuthorizeAsync()

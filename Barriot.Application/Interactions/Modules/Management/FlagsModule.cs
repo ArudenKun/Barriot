@@ -7,6 +7,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class FlagsModule : BarriotModuleBase
     {
+        public FlagsModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [DoUserCheck]
         [ComponentInteraction("flag-creating:*,*")]
         public async Task FlagAsync(ulong _, ulong targetId)

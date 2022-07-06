@@ -1,6 +1,8 @@
-﻿using Barriot.Extensions;
+﻿using Barriot.Application.Interactions.Attributes;
+using Barriot.Extensions;
 using Barriot.Models.Files;
 using Barriot.Pagination;
+using System.Diagnostics;
 
 namespace Barriot.Application.Interactions
 {
@@ -9,6 +11,158 @@ namespace Barriot.Application.Interactions
     /// </summary>
     public class BarriotModuleBase : RestInteractionModuleBase<BarriotInteractionContext>
     {
+        /// <summary>
+        ///     A logger accessible from the interaction source to send log messages to the console interface.
+        /// </summary>
+        protected ILogger<BarriotModuleBase> Logger { get; }
+
+        /// <summary>
+        ///     A stopwatch accessible from the interaction source to check execution time & module building time.
+        /// </summary>
+        protected Stopwatch Stopwatch { get; }
+
+        private bool _isDebug = false;
+
+        public BarriotModuleBase(ILogger<BarriotModuleBase> logger)
+        {
+            Logger = logger;
+            Stopwatch = Stopwatch.StartNew();
+        }
+
+        #region Execution
+
+        public override void OnModuleBuilding(InteractionService commandService, ModuleInfo module)
+        {
+            if (module.Attributes.Any(x => x is DebugAttribute))
+                _isDebug = true;
+
+            Stopwatch.Stop();
+            if (_isDebug)
+            {
+                Logger.LogDebug("Module ({}) built in {} ms/t ({} ms)",
+                    module.Name,
+                    Stopwatch.ElapsedTicks,
+                    Stopwatch.ElapsedMilliseconds);
+            }
+        }
+
+        public override void BeforeExecute(ICommandInfo command)
+        {
+            if (command.Module.Attributes.Any(x => x is DebugAttribute))
+            {
+                _isDebug = true;
+
+                Logger.LogDebug("Module ({}) in scope for command '{}'",
+                    command.Module.Name,
+                    command.Name);
+                Logger.LogDebug("Starting execution of: '{}' for {} ({})",
+                    command.Name,
+                    Context.User,
+                    Context.User.Id);
+                Stopwatch.Start();
+            }
+        }
+        private static int CalculateTier(long currentPoints, ref int ranking)
+        {
+            int tier = 0;
+            while (currentPoints >= ranking)
+            {
+                ranking *= 2;
+                tier++;
+            }
+            ranking /= 2;
+            return tier;
+        }
+
+        private bool CanAssignFlag(UserFlag newFlag)
+        {
+            List<UserFlag> flags = Context.Member.Flags;
+            UserFlag[] newFlags = { newFlag };
+
+            if (!flags.Any(x => x.Title == newFlag.Title))
+            {
+                flags.RemoveAll(x => x.Type == newFlag.Type);
+                Context.Member.Flags = new(flags.Concat(newFlags));
+                return true;
+            }
+            return false;
+        }
+
+        private bool _hasWonGame = false;
+
+        public void WonGame()
+        {
+            if (_hasWonGame)
+                throw new InvalidOperationException("A user cannot win a game twice in a row.");
+            _hasWonGame = true;
+        }
+
+        public override async Task AfterExecuteAsync(ICommandInfo command)
+        {
+            if (_isDebug)
+            {
+                Stopwatch.Stop();
+                Logger.LogDebug("Execution of '{}' for {} ({}) took {} ms",
+                    command.Name,
+                    Context.User,
+                    Context.User.Id,
+                    Stopwatch.ElapsedMilliseconds);
+            }
+
+            if (_hasWonGame)
+            {
+                Context.Member.GamesWon++;
+
+                int ranking = 10;
+                int tier = CalculateTier(Context.Member.GamesWon, ref ranking);
+
+                if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateChampion(tier, ranking)))
+                    await FollowupAsync(
+                        text: $":star: **Congratulations!** *You have won over ` {ranking} ` challenges and have been granted a new acknowledgement!*" +
+                        $"\n\n> You can find your acknowledgements by executing ` /statistics `",
+                        ephemeral: true);
+            }
+
+            if (command is ComponentCommandInfo or ModalCommandInfo)
+            {
+                Context.Member.ButtonsPressed++;
+
+                int ranking = 300;
+                int tier = CalculateTier(Context.Member.ButtonsPressed, ref ranking);
+
+                if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateComponent(tier, ranking)))
+                    await FollowupAsync(
+                        text: $":star: **Congratulations!** *You have pressed over ` {ranking} ` buttons and have been granted a new acknowledgement!*" +
+                        $"\n\n> You can find your acknowledgements by executing ` /statistics `",
+                        ephemeral: true);
+            }
+
+            else
+            {
+                if (Context.Member.Inbox.Any() && command.Name != "inbox")
+                    await FollowupAsync(
+                        text: ":speech_balloon: **You have unread mail!** Please use ` /inbox ` to read this mail.",
+                        ephemeral: true);
+
+                Context.Member.LastCommand = command.Name;
+                Context.Member.CommandsExecuted++;
+
+                int ranking = 150;
+                int tier = CalculateTier(Context.Member.CommandsExecuted, ref ranking);
+
+                if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateCommand(tier, ranking)))
+                    await FollowupAsync(
+                        text: $":star: **Congratulations!** *You have executed over ` {ranking} ` commands and been granted a new acknowledgement!*" +
+                        $"\n\n> You can find your acknowledgements by executing ` /statistics `",
+                        ephemeral: true);
+            }
+
+            if (Context.Member.UserName is "Unknown")
+                Context.Member.UserName = $"{Context.User.Username}#{Context.User.Discriminator}";
+        }
+
+        #endregion
+
         #region DeferAsync
 
         /// <summary>
@@ -344,99 +498,6 @@ namespace Barriot.Application.Interactions
 
             await FollowupAsync(
                 text: text);
-        }
-
-        #endregion
-
-        #region Post-processing
-
-        private static int CalculateTier(long currentPoints, ref int ranking)
-        {
-            int tier = 0;
-            while (currentPoints >= ranking)
-            {
-                ranking *= 2;
-                tier++;
-            }
-            ranking /= 2;
-            return tier;
-        }
-
-        private bool CanAssignFlag(UserFlag newFlag)
-        {
-            List<UserFlag> flags = Context.Member.Flags;
-            UserFlag[] newFlags = { newFlag };
-
-            if (!flags.Any(x => x.Title == newFlag.Title))
-            {
-                flags.RemoveAll(x => x.Type == newFlag.Type);
-                Context.Member.Flags = new(flags.Concat(newFlags));
-                return true;
-            }
-            return false;
-        }
-
-        private bool _hasWonGame = false;
-
-        public void WonGame()
-        {
-            if (_hasWonGame)
-                throw new InvalidOperationException("A user cannot win a game twice in a row.");
-            _hasWonGame = true;
-        }
-
-        public override async Task AfterExecuteAsync(ICommandInfo command)
-        {
-            if (Context.Member.UserName is "Unknown")
-                Context.Member.UserName = $"{Context.User.Username}#{Context.User.Discriminator}";
-
-            if (_hasWonGame)
-            {
-                Context.Member.GamesWon++;
-
-                int ranking = 10;
-                int tier = CalculateTier(Context.Member.GamesWon, ref ranking);
-
-                if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateChampion(tier, ranking)))
-                    await FollowupAsync(
-                        text: $":star: **Congratulations!** *You have won over ` {ranking} ` challenges and have been granted a new acknowledgement!*" +
-                        $"\n\n> You can find your acknowledgements by executing ` /statistics `",
-                        ephemeral: true);
-            }
-
-            if (command is ComponentCommandInfo or ModalCommandInfo)
-            {
-                Context.Member.ButtonsPressed++;
-
-                int ranking = 300;
-                int tier = CalculateTier(Context.Member.ButtonsPressed, ref ranking);
-
-                if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateComponent(tier, ranking)))
-                    await FollowupAsync(
-                        text: $":star: **Congratulations!** *You have pressed over ` {ranking} ` buttons and have been granted a new acknowledgement!*" +
-                        $"\n\n> You can find your acknowledgements by executing ` /statistics `",
-                        ephemeral: true);
-            }
-
-            else
-            {
-                if (Context.Member.Inbox.Any() && command.Name != "inbox")
-                    await FollowupAsync(
-                        text: ":speech_balloon: **You have unread mail!** Please use ` /inbox ` to read this mail.",
-                        ephemeral: true);
-
-                Context.Member.LastCommand = command.Name;
-                Context.Member.CommandsExecuted++;
-
-                int ranking = 150;
-                int tier = CalculateTier(Context.Member.CommandsExecuted, ref ranking);
-
-                if (tier is not (0 or > 10) && CanAssignFlag(UserFlag.CreateCommand(tier, ranking)))
-                    await FollowupAsync(
-                        text: $":star: **Congratulations!** *You have executed over ` {ranking} ` commands and been granted a new acknowledgement!*" +
-                        $"\n\n> You can find your acknowledgements by executing ` /statistics `",
-                        ephemeral: true);
-            }
         }
 
         #endregion

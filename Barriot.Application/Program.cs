@@ -1,4 +1,3 @@
-using Barriot.Application.API;
 using Barriot.Application.Interactions;
 using Barriot.Application.Services;
 using Barriot.Data;
@@ -13,15 +12,18 @@ var client = await ServiceExtensions.CreateClientAsync(builder.Configuration["Pr
 builder.Services.AddSingleton(client);
 builder.Services.AddDatabase(builder.Configuration["DbToken"]);
 builder.Services.AddInteractions();
-builder.Services.AddImplementations();
+builder.Services.AddExplicitServices();
 builder.Services.AddHttp(builder.Configuration.GetSection("APIs"));
 
 var app = builder.Build();
 
-await InteractionExtensions.ConfigureInteractionsAsync(app);
+await app.Services.GetRequiredService<ServiceActivator>()
+    .ActivateAsync();
 
 await app.Services.GetRequiredService<DatabaseManager>()
     .ConfigureAsync();
+
+await InteractionExtensions.ConfigureInteractionsAsync(app);
 
 app.UseAuthorization();
 

@@ -7,6 +7,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class Connect4Module : BarriotModuleBase
     {
+        public Connect4Module(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [DoUserCheck]
         [ComponentInteraction("connect-init:*,*")]
         public async Task ConnectInitialAsync(ulong userId, ulong targetId)

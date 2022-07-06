@@ -5,13 +5,10 @@ namespace Barriot.Application.Interactions
     public class InteractionApiManager
     {
         private readonly Func<ICommandInfo, bool> _fetchAttributeFunc = x => x.Attributes.Any(x => x is AllowAPIAttribute attr && attr.AllowAPI is true);
-
         private readonly List<string> _commandMap = new();
-
         private readonly InteractionService _service;
 
         private const char _filter = ':';
-
         private const char _wildCardSeperator = '*';
 
         /// <summary>

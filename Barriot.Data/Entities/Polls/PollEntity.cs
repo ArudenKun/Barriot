@@ -38,8 +38,8 @@ namespace Barriot
         public async Task<bool> DeleteAsync()
             => await PollHelper.DeleteAsync(this);
 
-        public static async Task<bool> DeleteManyAsync(DateTime time)
-            => await PollHelper.DeleteManyAsync(time);
+        public static async Task<bool> DeleteManyAsync(DateTime? time = null)
+            => await PollHelper.DeleteManyAsync(time ?? DateTime.UtcNow);
 
         public static async Task<PollEntity> GetAsync(ulong messageId)
             => await PollHelper.GetAsync(messageId);

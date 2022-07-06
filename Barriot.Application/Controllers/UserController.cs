@@ -14,10 +14,14 @@ namespace Barriot.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        [Route("{id}")]
+        public async Task<IActionResult> GetAsync(int id)
         {
+            Console.WriteLine(id);
+
             await Task.CompletedTask;
-            throw new NotImplementedException();
+            
+            return Ok(NoContent());
         }
 
         [HttpPost]
@@ -28,7 +32,8 @@ namespace Barriot.Application.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsync()
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             await Task.CompletedTask;
             throw new NotImplementedException();

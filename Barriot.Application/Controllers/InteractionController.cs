@@ -70,13 +70,15 @@ namespace Barriot.Application.Controllers
 
             string payload = string.Empty;
 
-            var context = new BarriotInteractionContext(_client, interaction, (str) =>
+            var context = new BarriotInteractionContext(await UserEntity.GetAsync(interaction.User.Id), _client, interaction, (str) =>
             {
                 payload = str;
                 return Task.CompletedTask;
             });
 
             var result = await _service.ExecuteCommandAsync(context, _serviceProvider);
+
+            await _postExecManager.RunAsync(result, context);
 
             return new ContentResultBuilder(200)
                 .WithPayload(payload)

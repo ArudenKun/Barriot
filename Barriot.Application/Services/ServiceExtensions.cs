@@ -55,23 +55,21 @@ namespace Barriot.Application.Services
             return provider;
         }
 
-        public static IServiceCollection AddImplementations(this IServiceCollection provider)
+        public static IServiceCollection AddExplicitServices(this IServiceCollection provider)
         {
-            //provider.AddSingleton<UserService>();
-            //provider.AddSingleton<TranslateService>();
-            //provider.AddSingleton<InfoService>();
-
-            //return provider;
-
-            var interfaceType = typeof(IService);
+            var generalInterface = typeof(IService);
+            var configurableInterface = typeof(IConfigurableService);
 
             foreach (var type in typeof(Program).Assembly.GetTypes())
             {
-                if (interfaceType.IsAssignableFrom(type) && !type.IsAbstract)
-                {
+                if (generalInterface.IsAssignableFrom(type) && !type.IsAbstract)
                     provider.AddSingleton(type);
-                }
+
+                else if (configurableInterface.IsAssignableFrom(type) && !type.IsAbstract)
+                    provider.AddSingleton(configurableInterface, type);
             }
+
+            provider.AddSingleton<ServiceActivator>();
 
             return provider;
         }

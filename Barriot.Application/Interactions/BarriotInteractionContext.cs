@@ -10,20 +10,16 @@
         /// </summary>
         public UserEntity Member { get; }
 
-        public 
-
         /// <summary>
         ///     Creates a new context for upcoming interaction handlers to make use of.
         /// </summary>
         /// <param name="client"></param>
         /// <param name="interaction"></param>
         /// <param name="responseCallback"></param>
-        internal BarriotInteractionContext(DiscordRestClient client, RestInteraction interaction, Func<string, Task> responseCallback)
+        internal BarriotInteractionContext(UserEntity entity, DiscordRestClient client, RestInteraction interaction, Func<string, Task> responseCallback)
             : base(client, interaction, responseCallback)
         {
-            Member = UserEntity.GetAsync(User)
-                .GetAwaiter()
-                .GetResult();
+            Member = entity;
         }
     }
 }

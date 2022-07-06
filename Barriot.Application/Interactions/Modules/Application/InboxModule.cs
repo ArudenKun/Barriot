@@ -5,6 +5,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class InboxModule : BarriotModuleBase
     {
+        public InboxModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [SlashCommand("inbox", "Read messages ment for you by Barriot!")]
         public async Task InboxAsync()
             => await InboxAsync(Context.User.Id);

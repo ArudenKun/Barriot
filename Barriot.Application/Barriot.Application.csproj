@@ -20,11 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Application\Core\Barriot.Core.csproj" />
-		<ProjectReference Include="..\..\Application\Data\Barriot.Data.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Using Include="Discord" />
 		<Using Include="Discord.Rest" />
 		<Using Include="Discord.Interactions" />
@@ -39,6 +34,11 @@
 	<ItemGroup>
 	  <Folder Include="Interactions\Converters\" />
 	  <Folder Include="Interactions\Modals\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Barriot.Core\Barriot.Core.csproj" />
+	  <ProjectReference Include="..\Barriot.Data\Barriot.Data.csproj" />
 	</ItemGroup>
 
 </Project>

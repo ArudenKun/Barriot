@@ -10,6 +10,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class PinModule : BarriotModuleBase
     {
+        public PinModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [MessageCommand("Pin")]
         public async Task PinAsync(IMessage message)
         {

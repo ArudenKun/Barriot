@@ -11,7 +11,7 @@ namespace Barriot.Application.Interactions.Modules
         private readonly IConfiguration _configuration;
         private readonly InfoService _service;
 
-        public InfoModule(IConfiguration configuration, InfoService service)
+        public InfoModule(IConfiguration configuration, InfoService service, ILogger<BarriotModuleBase> logger) : base(logger)
         {
             _configuration = configuration;
             _service = service;

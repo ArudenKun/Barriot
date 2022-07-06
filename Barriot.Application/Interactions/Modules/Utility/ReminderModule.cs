@@ -9,6 +9,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class ReminderModule : BarriotModuleBase
     {
+        public ReminderModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [SlashCommand("remind", "Creates a reminder for a set time with provided message.")]
         public async Task RemindAsync(
             [Summary("time", "The time until this reminder")] TimeSpan spanUntil,

@@ -10,7 +10,7 @@ namespace Barriot.Application.Interactions.Modules
 
         private readonly UserService _service;
 
-        public UserModule(IConfiguration config, UserService service)
+        public UserModule(IConfiguration config, UserService service, ILogger<BarriotModuleBase> logger) : base(logger)
         {
             _configuration = config;
             _service = service;

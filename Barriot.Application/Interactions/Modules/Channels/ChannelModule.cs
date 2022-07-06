@@ -9,6 +9,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class ChannelModule : BarriotModuleBase
     {
+        public ChannelModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [AllowAPI(true)]
         [SlashCommand("channel", "Manages this channel.")]
         public async Task ManageChannelAsync()

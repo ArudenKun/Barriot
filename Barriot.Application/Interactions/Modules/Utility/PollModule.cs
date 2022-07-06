@@ -8,6 +8,11 @@ namespace Barriot.Application.Interactions.Modules
     [IgnoreBlacklistedUsers]
     public class PollModule : BarriotModuleBase
     {
+        public PollModule(ILogger<BarriotModuleBase> logger) : base(logger)
+        {
+
+        }
+
         [SlashCommand("poll", "Create a poll for the community to answer to.")]
         public async Task PollAsync()
             => await RespondWithModalAsync<PollModal>("poll:1");
